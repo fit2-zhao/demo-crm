@@ -1,113 +1,181 @@
-<p align="center"><a href="https://metersphere.io"><img src="https://metersphere.oss-cn-hangzhou.aliyuncs.com/img/MeterSphere-%E7%B4%AB%E8%89%B2.png" alt="MeterSphere" width="300" /></a></p>
-<h3 align="center">新一代的开源持续测试工具</h3>
-<p align="center">
-  <a href="https://www.gnu.org/licenses/gpl-3.0.html"><img src="https://shields.io/github/license/metersphere/metersphere?color=%231890FF" alt="License: GPL v3"></a>
-  <a href="https://www.codacy.com/gh/metersphere/metersphere/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=metersphere/metersphere&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/da67574fd82b473992781d1386b937ef" alt="Codacy"></a>
-  <a href="https://github.com/metersphere/metersphere/releases"><img src="https://img.shields.io/github/v/release/metersphere/metersphere" alt="GitHub release"></a>
-  <a href="https://github.com/metersphere/metersphere"><img src="https://img.shields.io/github/stars/metersphere/metersphere?color=%231890FF&style=flat-square" alt="Stars"></a>
-  <a href="https://hub.docker.com/r/metersphere/metersphere-ce-allinone"><img src="https://img.shields.io/docker/pulls/metersphere/metersphere-ce-allinone?label=downloads" alt="Download"></a>
-  <a href="https://gitee.com/fit2cloud-feizhiyun/MeterSphere"><img src="https://gitee.com/fit2cloud-feizhiyun/MeterSphere/badge/star.svg?theme=gvp" alt="Gitee Stars"></a><br>
-</p>
-<hr />
 
-MeterSphere 是新一代的开源持续测试工具，让软件测试工作更简单、更高效，不再成为持续交付的瓶颈。
+# Demo CRM 脚手架
 
--   **测试管理**：从测试用例管理，到测试计划执行、缺陷管理、测试报告生成，具有远超 TestLink 等传统测试管理工具的使用体验；
--   **接口测试**：集 Postman 的易用与 JMeter 的灵活于一体，接口调试、接口定义、接口 Mock、场景自动化、接口报告，你想要的都有；
--   **团队协作**：采用“系统-组织-项目”分层设计理念，帮助用户摆脱单机测试工具的束缚，方便快捷地开展团队协作；
--   **插件体系**：提供各种类别的插件，用户可以按需取用，快速实现 MeterSphere 测试能力的扩展以及与 DevOps 流水线的集成。
+这是一个基于 Spring Boot 的简单项目脚手架，包含常用的功能和最佳实践，帮助开发者快速启动并构建基于 Spring 的应用。
 
-## 快速开始
+## 目录
 
-```
-docker run -d -p 8081:8081 --name=metersphere -v ~/.metersphere/data:/opt/metersphere/data cr2.fit2cloud.com/metersphere/metersphere-ce-allinone
+- [功能特性](#功能特性)
+- [技术栈](#技术栈)
+- [快速开始](#快速开始)
+- [项目结构](#项目结构)
+- [API 文档](#api-文档)
+- [配置说明](#配置说明)
+- [测试](#测试)
+- [贡献指南](#贡献指南)
+- [许可证](#许可证)
 
-# 用户名: admin
-# 密码: metersphere
-```
+## 功能特性
 
-你也可以通过 [1Panel 应用商店](https://1panel.cn/) 快速部署 MeterSphere。
+- 用户登录和登出
+- 基于 Shiro 的认证与授权
+- 常用的 CRUD 接口示例
+- 全局异常处理
+- 统一的响应格式
+- 基本的数据库配置（支持 MySQL）
+- 常用的工具类封装
 
-如果是内网环境，推荐使用 [离线安装包方式](https://community.fit2cloud.com/#/products/metersphere/downloads) 进行安装部署。
-
-如你有更多问题，可以通过论坛和技术交流群与我们交流。
-
--   [论坛求助](https://bbs.fit2cloud.com/c/ms/8)
--   技术交流群
-     
-<image height="150px" width="150px" src="https://github.com/metersphere/metersphere/assets/23045261/57314d2c-ea97-4a7d-b20c-0eb577c0ebbf"/>
-
-## UI 展示
-
-<table style="border-collapse: collapse; border: 1px solid black;">
-  <tr>
-    <td style="padding: 5px;background-color:#fff;"><img src= "https://github.com/metersphere/metersphere/assets/23045261/e330db63-ea48-43b5-9645-b143c3326632" alt="MeterSphere Demo1" /></td>
-    <td style="padding: 5px;background-color:#fff;"><img src= "https://github.com/metersphere/metersphere/assets/23045261/315a13f6-6565-498d-ab62-6d5b46d49591" alt="MeterSphere Demo2" /></td>
-  </tr>
-  <tr>
-    <td style="padding: 5px;background-color:#fff;"><img src= "https://github.com/metersphere/metersphere/assets/23045261/785f7c05-430c-4eab-a0c5-0661bc177df0" alt="MeterSphere Demo3" /></td>
-    <td style="padding: 5px;background-color:#fff;"><img src= "https://github.com/metersphere/metersphere/assets/23045261/a53dd241-0140-43e4-83ba-95f0f0aeccc5" alt="MeterSphere Demo4" /></td>
-  </tr>
-  <tr>
-    <td style="padding: 5px;background-color:#fff;"><img src= "https://github.com/metersphere/metersphere/assets/23045261/fc09f2bc-a822-4c8c-ba58-c8e55f362fa3" alt="MeterSphere Demo5" /></td>
-    <td style="padding: 5px;background-color:#fff;"><img src= "https://github.com/metersphere/metersphere/assets/23045261/ed689d96-78fc-4e21-a29b-49054291dc59" alt="MeterSphere Demo6" /></td>
-  </tr>
-  <tr>
-    <td style="padding: 5px;background-color:#fff;"><img src= "https://github.com/metersphere/metersphere/assets/23045261/8b468704-3741-4f73-a86c-f224f15aeba2" alt="MeterSphere Demo7" /></td>
-    <td style="padding: 5px;background-color:#fff;"><img src= "https://github.com/metersphere/metersphere/assets/23045261/023dad1b-37c6-480c-a32e-4c71dd1010d2" alt="MeterSphere Demo8" /></td>
-  </tr>
-</table>
-
-## 版本说明
-
-MeterSphere 按年发布 LTS（Long Term Support）版本。
-
-- v1.10-lts：发布时间为 2021 年 5 月 27 日，目前已经停止维护；
-- v1.20-lts：发布时间为 2022 年 4 月 27 日，目前已经停止维护；
-- v2.10-lts：发布时间为 2023 年 5 月 25 日，仅进行必要的安全类 Bug 修复和严重 Bug 修复。
-
-与 MeterSphere v1.x 和 v2.x 相比，MeterSphere v3.x 产品定位发生变化，聚焦做好测试管理和接口测试，不再提供性能测试和 UI 测试相关的功能和能力，也不支持从 v1.x 和 v2.x 版本升级到 v3.x。
-
-MeterSphere v3.x 的版本发布计划：
-
-- 2024 年 5 月 30 日：发布 v3.0 beta 版本；
-- 2024 年 6 月 27 日：发布 v3.0 正式版本；
-- 2024 年 12 月 26 日：发布 v3.6-lts LTS 版本。
-
-MeterSphere 产品版本分为社区版和企业版，详情请参见：[MeterSphere 产品版本对比](https://metersphere.io/v3/pricing.html)
 
 ## 技术栈
 
 -   后端: [Spring Boot](https://www.tutorialspoint.com/spring_boot/spring_boot_introduction.htm)
 -   前端: [Vue.js](https://vuejs.org/)
--   中间件: [MySQL](https://www.mysql.com/), [Kafka](https://kafka.apache.org/), [MinIO](https://min.io/), [Redis](https://redis.com/)
+-   中间件: [MySQL](https://www.mysql.com/),  [MinIO](https://min.io/), [Redis](https://redis.com/)
 -   基础设施: [Docker](https://www.docker.com/)
--   测试引擎: [JMeter](https://jmeter.apache.org/)
 
-## 插件
+## 快速开始
 
-- [TAPD](https://www.tapd.cn/) 需求和缺陷同步插件：通过调用 TAPD 企业版本提供的 API 接口（[TAPD 企业版（API）申请](https://jsj.top/f/Lpk1sh)），将 MeterSphere 的测试用例和 TAPD 需求项进行关联，以及将 MeterSphere 和 TAPD 两个应用的缺陷进行双向同步。
-- 禅道需求和缺陷同步插件：将 MeterSphere 的测试用例和禅道需求项进行关联，以及将 MeterSphere 和禅道两个应用的缺陷进行双向同步。
-- JIRA 需求和缺陷同步插件：将 MeterSphere 的测试用例和 JIRA 需求项进行关联，以及将 MeterSphere 和 JIRA 两个应用的缺陷进行双向同步。
-- [Jenkins](https://www.jenkins.io/) 持续集成插件：实现在 Jenkins 流水线中触发并自动执行 MeteSphere 测试计划。
-- 自定义数据库驱动：支持对 达梦、Oracle、SQLite、Microsoft SQL Server 等数据库的连接和数据访问。
-- 接口协议插件：实现接口测试中对 TCP、Dubbo、MQTT 等协议的支持。
-- IDE 插件：[MeterSphere APl Debugger 插件](https://github.com/metersphere/metersphere-idea-plugin/) 是 MeterSphere 提供的 InteliJ IDEA 插件，它可以快速提取 API 特征，实时进行 API 调试并生成 API 文档，一键同步到 MeterSphere 进行管理。
+### 环境准备
 
-## 飞致云的其他明星项目
+1. 确保已安装 Java 21 或更高版本。
+2. 确保已安装 Maven 3.6 或更高版本。
+3. 确保已配置好 MySQL 数据库（或其他支持的数据库）。
 
-- [1Panel](https://github.com/1panel-dev/1panel/) - 现代化、开源的 Linux 服务器运维管理面板
-- [MaxKB](https://github.com/1panel-dev/maxkb) - 基于 LLM 大语言模型的知识库问答系统
-- [JumpServer](https://github.com/jumpserver/jumpserver/) - 广受欢迎的开源堡垒机
-- [DataEase](https://github.com/dataease/dataease/) - 人人可用的开源数据可视化分析工具
-- [Halo](https://github.com/halo-dev/halo/) - 强大易用的开源建站工具
+### 克隆项目
 
-## License & Copyright
+```bash
+git clone https://github.com/fit2-zhao/demo-crm.git
+cd demo-crm
+```
 
-Copyright (c) 2014-2024 飞致云 FIT2CLOUD, All rights reserved.
+### 配置数据库
 
-Licensed under The GNU General Public License version 3 (GPLv3)  (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+修改 `/opt/demo/conf/demo.properties` 文件，设置数据库连接信息：
 
-https://www.gnu.org/licenses/gpl-3.0.html
+``` Properties
+spring.datasource.url=jdbc:mysql://ip:3306/database?autoReconnect=false&useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false
+spring.datasource.password=pwd
+spring.datasource.username=username
 
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+```
+
+### 运行项目
+
+在项目根目录运行以下命令启动项目：
+
+```bash
+# 此命令会将parent pom 安装到本地仓库，其他外部子工程可以获得最新的 <properties></properties>
+./mvnw install -N
+
+# 此命令会将 domain sdk ，其他外部子工程可以获得最新的 jar
+./mvnw clean install -DskipTests -DskipAntRunForJenkins --file backend/pom.xml
+
+```
+### 整体打包
+
+```bash
+./mvnw clean package
+
+```
+
+项目启动后访问 `http://localhost:8081` 进行测试。
+
+## 项目结构
+
+```plaintext
+.
+├── backend                   # 后端服务代码目录
+│   └── src
+│       ├── main              # 主应用代码
+│       │   ├── java          # Java 源代码
+│       │   │   └── io
+│       │   │       └── demo
+│       │   │           └── crm
+│       │   │               ├── common         # 公共模块
+│       │   │               │   ├── annotation # 自定义注解
+│       │   │               │   ├── dto        # 数据传输对象（Data Transfer Objects）
+│       │   │               │   ├── exception  # 异常处理类
+│       │   │               │   ├── file       # 文件相关处理
+│       │   │               │   ├── groups     # 分组类，用于校验等
+│       │   │               │   ├── interceptor# 拦截器
+│       │   │               │   ├── log        # 日志管理
+│       │   │               │   ├── security   # 安全性相关
+│       │   │               │   ├── uid        # 唯一标识符生成
+│       │   │               │   └── util       # 工具类
+│       │   │               ├── config         # 配置类
+│       │   │               ├── listener       # 事件监听器
+│       │   │               └── services       # 服务层
+│       │   │                   ├── customer   # 客户模块服务
+│       │   │                   ├── marketing  # 营销模块服务
+│       │   │                   ├── order      # 订单模块服务
+│       │   │                   ├── reporting  # 报告模块服务
+│       │   │                   ├── sales      # 销售模块服务
+│       │   │                   └── system     # 系统模块服务
+│       │   └── resources      # 资源文件目录
+│       │       ├── i18n       # 国际化文件
+│       │       └── migration  # 数据库迁移脚本
+│       │           └── 1.0.0
+│       │               ├── ddl # 数据定义语言（Data Definition Language）
+│       │               └── dml # 数据操作语言（Data Manipulation Language）
+│       └── test               # 测试代码
+│           ├── java           # Java 测试代码
+│           │   └── io
+│           │       └── demo
+│           │           └── crm
+│           │               └── services
+│           │                   └── system # 系统模块测试代码
+│           └── resources      # 测试资源
+│               └── dml        # 数据操作语言文件，用于测试数据
+└── frontend                   # 前端代码目录
+    ├── public                # 公共资源
+    └── src                   # 前端源代码
+        ├── assets            # 静态资源（图片、样式等）
+        └── components        # 组件
+
+```
+
+## API 文档
+
+以下是一些示例 API 端点。详细的 API 文档可以使用 Swagger 自动生成，或使用 Postman 等工具导出。
+
+### 示例接口
+
+- **POST /login** - 用户登录
+- **GET /signout** - 退出登录
+
+> **提示**：如需测试，请确保在请求头中添加 `Authorization: Bearer <token>`。
+
+## 配置说明
+
+`demo.properties` 是主要的配置文件，包含数据库配置。
+
+
+## 测试
+
+### 单元测试
+
+项目包含了基本的单元测试，主要测试服务层和控制器层的业务逻辑。你可以使用以下命令运行测试：
+
+```bash
+mvn test
+```
+
+### 集成测试
+
+集成测试确保应用的不同模块可以正常协作，推荐在 CI/CD 环境中运行。
+
+## 贡献指南
+
+如果你想为该项目贡献代码，请遵循以下步骤：
+
+1. Fork 该项目。
+2. 创建你的特性分支 (`git checkout -b feature/AmazingFeature`)。
+3. 提交你的修改 (`git commit -m 'Add some AmazingFeature'`)。
+4. Push 到分支 (`git push origin feature/AmazingFeature`)。
+5. 提交一个 Pull Request。
+
+请确保你的代码符合项目的代码风格，并通过所有的测试。
+
+## 许可证
+
+该项目遵循 [MIT 许可证](LICENSE) 许可，你可以自由地使用和修改。
