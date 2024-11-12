@@ -8,7 +8,7 @@ import java.lang.annotation.*;
  * 操作日志注解，用于记录操作日志的相关信息。
  * 该注解可以应用于类或方法级别，用于定义操作类型、表达式及执行类。
  *
- * @author [fit2-zhao]
+
  */
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)

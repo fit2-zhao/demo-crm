@@ -24,7 +24,6 @@ import java.util.Map;
  * 本类主要用于配置会话的 ID 解析器，并通过定时任务清理没有绑定用户的会话。
  * </p>
  *
- * @author [fit2-zhao]
  * @version 1.0
  */
 @Configuration

@@ -11,7 +11,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * 通过 {@link ConfigurationProperties} 注解自动注入相关属性。
  * </p>
  *
- * @author [fit2-zhao]
  * @version 1.0
  */
 @ConfigurationProperties(prefix = MinioProperties.MINIO_PREFIX)

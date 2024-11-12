@@ -1,6 +1,7 @@
 package io.demo.crm.services.system;
 
 import io.demo.crm.config.MinioProperties;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.ldap.LdapAutoConfiguration;
@@ -8,7 +9,6 @@ import org.springframework.boot.autoconfigure.neo4j.Neo4jAutoConfiguration;
 import org.springframework.boot.autoconfigure.quartz.QuartzAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.ServletComponentScan;
-import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication(exclude = {
         QuartzAutoConfiguration.class,
@@ -19,10 +19,10 @@ import org.springframework.context.annotation.ComponentScan;
         MinioProperties.class
 })
 @ServletComponentScan
-@ComponentScan(basePackages = {"io.demo.crm.common", "io.demo.crm.system"})
-public class SystemApplication {
+@MapperScan(basePackages = {"io.demo"})
+public class DemoApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SystemApplication.class, args);
+        SpringApplication.run(DemoApplication.class, args);
     }
 }

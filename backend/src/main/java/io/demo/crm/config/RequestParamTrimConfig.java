@@ -16,7 +16,6 @@ import java.io.IOException;
  * 本类的作用是为 String 类型字段的反序列化过程添加自定义逻辑，去除请求参数中的前后空格。
  * </p>
  *
- * @author [fit2-zhao]
  * @version 1.0
  */
 @Configuration

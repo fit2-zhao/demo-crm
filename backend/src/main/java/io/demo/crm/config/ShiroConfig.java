@@ -33,7 +33,6 @@ import java.util.Map;
  * 它还定义了授权和认证的处理逻辑，以及注解支持。
  * </p>
  *
- * @author [fit2-zhao]
  * @version 1.0
  */
 @Configuration
@@ -99,8 +98,8 @@ public class ShiroConfig {
      * </p>
      *
      * @param sessionManager 会话管理器
-     * @param cacheManager 缓存管理器
-     * @param localRealm 自定义 Realm 实例
+     * @param cacheManager   缓存管理器
+     * @param localRealm     自定义 Realm 实例
      * @return 配置好的 {@link DefaultWebSecurityManager} 实例
      */
     @Bean(name = "securityManager")

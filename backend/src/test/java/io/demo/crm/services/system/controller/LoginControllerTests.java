@@ -25,9 +25,9 @@ public class LoginControllerTests {
     private MockMvc mockMvc;
 
     @Test
-    @Sql(scripts = {"/dml/init_user_login_test.sql"},
+/*    @Sql(scripts = {"/dml/init_user_login_test.sql"},
             config = @SqlConfig(encoding = "utf-8", transactionMode = SqlConfig.TransactionMode.ISOLATED),
-            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)*/
     public void testLogin() throws Exception {
         // 1. 正常登录
         String login = "/login";

@@ -3,7 +3,7 @@ package io.demo.crm.common.uid.worker;
 
 import io.demo.crm.common.util.LogUtils;
 import io.demo.crm.services.system.domain.WorkerNode;
-import io.demo.crm.services.system.mapper.ext.ExtNodeMapper;
+import io.demo.crm.services.system.mapper.ext.ExtWorkerNodeMapper;
 import io.demo.crm.common.uid.utils.DockerUtils;
 import io.demo.crm.common.uid.utils.NetUtils;
 import jakarta.annotation.Resource;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class DisposableWorkerIdAssigner implements WorkerIdAssigner {
     @Resource
-    private ExtNodeMapper extNodeMapper;
+    private ExtWorkerNodeMapper extWorkerNodeMapper;
 
     /**
      * Assign worker id base on database.<p>
@@ -32,7 +32,7 @@ public class DisposableWorkerIdAssigner implements WorkerIdAssigner {
             WorkerNode workerNode = buildWorkerNode();
 
             // add worker node for new (ignore the same IP + PORT)
-            extNodeMapper.insert(workerNode);
+            extWorkerNodeMapper.insert(workerNode);
             LogUtils.info("Add worker node:" + workerNode);
 
             return workerNode.getId();
