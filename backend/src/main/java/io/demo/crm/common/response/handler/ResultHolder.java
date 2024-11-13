@@ -1,6 +1,6 @@
-package io.demo.crm.common.annotation.handler;
+package io.demo.crm.common.response.handler;
 
-import io.demo.crm.common.annotation.result.MsHttpResultCode;
+import io.demo.crm.common.response.result.MsHttpResultCode;
 import lombok.Data;
 
 /**

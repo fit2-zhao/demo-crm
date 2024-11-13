@@ -1,4 +1,4 @@
-package io.demo.crm.common.annotation.handler;
+package io.demo.crm.common.response.handler;
 
 import java.lang.annotation.*;
 

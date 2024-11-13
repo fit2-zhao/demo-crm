@@ -6,7 +6,7 @@ import io.demo.crm.services.system.constants.UserSource;
 import io.demo.crm.common.exception.SystemException;
 import io.demo.crm.common.util.CodingUtils;
 import io.demo.crm.common.util.Translator;
-import io.demo.crm.common.annotation.handler.ResultHolder;
+import io.demo.crm.common.response.handler.ResultHolder;
 import io.demo.crm.services.system.domain.User;
 import io.demo.crm.services.system.domain.UserExample;
 import io.demo.crm.common.dto.UserDTO;

@@ -1,9 +1,9 @@
-package io.demo.crm.common.annotation.handler;
+package io.demo.crm.common.response.handler;
 
 import io.demo.crm.common.exception.IResultCode;
 import io.demo.crm.common.exception.SystemException;
 import io.demo.crm.common.util.Translator;
-import io.demo.crm.common.annotation.result.MsHttpResultCode;
+import io.demo.crm.common.response.result.MsHttpResultCode;
 import io.demo.crm.common.util.ServiceUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

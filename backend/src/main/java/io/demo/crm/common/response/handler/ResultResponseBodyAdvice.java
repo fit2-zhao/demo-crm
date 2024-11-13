@@ -1,4 +1,4 @@
-package io.demo.crm.common.annotation.handler;
+package io.demo.crm.common.response.handler;
 
 import io.demo.crm.common.util.JSON;
 import org.jetbrains.annotations.NotNull;

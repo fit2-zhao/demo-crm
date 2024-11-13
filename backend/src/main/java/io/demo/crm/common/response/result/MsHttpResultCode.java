@@ -1,4 +1,4 @@
-package io.demo.crm.common.annotation.result;
+package io.demo.crm.common.response.result;
 
 import io.demo.crm.common.exception.IResultCode;
 
