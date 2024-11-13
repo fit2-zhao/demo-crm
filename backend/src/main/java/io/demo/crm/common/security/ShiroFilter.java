@@ -40,6 +40,7 @@ public class ShiroFilter {
         filterChainDefinitionMap.put("/swagger-ui.html", "anon");
         filterChainDefinitionMap.put("/swagger-ui/**", "anon");
         filterChainDefinitionMap.put("/api-docs/**", "anon");
+        filterChainDefinitionMap.put("/v3/api-docs/**", "anon");
 
         // 403 错误页面路径
         filterChainDefinitionMap.put("/403", "anon");
