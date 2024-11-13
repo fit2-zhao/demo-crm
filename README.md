@@ -92,7 +92,7 @@ spring.datasource.username=username
 │       │   │       └── demo
 │       │   │           └── crm
 │       │   │               ├── common         # 公共模块
-│       │   │               │   ├── annotation # 自定义注解
+│       │   │               │   ├── response # 响应内容封装处理
 │       │   │               │   ├── dto        # 数据传输对象（Data Transfer Objects）
 │       │   │               │   ├── exception  # 异常处理类
 │       │   │               │   ├── file       # 文件相关处理
