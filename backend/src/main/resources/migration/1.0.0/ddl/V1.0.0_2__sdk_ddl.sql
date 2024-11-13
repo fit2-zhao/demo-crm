@@ -54,5 +54,34 @@ CREATE TABLE IF NOT EXISTS worker_node
     DEFAULT CHARSET = utf8mb4
     COLLATE = utf8mb4_general_ci COMMENT = 'DB WorkerID Assigner for UID Generator';
 
+CREATE TABLE IF NOT EXISTS `schedule` (
+    `id` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+    `key` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'qrtz UUID',
+    `type` varchar(50) COLLATE utf8mb4_general_ci NOT NULL COMMENT '执行类型 cron',
+    `value` varchar(255) COLLATE utf8mb4_general_ci NOT NULL COMMENT 'cron 表达式',
+    `job` varchar(64) COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Schedule Job Class Name',
+    `resource_type` varchar(50) COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'NONE' COMMENT '资源类型 API_IMPORT,API_SCENARIO,UI_SCENARIO,LOAD_TEST,TEST_PLAN,CLEAN_REPORT,BUG_SYNC',
+    `enable` bit(1) DEFAULT NULL COMMENT '是否开启',
+    `resource_id` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '资源ID，api_scenario ui_scenario load_test',
+    `create_user` varchar(50) COLLATE utf8mb4_general_ci NOT NULL COMMENT '创建人',
+    `create_time` bigint NOT NULL COMMENT '创建时间',
+    `update_time` bigint NOT NULL COMMENT '更新时间',
+    `project_id` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '项目ID',
+    `name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '名称',
+    `config` varchar(1000) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '配置',
+    `num` bigint NOT NULL COMMENT '业务ID',
+    PRIMARY KEY (`id`),
+    KEY `idx_resource_id` (`resource_id`),
+    KEY `idx_create_user` (`create_user`),
+    KEY `idx_create_time` (`create_time` DESC),
+    KEY `idx_update_time` (`update_time` DESC),
+    KEY `idx_project_id` (`project_id`),
+    KEY `idx_enable` (`enable`),
+    KEY `idx_name` (`name`),
+    KEY `idx_type` (`type`),
+    KEY `idx_resource_type` (`resource_type`),
+    KEY `idx_num` (`num`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='定时任务';
+
 -- set innodb lock wait timeout to default
 SET SESSION innodb_lock_wait_timeout = DEFAULT;

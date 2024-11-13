@@ -109,7 +109,7 @@ public class LogAspect {
                 // 将执行类传入上下文
                 boolean isNext = false;
                 for (Class<?> clazz : msLog.serviceClass()) {
-                    context.setVariable("msClass", applicationContext.getBean(clazz));
+                    context.setVariable("serviceClass", applicationContext.getBean(clazz));
                     isNext = true;
                 }
                 if (!isNext) {
@@ -275,7 +275,7 @@ public class LogAspect {
 
                 boolean isNext = false;
                 for (Class<?> clazz : msLog.serviceClass()) {
-                    context.setVariable("msClass", applicationContext.getBean(clazz));
+                    context.setVariable("serviceClass", applicationContext.getBean(clazz));
                     isNext = true;
                 }
                 if (!isNext) {

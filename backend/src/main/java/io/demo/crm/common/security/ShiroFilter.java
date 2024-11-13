@@ -1,4 +1,4 @@
-package io.demo.crm.common.util;
+package io.demo.crm.common.security;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,7 +7,7 @@ import java.util.Map;
  * 用于管理应用程序中过滤器链的工具类。
  * 包含加载基础过滤器链和忽略 CSRF 过滤器链的方法。
  */
-public class ChainFilterUtils {
+public class ShiroFilter {
 
     /**
      * 加载应用程序的基础过滤器链。

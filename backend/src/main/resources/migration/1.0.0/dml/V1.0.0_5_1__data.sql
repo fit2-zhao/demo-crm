@@ -25,7 +25,7 @@ VALUES
         'admin',
         'Administrator',
         'admin@demo.io',
-        '3259a9d7f208ef9690025d1432558c5b',
+        MD5('admin'),
          1,
         1716175907000,
         1729752373360,

@@ -25,14 +25,14 @@ public class LoginControllerTests {
     private MockMvc mockMvc;
 
     @Test
-/*    @Sql(scripts = {"/dml/init_user_login_test.sql"},
+    @Sql(scripts = {"/dml/init_user_login_test.sql"},
             config = @SqlConfig(encoding = "utf-8", transactionMode = SqlConfig.TransactionMode.ISOLATED),
-            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)*/
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     public void testLogin() throws Exception {
         // 1. 正常登录
         String login = "/login";
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(login)
-                        .content(String.format("{\"username\":\"%s\",\"password\":\"%s\"}", "test.login1", "test.login1@163.com"))
+                        .content(String.format("{\"username\":\"%s\",\"password\":\"%s\"}", "admin", "metersphere"))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))

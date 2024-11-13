@@ -1,6 +1,6 @@
 package io.demo.crm.config;
 
-import io.demo.crm.common.util.ChainFilterUtils;
+import io.demo.crm.common.security.ShiroFilter;
 import io.demo.crm.common.security.ApiKeyFilter;
 import io.demo.crm.common.security.CsrfFilter;
 import io.demo.crm.common.security.realm.LocalRealm;
@@ -61,8 +61,8 @@ public class ShiroConfig {
 
         // 配置过滤器链
         Map<String, String> filterChainDefinitionMap = shiroFilterFactoryBean.getFilterChainDefinitionMap();
-        filterChainDefinitionMap.putAll(ChainFilterUtils.loadBaseFilterChain());
-        filterChainDefinitionMap.putAll(ChainFilterUtils.ignoreCsrfFilter());
+        filterChainDefinitionMap.putAll(ShiroFilter.loadBaseFilterChain());
+        filterChainDefinitionMap.putAll(ShiroFilter.ignoreCsrfFilter());
         filterChainDefinitionMap.put("/**", "apikey, csrf, authc");
 
         return shiroFilterFactoryBean;

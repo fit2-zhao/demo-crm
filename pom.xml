@@ -44,7 +44,8 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <swagger-core-jakarta.revision>2.2.20</swagger-core-jakarta.revision>
         <commons-collections4.version>4.4</commons-collections4.version>
-
+        <commons-io.version>2.15.1</commons-io.version>
+        <testcontainers.version>1.20.3</testcontainers.version>
     </properties>
 
     <modules>
@@ -112,16 +113,10 @@
                 <version>${jacoco.version}</version>
                 <configuration>
                     <excludes>
-                        <exclude>io/demo/*/mapper/**</exclude>
-                        <exclude>io/demo/*/domain/**</exclude>
-                        <exclude>io/demo/handler/**</exclude>
-                        <exclude>io/demo/**/dto/**</exclude>
-                        <exclude>io/demo/**/config/**</exclude>
-                        <exclude>io/demo/**/constants/**</exclude>
-                        <exclude>io/demo/**/utils/**</exclude>
-                        <exclude>io/demo/system/schedule/**</exclude>
-                        <exclude>io/demo/system/security/**</exclude>
-                        <exclude>io/demo/system/controller/handler/**</exclude>
+                        <exclude>io/demo/crm/services*/mapper/**</exclude>
+                        <exclude>io/demo/crm/services*/domain/**</exclude>
+                        <exclude>io/demo/crm/common/**</exclude>
+                        <exclude>io/demo/crm/**/config/**</exclude>
                     </excludes>
                 </configuration>
                 <executions>

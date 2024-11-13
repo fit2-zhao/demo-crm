@@ -11,6 +11,7 @@ import io.demo.crm.common.util.rsa.RsaKey;
 import io.demo.crm.common.util.rsa.RsaUtils;
 import io.demo.crm.common.file.storage.DefaultRepositoryDir;
 import io.demo.crm.common.file.storage.StorageType;
+import io.demo.crm.services.system.service.ExtScheduleService;
 import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
@@ -38,7 +39,7 @@ public class AppStartListener implements ApplicationRunner {
     private DefaultUidGenerator uidGenerator;
 
     @Resource
-    private MinioProperties minioProperties;
+    private ExtScheduleService extScheduleService;
 
     /**
      * 应用启动后执行的初始化方法。
@@ -63,6 +64,9 @@ public class AppStartListener implements ApplicationRunner {
         LogUtils.info("初始化RSA配置");
         initializeRsaConfiguration();
 
+        LogUtils.info("初始化定时任务");
+        extScheduleService.startEnableSchedules();
+
         LogUtils.info("===== 完成初始化配置 =====");
     }
 
@@ -73,12 +77,12 @@ public class AppStartListener implements ApplicationRunner {
      * </p>
      */
     private void initializeMinIO() {
-        String bucketName = minioProperties.getBucket();
+//        String bucketName = minioProperties.getBucket();
         try {
             MinioRepository minioRepository = (MinioRepository) FileCenter.getRepository(StorageType.MINIO);
             minioRepository.init(minioClient);
 
-            // 检查存储桶是否存在
+         /*   // 检查存储桶是否存在
             boolean bucketExists = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
             if (!bucketExists) {
                 // 如果存储桶不存在，创建存储桶
@@ -86,7 +90,7 @@ public class AppStartListener implements ApplicationRunner {
                 LogUtils.info("MinIO存储桶创建成功.");
             } else {
                 LogUtils.info("MinIO存储桶已存在.");
-            }
+            }*/
         } catch (Exception e) {
             LogUtils.error("初始化MinIO存储桶时发生错误: " + e.getMessage(), e);
         }
