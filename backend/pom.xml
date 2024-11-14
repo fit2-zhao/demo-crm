@@ -83,7 +83,7 @@
 
         <dependency>
             <groupId>com.playtika.testcontainers</groupId>
-            <artifactId>embedded-mysql</artifactId>
+            <artifactId>embedded-mariadb</artifactId>
             <version>${embedded.version}</version>
             <scope>test</scope>
         </dependency>
@@ -189,18 +189,19 @@
             </exclusions>
         </dependency>
 
-        <!-- MySQL and related dependencies -->
+        <!-- MariaDB and related dependencies -->
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>${mybatis-starter.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>${mariadb-java-client.version}</version>
             <scope>runtime</scope>
         </dependency>
-        <!-- More MySQL related dependencies... -->
+        <!-- More MariaDB related dependencies... -->
 
 
         <!-- Commons and utility libraries -->
@@ -310,12 +311,13 @@
                     <configurationFile>src/main/resources/generator-config.xml</configurationFile>
                 </configuration>
                 <dependencies>
-                    <!-- MySQL 连接器 -->
+                    <!-- MariaDB 连接器 -->
                     <dependency>
-                        <groupId>com.mysql</groupId>
-                        <artifactId>mysql-connector-j</artifactId>
-                        <version>${mysql-connector-java.version}</version>
+                        <groupId>org.mariadb.jdbc</groupId>
+                        <artifactId>mariadb-java-client</artifactId>
+                        <version>${mariadb-java-client.version}</version>
                     </dependency>
+
                     <!-- MyBatis Generator 插件 -->
                     <dependency>
                         <groupId>com.itfsw</groupId>
