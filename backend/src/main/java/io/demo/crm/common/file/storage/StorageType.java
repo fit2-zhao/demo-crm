@@ -14,12 +14,28 @@ public enum StorageType {
     MINIO,
 
     /**
-     * GIT 存储，通常用于通过版本控制系统存储文件。
-     */
-    GIT,
-
-    /**
      * LOCAL 存储，通常用于本地文件存储。
      */
-    LOCAL
+    LOCAL;
+
+    /**
+     * 根据字符串获取对应的枚举值。
+     * <p>
+     * 如果提供的字符串不匹配任何枚举值，返回 {@code null}。
+     * </p>
+     *
+     * @param storageType 字符串表示的存储类型
+     * @return 对应的枚举值，或 {@code null} 如果没有匹配的枚举
+     */
+    public static StorageType fromString(String storageType) {
+        if (storageType != null) {
+            for (StorageType type : StorageType.values()) {
+                if (type.name().equalsIgnoreCase(storageType)) {
+                    return type;
+                }
+            }
+        }
+        return LOCAL;
+    }
+
 }

@@ -54,4 +54,12 @@ public class MinioProperties {
      * </p>
      */
     private String bucket;
+
+    /**
+     * MinIO 的存储桶是否启用。
+     * <p>
+     * 该属性用于指示是否启用 MinIO 存储桶。
+     * </p>
+     */
+    private boolean enabled;
 }

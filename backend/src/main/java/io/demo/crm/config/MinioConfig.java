@@ -6,6 +6,7 @@ import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.SetBucketLifecycleArgs;
 import io.minio.messages.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,7 +25,6 @@ import java.util.List;
  */
 @Configuration
 public class MinioConfig {
-
     /**
      * 创建 MinIO 客户端，并配置相关属性。
      * <p>
@@ -38,6 +38,12 @@ public class MinioConfig {
      */
     @Bean
     public MinioClient minioClient(MinioProperties minioProperties) throws Exception {
+        // 如果 MinIO 未启用，则直接返回 null
+        if (!minioProperties.isEnabled()) {
+            LogUtils.info("MinIO is not enabled, skip MinIO client initialization.");
+            return null;
+        }
+
         // 创建 MinioClient 客户端
         MinioClient minioClient = MinioClient.builder()
                 .endpoint(minioProperties.getEndpoint())

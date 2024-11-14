@@ -1,6 +1,6 @@
 package io.demo.crm.listener;
 
-import io.demo.crm.config.MinioProperties;
+import io.demo.crm.common.util.CommonBeanFactory;
 import io.demo.crm.common.file.storage.FileCenter;
 import io.demo.crm.common.file.storage.FileRepository;
 import io.demo.crm.common.file.storage.FileRequest;
@@ -10,10 +10,7 @@ import io.demo.crm.common.util.LogUtils;
 import io.demo.crm.common.util.rsa.RsaKey;
 import io.demo.crm.common.util.rsa.RsaUtils;
 import io.demo.crm.common.file.storage.DefaultRepositoryDir;
-import io.demo.crm.common.file.storage.StorageType;
 import io.demo.crm.services.system.service.ExtScheduleService;
-import io.minio.BucketExistsArgs;
-import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.SerializationUtils;
@@ -31,10 +28,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class AppStartListener implements ApplicationRunner {
-
-    @Resource
-    private MinioClient minioClient;
-
     @Resource
     private DefaultUidGenerator uidGenerator;
 
@@ -77,20 +70,12 @@ public class AppStartListener implements ApplicationRunner {
      * </p>
      */
     private void initializeMinIO() {
-//        String bucketName = minioProperties.getBucket();
         try {
-            MinioRepository minioRepository = (MinioRepository) FileCenter.getRepository(StorageType.MINIO);
-            minioRepository.init(minioClient);
-
-         /*   // 检查存储桶是否存在
-            boolean bucketExists = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
-            if (!bucketExists) {
-                // 如果存储桶不存在，创建存储桶
-                minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
-                LogUtils.info("MinIO存储桶创建成功.");
-            } else {
-                LogUtils.info("MinIO存储桶已存在.");
-            }*/
+            FileRepository fileRepository = FileCenter.getDefaultRepository();
+            if (fileRepository instanceof MinioRepository minioRepository) {
+                MinioClient minioClient = CommonBeanFactory.getBean(MinioClient.class);
+                minioRepository.init(minioClient);
+            }
         } catch (Exception e) {
             LogUtils.error("初始化MinIO存储桶时发生错误: " + e.getMessage(), e);
         }

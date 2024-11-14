@@ -1,6 +1,10 @@
 package io.demo.crm.common.file.storage;
 
 import io.demo.crm.common.util.CommonBeanFactory;
+import io.demo.crm.common.util.LogUtils;
+import io.demo.crm.config.MinioProperties;
+
+import static io.demo.crm.common.file.storage.StorageType.*;
 
 /**
  * FileCenter 类提供了根据存储类型获取对应文件仓库的静态方法。
@@ -9,6 +13,8 @@ import io.demo.crm.common.util.CommonBeanFactory;
  * </p>
  */
 public class FileCenter {
+    // 默认存储类型
+    private static StorageType defStorageType = null;
 
     // 私有构造函数，防止实例化
     private FileCenter() {
@@ -37,6 +43,11 @@ public class FileCenter {
      * @return 默认的 {@link FileRepository} 实现。
      */
     public static FileRepository getDefaultRepository() {
-        return CommonBeanFactory.getBean(MinioRepository.class);
+        if (defStorageType == null) {
+            MinioProperties properties = CommonBeanFactory.getBean(MinioProperties.class);
+            defStorageType = properties != null && properties.isEnabled() ? MINIO : LOCAL;
+        }
+        LogUtils.info("Default storage type is set to: " + defStorageType);
+        return getRepository(defStorageType);
     }
 }

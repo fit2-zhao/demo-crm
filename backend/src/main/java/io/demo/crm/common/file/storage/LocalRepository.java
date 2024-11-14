@@ -19,6 +19,7 @@ import java.util.List;
  */
 @Component
 public class LocalRepository implements FileRepository {
+    private static final String DEFAULT_FOLDER = "/opt/demo/data/files/";
 
     /**
      * 保存文件到本地存储。
@@ -64,6 +65,14 @@ public class LocalRepository implements FileRepository {
     @Override
     public void saveFile(byte[] bytes, FileRequest request) throws IOException {
         File file = new File(getFilePath(request));
+        // 检查父目录是否存在，如果不存在则创建它
+        File parentDir = file.getParentFile();
+        if (parentDir != null && !parentDir.exists()) {
+            boolean dirsCreated = parentDir.mkdirs(); // 创建父目录
+            if (!dirsCreated) {
+                throw new IOException("Failed to create directories: " + parentDir.getAbsolutePath());
+            }
+        }
         try (OutputStream ops = new FileOutputStream(file)) {
             ops.write(bytes);
         }
@@ -154,11 +163,11 @@ public class LocalRepository implements FileRepository {
      *
      * @param request 文件请求信息，包含文件夹路径。
      * @return 返回文件夹中文件的文件名列表。
-     * @throws Exception 如果获取文件列表过程中发生错误，抛出异常。
      */
     @Override
     public List<String> getFolderFileNames(FileRequest request) {
-        return null; // 返回 null 或者未实现逻辑
+        return null;
+        // 返回 null 或者未实现逻辑
     }
 
     /**
@@ -193,7 +202,7 @@ public class LocalRepository implements FileRepository {
      */
     private String getFilePath(FileRequest request) {
         FileValidate.validateFileName(request.getFolder(), request.getFileName());
-        return StringUtils.join(getFileDir(request), "/", request.getFileName());
+        return StringUtils.join(DEFAULT_FOLDER, getFileDir(request), "/", request.getFileName());
     }
 
     /**
