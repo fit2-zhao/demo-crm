@@ -53,7 +53,7 @@ cd demo-crm
 修改 `/opt/demo/conf/demo.properties` 文件，设置数据库连接信息：
 
 ``` Properties
-spring.datasource.url=jdbc:MariaDB://ip:3306/database?autoReconnect=false&useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false
+spring.datasource.url=jdbc:mariadb://ip:3306/database?autoReconnect=false&useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false
 spring.datasource.password=pwd
 spring.datasource.username=username
 
