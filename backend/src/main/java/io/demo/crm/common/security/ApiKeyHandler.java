@@ -8,6 +8,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Objects;
+
 /**
  * 处理 API 密钥验证的工具类，包括获取用户、验证请求是否包含 API 密钥以及验证签名的功能。
  */
@@ -57,7 +59,7 @@ public class ApiKeyHandler {
         }
 
         // 获取用户密钥信息
-        UserKey userKey = CommonBeanFactory.getBean(UserKeyService.class).getUserKey(accessKey);
+        UserKey userKey = Objects.requireNonNull(CommonBeanFactory.getBean(UserKeyService.class)).getUserKey(accessKey);
         if (userKey == null) {
             throw new RuntimeException("invalid accessKey");
         }

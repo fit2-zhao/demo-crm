@@ -1,0 +1,576 @@
+package io.demo.crm.core;
+
+import lombok.Getter;
+import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.builder.annotation.ProviderContext;
+import org.apache.ibatis.jdbc.AbstractSQL;
+
+import javax.persistence.Column;
+import javax.persistence.Id;
+import java.beans.Transient;
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+
+/**
+ * @param <Entity>
+ */
+public interface BaseMapper<Entity> {
+
+    @InsertProvider(type = InsertSqlProvider.class, method = "invoke")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    Integer insert(Entity entity);
+
+    @InsertProvider(type = BatchInsertSqlProvider.class, method = "invoke")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    Integer batchInsert(List<Entity> entities);
+
+    @UpdateProvider(type = UpdateSqlProvider.class, method = "invoke")
+    Integer updateById(Entity entity);
+
+    @UpdateProvider(type = UpdateSelectiveSqlProvider.class, method = "invoke")
+    Integer update(Entity entity);
+
+    @DeleteProvider(type = DeleteSqlProvider.class, method = "invoke")
+    Integer deleteById(Serializable id);
+
+    @DeleteProvider(type = DeleteByCriteriaSqlProvider.class, method = "invoke")
+    Integer delete(Entity criteria);
+
+    @SelectProvider(type = SelectByIdSqlProvider.class, method = "invoke")
+    Entity selectByPrimaryKey(Serializable id);
+
+    @SelectProvider(type = SelectAllSqlProvider.class, method = "invoke")
+    List<Entity> selectAll(String orderBy);
+
+    @SelectProvider(type = SelectByCriteriaSqlProvider.class, method = "invoke")
+    List<Entity> select(Entity criteria);
+
+    @SelectProvider(type = SelectByCriteriaSqlProvider.class, method = "invoke")
+    Entity selectOne(Entity criteria);
+
+    @SelectProvider(type = SelectInSqlProvider.class, method = "invoke")
+    List<Entity> selectByColumn(@Param("column") String column, @Param("array") Serializable[] ids);
+
+    @SelectProvider(type = CountByCriteriaSqlProvider.class, method = "invoke")
+    Long countByExample(Entity criteria);
+
+    @SelectProvider(type = SelectBySqlProvider.class, method = "invoke")
+    List<Entity> query(@Param("sqlBuild") Function<SQL, SQL> sqlBuild, @Param("entity") Object criteria);
+
+    default List<Entity> selectByIds(@Param("array") Serializable[] ids) {
+        return selectByColumn("id", ids);
+    }
+
+    default boolean exist(Entity criteria) {
+        Long count = countByExample(criteria);
+        return count != null && count > 0;
+    }
+
+    default Integer upsert(Entity criteria) {
+        return exist(criteria) ? updateById(criteria) : insert(criteria);
+    }
+
+
+    class InsertSqlProvider extends AbstractSqlProviderSupport implements WriteType {
+        @Override
+        public SQL sql(Object criteria) {
+            return new SQL()
+                    .INSERT_INTO(table.getTableName())
+                    .INTO_COLUMNS(table.getColumns())
+                    .INTO_VALUES(Stream.of(table.getFields()).map(this::bindParameter).toArray(String[]::new));
+        }
+    }
+
+    @SuppressWarnings("all")
+    class BatchInsertSqlProvider extends AbstractSqlProviderSupport implements WriteType {
+        @Override
+        public SQL sql(Object criteria) {
+            return new SQL()
+                    .INSERT_INTO(table.getTableName())
+                    .INTO_COLUMNS(table.getColumns())
+                    .INTO_VALUES(Stream.of(table.getFields()).map(this::bindParameter).toArray(String[]::new));
+        }
+    }
+
+    @SuppressWarnings("all")
+    class UpdateSqlProvider extends AbstractSqlProviderSupport implements WriteType {
+        @Override
+        public SQL sql(Object criteria) {
+            return new SQL()
+                    .UPDATE(table.getTableName())
+                    .SET(Stream.of(table.getFields())
+                            .filter(field -> !table.getPrimaryKeyColumn().equals(columnName(field)))
+                            .map(field -> columnName(field) + " = " + bindParameter(field)).toArray(String[]::new))
+                    .WHERE(table.getPrimaryKeyColumn() + " = #{id}");
+        }
+    }
+
+    @SuppressWarnings("all")
+    class UpdateSelectiveSqlProvider extends AbstractSqlProviderSupport implements WriteType {
+        @Override
+        public SQL sql(Object entity) {
+            return new SQL()
+                    .UPDATE(table.getTableName())
+                    .SET(ignoreNullAndCombined(entity, field -> columnName(field) + " = " + bindParameter(field), true))
+                    .WHERE(table.getPrimaryKeyColumn() + " = #{id}");
+        }
+    }
+
+    class DeleteSqlProvider extends AbstractSqlProviderSupport implements WriteType {
+        @Override
+        public SQL sql(Object criteria) {
+            return new SQL()
+                    .DELETE_FROM(table.getTableName())
+                    .WHERE(table.getPrimaryKeyColumn() + " = #{id}");
+        }
+    }
+
+    class DeleteByCriteriaSqlProvider extends AbstractSqlProviderSupport implements WriteType {
+        @Override
+        public SQL sql(Object criteria) {
+            return new SQL()
+                    .DELETE_FROM(table.getTableName())
+                    .WHERE(ignoreNullAndCombined(criteria, field -> columnName(field) + " = " + bindParameter(field)));
+        }
+    }
+
+    class SelectByIdSqlProvider extends AbstractSqlProviderSupport {
+        @Override
+        public SQL sql(Object criteria) {
+            return new SQL()
+                    .SELECT(table.getSelectColumns())
+                    .FROM(table.getTableName())
+                    .WHERE(table.getPrimaryKeyColumn() + " = #{id}");
+        }
+    }
+
+    class SelectAllSqlProvider extends AbstractSqlProviderSupport {
+        @Override
+        public SQL sql(Object criteria) {
+            String orderBy = (String) criteria;
+            SQL sql = new SQL()
+                    .SELECT(table.getSelectColumns())
+                    .FROM(table.getTableName());
+            if (Util.isEmpty(orderBy)) {
+                orderBy = table.getPrimaryKeyColumn() + " DESC";
+            }
+            return sql.ORDER_BY(orderBy);
+        }
+    }
+
+    @SuppressWarnings("all")
+    class SelectInSqlProvider extends AbstractSqlProviderSupport {
+        @Override
+        public SQL sql(Object entities) {
+            Map<String, Object> param = (Map) entities;
+            String inField = (String) param.get("column");
+            Serializable[] ids = (Serializable[]) param.get("array");
+            String idStr = " <foreach item='item' collection='array' open='(' separator=',' close=')'>#{item}</foreach> ";
+            String where = (ids != null && ids.length > 0) ? (inField + " IN " + idStr) : " 1=1 ";
+
+            return new SQL()
+                    .SELECT(table.getSelectColumns())
+                    .FROM(table.getTableName())
+                    .WHERE(where);
+        }
+    }
+
+    class SelectByCriteriaSqlProvider extends AbstractSqlProviderSupport {
+        @Override
+        public SQL sql(Object criteria) {
+            return new SQL()
+                    .SELECT(table.getSelectColumns())
+                    .FROM(table.getTableName())
+                    .WHERE(ignoreNullAndCombined(criteria, field -> columnName(field) + " = " + bindParameter(field)))
+                    .ORDER_BY(table.getPrimaryKeyColumn() + " DESC");
+        }
+    }
+
+    class SelectBySqlProvider extends AbstractSqlProviderSupport {
+        @SuppressWarnings("all")
+        @Override
+        public SQL sql(Object entities) {
+            Map<String, Object> param = (Map) entities;
+            Function<SQL, SQL> sqlBuild = (Function) param.get("sqlBuild");
+            Object criteria = param.get("entity");
+
+            return sqlBuild.apply(
+                    new SQL().FROM(table.getTableName())
+            );
+        }
+    }
+
+    class CountByCriteriaSqlProvider extends AbstractSqlProviderSupport {
+        @Override
+        public SQL sql(Object criteria) {
+            return new SQL()
+                    .SELECT("COUNT(*)")
+                    .FROM(table.getTableName())
+                    .WHERE(ignoreNullAndCombined(criteria, field -> columnName(field) + " = " + bindParameter(field)));
+        }
+    }
+
+    interface Interceptor {
+        /**
+         * 类似 @PrePersist
+         **/
+        default void prePersist() {
+        }
+    }
+
+    interface WriteType {
+    }
+
+    class SQL extends AbstractSQL<SQL> {
+        public SQL WHERE(boolean test, String condition) {
+            return test ? super.WHERE(condition) : this;
+        }
+
+        @Override
+        public SQL getSelf() {
+            return this;
+        }
+    }
+
+    abstract class AbstractSqlProviderSupport {
+        private static final Map<Class<?>, TableInfo> tableCache = new ConcurrentHashMap<>(256);
+
+        abstract SQL sql(Object criteria);
+
+        protected TableInfo table;
+
+        String invoke(Object criteria, ProviderContext context) {
+            return buildSql(criteria, tableInfo(context));
+        }
+
+        String buildSql(Object criteria, TableInfo table) {
+            this.table = table;
+            SQL sql = sql(criteria);
+            beforeInterceptor(criteria, sql);
+            return String.format("<script>%s</script>", sql.toString());
+        }
+
+        void beforeInterceptor(Object obj, SQL sql) {
+            if (obj instanceof Interceptor && this instanceof WriteType) {
+                ((Interceptor) obj).prePersist();
+            }
+        }
+
+        String[] ignoreNullAndCombined(Object criteria, Function<Field, String> func, boolean ignorePk) {
+            return Stream.of(table.getFields())
+                    .filter(field -> {
+                        Object value = value(criteria, field);
+                        // 过滤空字符串
+                        boolean noNull = value != null;
+                        return ignorePk ? (noNull && !table.getPrimaryKeyColumn().equals(columnName(field))) : noNull;
+                    })
+                    .map(func)
+                    .toArray(String[]::new);
+        }
+
+        String[] ignoreNullAndCombined(Object criteria, Function<Field, String> func) {
+            return ignoreNullAndCombined(criteria, func, false);
+        }
+
+        /**
+         * 获取并缓存表信息结构
+         */
+        TableInfo tableInfo(ProviderContext context) {
+            return tableCache.computeIfAbsent(context.getMapperType(), t -> Util.tableInfo(entityType(context)));
+        }
+
+        /**
+         * 获取BaseMapper接口中的泛型类型
+         *
+         * @param context ProviderContext
+         * @return clz
+         */
+        Class<?> entityType(ProviderContext context) {
+            return Stream.of(context.getMapperType().getGenericInterfaces())
+                    .filter(ParameterizedType.class::isInstance)
+                    .map(ParameterizedType.class::cast)
+                    .filter(type -> type.getRawType() == BaseMapper.class)
+                    .findFirst()
+                    .map(type -> type.getActualTypeArguments()[0])
+                    .filter(Class.class::isInstance)
+                    .map(Class.class::cast)
+                    .orElseThrow(() -> new IllegalStateException("未找到BaseMapper的泛型类 " + context.getMapperType().getName() + "."));
+        }
+
+        String bindParameter(Field field) {
+            return String.format("#{%s}", field.getName());
+        }
+
+        String columnName(Field field) {
+            return Util.columnName(field);
+        }
+
+        Object value(Object bean, Field field) {
+            return Util.value(bean, field);
+        }
+    }
+
+    class Util {
+        private final static String FIELD_SEP_TAG = "`";
+
+        static TableInfo tableInfo(Class<?> entityClass) {
+            //获取不含有@NoColumn注解的fields
+            Predicate<Field> fieldFilter = field -> !"serialVersionUID".equals(field.getName());
+
+            Field[] fields = excludeNoColumnField(Util.getFields(entityClass, fieldFilter));
+
+            TableInfo info = new TableInfo();
+            info.setEntityClass(entityClass);
+            info.setFields(fields);
+            info.setTableName(tableName(entityClass));
+            info.setPrimaryKeyColumn(primaryKeyColumn(fields, "id"));
+            info.setColumns(columns(fields));
+            info.setSelectColumns(selectColumns(fields));
+            return info;
+        }
+
+        synchronized static Object value(Object bean, Field field) {
+            if (null == bean) {
+                return null;
+            }
+            try {
+                field.setAccessible(true);
+                return field.get(bean);
+            } catch (IllegalAccessException e) {
+                throw new IllegalStateException(e);
+            } finally {
+                field.setAccessible(false);
+            }
+        }
+
+        /**
+         * 如果fields中含有@Primary的字段，则返回该字段名为主键，否则默认'id'为主键名
+         *
+         * @param fields entityClass所有fields
+         * @return 主键column(驼峰转为下划线)
+         */
+        static String primaryKeyColumn(Field[] fields, String defaultPrimaryKey) {
+            return Stream.of(fields).filter(field -> field.isAnnotationPresent(Id.class))
+                    .findFirst()    //返回第一个primaryKey的field
+                    .map(Util::columnName)
+                    .orElse(defaultPrimaryKey);
+        }
+
+        static String tableName(Class<?> entityType) {
+            // table prefix todo
+            return "" + camel2Underscore(entityType.getSimpleName());
+        }
+
+        /**
+         * 获取所有pojo所有属性对应的数据库字段 (不包含pojo中含有@NoColumn主键的属性)
+         *
+         * @param fields entityClass所有fields
+         * @return str[]
+         */
+        static String[] columns(Field[] fields) {
+            return Stream.of(fields).map(Util::columnName).toArray(String[]::new);
+        }
+
+        /**
+         * 过滤含有@NoColumn注解的field
+         *
+         * @param totalField entityClass所有的字段
+         * @return 不包含@NoColumn注解的fields
+         */
+        static Field[] excludeNoColumnField(Field[] totalField) {
+            return Stream.of(totalField)
+                    //过滤含有@NoColumn注解的field
+                    .filter(field -> !field.isAnnotationPresent(Transient.class))
+                    .toArray(Field[]::new);
+        }
+
+        /**
+         * 获取查询对应的字段 (不包含pojo中含有@NoColumn主键的属性)
+         *
+         * @param fields p
+         * @return str[]
+         */
+        static String[] selectColumns(Field[] fields) {
+            return Stream.of(fields).map(Util::selectColumnName).toArray(String[]::new);
+        }
+
+        /**
+         * 获取单个属性对应的数据库字段（带有下划线字段将其转换为"字段 AS pojo属性名"形式）
+         *
+         * @param field Field
+         * @return str
+         */
+        static String selectColumnName(Field field) {
+            return columnName(field) + " AS " + FIELD_SEP_TAG + field.getName() + FIELD_SEP_TAG;
+        }
+
+        /**
+         * 获取单个属性对应的数据库字段
+         *
+         * @param field entityClass中的field
+         * @return str
+         */
+        static String columnName(Field field) {
+            Column column = field.getAnnotation(Column.class);
+            if (null != column && !column.name().isEmpty()) {
+                return column.name();
+            }
+            return FIELD_SEP_TAG + camel2Underscore(field.getName()) + FIELD_SEP_TAG;
+        }
+
+        static boolean isEmpty(String str) {
+            return str == null || str.trim().isEmpty();
+        }
+
+        /**
+         * 驼峰模式字符串转换为下划线字符串
+         *
+         * @param camelStr str
+         * @return str
+         */
+        static String camel2Underscore(String camelStr) {
+            return convertCamel(camelStr, '_');
+        }
+
+        /**
+         * 转换驼峰字符串为指定分隔符的字符串 <br/>
+         * 如：camelStr:"UserInfo"    separator:'_' <br/>
+         * return "user_info"
+         *
+         * @param camelStr  驼峰字符串
+         * @param separator 分隔符
+         * @return str
+         */
+        static String convertCamel(String camelStr, char separator) {
+            if (isEmpty(camelStr)) {
+                return camelStr;
+            }
+            StringBuilder out = new StringBuilder();
+            char[] strChar = camelStr.toCharArray();
+            for (int i = 0, len = strChar.length; i < len; i++) {
+                char c = strChar[i];
+                if (!Character.isLowerCase(c)) {
+                    //如果是首字符，则不需要添加分隔符
+                    if (i == 0) {
+                        out.append(Character.toLowerCase(c));
+                        continue;
+                    }
+                    out.append(separator).append(Character.toLowerCase(c));
+                    continue;
+                }
+                out.append(c);
+            }
+            return out.toString();
+        }
+
+        /**
+         * 获取指定类的所有的field,包括父类
+         *
+         * @param clazz       字段所属类型
+         * @param fieldFilter 字段过滤器
+         * @return 符合过滤器条件的字段数组
+         */
+        static Field[] getFields(Class<?> clazz, Predicate<Field> fieldFilter) {
+            List<Field> fields = new ArrayList<>(32);
+            while (Object.class != clazz && clazz != null) {
+                // 获得该类所有声明的字段，即包括public、private和protected，但是不包括父类的申明字段，
+                // getFields：获得某个类的所有的公共（public）的字段，包括父类中的字段
+                for (Field field : clazz.getDeclaredFields()) {
+                    if (fieldFilter != null && !fieldFilter.test(field)) {
+                        continue;
+                    }
+                    fields.add(field);
+                }
+                clazz = clazz.getSuperclass();
+            }
+            return fields.toArray(new Field[0]);
+        }
+    }
+
+
+    class TableInfo {
+        /**
+         * 表对应的实体类型
+         */
+        @Getter
+        private Class<?> entityClass;
+
+        /**
+         * 实体类型不含@NoColunm注解的field
+         */
+        private Field[] fields;
+
+        /**
+         * 表名
+         */
+        private String tableName;
+
+        /**
+         * 主键列名
+         */
+        private String primaryKeyColumn;
+
+        /**
+         * 所有列名
+         */
+        private String[] columns;
+
+        /**
+         * 所有select sql的列名，有带下划线的将其转为aa_bb AS aaBb
+         */
+        private String[] selectColumns;
+
+        void setEntityClass(Class<?> entityClass) {
+            this.entityClass = entityClass;
+        }
+
+        Field[] getFields() {
+            return fields;
+        }
+
+        void setFields(Field[] fields) {
+            this.fields = fields;
+        }
+
+        String getTableName() {
+            return tableName;
+        }
+
+        void setTableName(String tableName) {
+            this.tableName = tableName;
+        }
+
+        String getPrimaryKeyColumn() {
+            return primaryKeyColumn;
+        }
+
+        void setPrimaryKeyColumn(String primaryKeyColumn) {
+            this.primaryKeyColumn = primaryKeyColumn;
+        }
+
+        String[] getColumns() {
+            return columns;
+        }
+
+        void setColumns(String[] columns) {
+            this.columns = columns;
+        }
+
+        String[] getSelectColumns() {
+            return selectColumns;
+        }
+
+        void setSelectColumns(String[] selectColumns) {
+            this.selectColumns = selectColumns;
+        }
+
+    }
+}

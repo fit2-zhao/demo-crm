@@ -5,12 +5,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.persistence.Table;
+
 /**
  * 日志数据传输对象（DTO），继承自操作日志（OperationLog）。
  * 用于封装操作日志的具体数据，包含变更前后内容、是否需要历史记录等信息。
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
+@Table(name = "operation_log")
 public class LogDTO extends OperationLog {
 
     /**

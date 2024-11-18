@@ -1,15 +1,11 @@
 package io.demo.crm.listener;
 
-import io.demo.crm.common.util.CommonBeanFactory;
-import io.demo.crm.common.file.storage.FileCenter;
-import io.demo.crm.common.file.storage.FileRepository;
-import io.demo.crm.common.file.storage.FileRequest;
-import io.demo.crm.common.file.storage.MinioRepository;
+import io.demo.crm.common.file.storage.*;
 import io.demo.crm.common.uid.impl.DefaultUidGenerator;
+import io.demo.crm.common.util.CommonBeanFactory;
 import io.demo.crm.common.util.LogUtils;
 import io.demo.crm.common.util.rsa.RsaKey;
 import io.demo.crm.common.util.rsa.RsaUtils;
-import io.demo.crm.common.file.storage.DefaultRepositoryDir;
 import io.demo.crm.services.system.service.ExtScheduleService;
 import io.minio.MinioClient;
 import jakarta.annotation.Resource;

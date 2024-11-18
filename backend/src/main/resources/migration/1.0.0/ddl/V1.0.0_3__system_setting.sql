@@ -17,12 +17,12 @@ CREATE TABLE IF NOT EXISTS user
     `last_project_id`      VARCHAR(50) COMMENT '当前项目ID',
     `create_user`          VARCHAR(50)  NOT NULL COMMENT '创建人',
     `update_user`          VARCHAR(50)  NOT NULL COMMENT '修改人',
-    `deleted`              BIT NOT NULL  DEFAULT 0 COMMENT '是否删除' ,
+    `deleted`              BIT          NOT NULL DEFAULT 0 COMMENT '是否删除',
     `cft_token`            VARCHAR(255) COMMENT 'CFT Token',
-   PRIMARY KEY (id)
+    PRIMARY KEY (id)
 ) ENGINE = InnoDB
- DEFAULT CHARSET = utf8mb4
- COLLATE = utf8mb4_general_ci COMMENT = '用户';
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_general_ci COMMENT = '用户';
 
 
 
@@ -47,6 +47,23 @@ CREATE TABLE IF NOT EXISTS user_extend
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT = '用户扩展';
 
+CREATE TABLE IF NOT EXISTS `user_key`
+(
+    `id`          varchar(50) COLLATE utf8mb4_general_ci NOT NULL COMMENT 'user_key ID',
+    `create_user` varchar(50) COLLATE utf8mb4_general_ci NOT NULL COMMENT '用户ID',
+    `access_key`  varchar(50) COLLATE utf8mb4_general_ci NOT NULL COMMENT 'access_key',
+    `secret_key`  varchar(50) COLLATE utf8mb4_general_ci NOT NULL COMMENT 'secret key',
+    `create_time` bigint                                 NOT NULL COMMENT '创建时间',
+    `enable`      bit(1)                                 NOT NULL DEFAULT b'1' COMMENT '状态',
+    `forever`     bit(1)                                 NOT NULL DEFAULT b'1' COMMENT '是否永久有效',
+    `expire_time` bigint                                          DEFAULT NULL COMMENT '到期时间',
+    `description` varchar(1000) COLLATE utf8mb4_general_ci        DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `idx_ak` (`access_key`),
+    KEY `idx_create_user` (`create_user`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_general_ci COMMENT ='用户api key';
 
 -- set innodb lock wait timeout to default
 SET SESSION innodb_lock_wait_timeout = DEFAULT;

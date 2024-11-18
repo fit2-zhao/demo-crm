@@ -30,7 +30,7 @@ import java.util.Properties;
  * @version 1.0
  */
 @Configuration
-@MapperScan(basePackages = {"io.demo.crm.services.*.mapper","io.demo.crm.services.*.mapper.ext"}, sqlSessionFactoryRef = "sqlSessionFactory")
+@MapperScan(basePackages = {"io.demo.crm.services.*.mapper", "io.demo.crm.services.*.mapper.ext"}, sqlSessionFactoryRef = "sqlSessionFactory")
 @EnableTransactionManagement
 public class MybatisConfig {
 
@@ -162,4 +162,6 @@ public class MybatisConfig {
     public DataSourceProperties quartzDataSourceProperties() {
         return new DataSourceProperties();
     }
+
+
 }

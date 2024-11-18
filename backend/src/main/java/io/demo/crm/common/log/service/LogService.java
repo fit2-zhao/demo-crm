@@ -1,19 +1,19 @@
 package io.demo.crm.common.log.service;
 
-import io.demo.crm.services.system.domain.OperationLogBlob;
 import io.demo.crm.common.log.dto.LogDTO;
-import io.demo.crm.services.system.mapper.OperationLogBlobMapper;
-import io.demo.crm.services.system.mapper.OperationLogMapper;
+import io.demo.crm.common.uid.IDGenerator;
+import io.demo.crm.common.util.BeanUtils;
+import io.demo.crm.core.BaseMapper;
+import io.demo.crm.services.system.domain.OperationLog;
+import io.demo.crm.services.system.domain.OperationLogBlob;
 import jakarta.annotation.Resource;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,13 +25,10 @@ import java.util.List;
 public class LogService {
 
     @Resource
-    private OperationLogMapper operationLogMapper;
+    private BaseMapper<OperationLog> operationLogMapper;
 
     @Resource
-    private OperationLogBlobMapper operationLogBlobMapper;
-
-    @Resource
-    private SqlSessionFactory sqlSessionFactory;
+    private BaseMapper<OperationLogBlob> operationLogBlobMapper;
 
     /**
      * 根据 LogDTO 创建一个 OperationLogBlob 实体对象。
@@ -78,6 +75,7 @@ public class LogService {
         log.setContent(subStrContent(log.getContent()));
 
         // 插入操作日志和日志Blob数据
+        log.setId(IDGenerator.nextStr());
         operationLogMapper.insert(log);
         operationLogBlobMapper.insert(getBlob(log));
     }
@@ -89,30 +87,27 @@ public class LogService {
      */
     @Async
     public void batchAdd(List<LogDTO> logs) {
-        // 如果日志列表为空，返回
+        // 如果日志列表为空，直接返回
         if (CollectionUtils.isEmpty(logs)) {
             return;
         }
 
-        // 开启批量操作的 SqlSession
-        try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
-            OperationLogBlobMapper logBlobMapper = sqlSession.getMapper(OperationLogBlobMapper.class);
-
-            // 批量插入日志数据
-            if (CollectionUtils.isNotEmpty(logs)) {
-                long currentTimeMillis = System.currentTimeMillis();
-                logs.forEach(item -> {
-                    item.setContent(subStrContent(item.getContent()));  // 截断内容
-                    item.setCreateTime(currentTimeMillis);  // 设置创建时间
-
-                    // 插入操作日志和日志Blob数据
-                    operationLogMapper.insert(item);
-                    logBlobMapper.insert(getBlob(item));
-                });
-            }
-
-            // 提交批量操作
-            sqlSession.flushStatements();
-        }
+        var currentTimeMillis = System.currentTimeMillis();
+        List<OperationLog> items = new ArrayList<>();
+        // 使用流处理，构建操作日志和Blob列表
+        var blobs = logs.stream()
+                .peek(log -> {
+                    log.setId(IDGenerator.nextStr());
+                    log.setContent(subStrContent(log.getContent()));
+                    log.setCreateTime(currentTimeMillis);
+                    OperationLog item = new OperationLog();
+                    BeanUtils.copyBean(item, log);
+                    items.add(item);
+                })
+                .map(this::getBlob)
+                .toList();
+        // 批量插入操作日志和日志Blob数据
+        operationLogMapper.batchInsert(items);
+        operationLogBlobMapper.batchInsert(blobs);
     }
 }

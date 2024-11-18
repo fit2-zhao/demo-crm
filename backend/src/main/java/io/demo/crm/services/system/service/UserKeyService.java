@@ -1,19 +1,18 @@
 package io.demo.crm.services.system.service;
 
-import io.demo.crm.common.exception.SystemException;
-import io.demo.crm.common.util.JSON;
-import io.demo.crm.common.util.Translator;
-import io.demo.crm.services.system.constants.HttpMethodConstants;
-import io.demo.crm.services.system.domain.UserKey;
-import io.demo.crm.services.system.domain.UserKeyExample;
 import io.demo.crm.common.dto.builder.LogDTOBuilder;
+import io.demo.crm.common.exception.SystemException;
 import io.demo.crm.common.log.constants.LogConstants;
 import io.demo.crm.common.log.constants.LogModule;
 import io.demo.crm.common.log.constants.LogType;
 import io.demo.crm.common.log.dto.LogDTO;
 import io.demo.crm.common.log.service.LogService;
-import io.demo.crm.services.system.mapper.UserKeyMapper;
 import io.demo.crm.common.uid.IDGenerator;
+import io.demo.crm.common.util.JSON;
+import io.demo.crm.common.util.Translator;
+import io.demo.crm.core.BaseMapper;
+import io.demo.crm.services.system.constants.HttpMethodConstants;
+import io.demo.crm.services.system.domain.UserKey;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
@@ -27,7 +26,7 @@ import java.util.List;
 public class UserKeyService {
 
     @Resource
-    private UserKeyMapper userKeyMapper;
+    private BaseMapper<UserKey> userKeyMapper;
 
     @Resource
     private UserLoginService userLoginService;
@@ -39,10 +38,9 @@ public class UserKeyService {
      * 获取指定用户的 API 密钥信息
      */
     public List<UserKey> getUserKeysInfo(String userId) {
-        UserKeyExample example = new UserKeyExample();
-        example.createCriteria().andCreateUserEqualTo(userId);
-        example.setOrderByClause("create_time");
-        return userKeyMapper.selectByExample(example);
+        UserKey example = new UserKey();
+        example.setCreateUser(userId);
+        return userKeyMapper.select(example);
     }
 
     /**
@@ -69,7 +67,7 @@ public class UserKeyService {
      */
     public void deleteUserKey(String id) {
         UserKey userKey = validateAndGetUserKey(id);
-        userKeyMapper.deleteByPrimaryKey(userKey.getId());
+        userKeyMapper.deleteById(userKey.getId());
     }
 
     /**
@@ -92,10 +90,11 @@ public class UserKeyService {
      * 根据 accessKey 获取 API 密钥信息
      */
     public UserKey getUserKey(String accessKey) {
-        UserKeyExample example = new UserKeyExample();
-        example.createCriteria().andAccessKeyEqualTo(accessKey).andEnableEqualTo(true);
-        List<UserKey> userKeysList = userKeyMapper.selectByExample(example);
-        return CollectionUtils.isEmpty(userKeysList) ? null : userKeysList.get(0);
+        UserKey example = new UserKey();
+        example.setAccessKey(accessKey);
+        example.setEnable(true);
+        List<UserKey> userKeysList = userKeyMapper.select(example);
+        return CollectionUtils.isEmpty(userKeysList) ? null : userKeysList.getFirst();
     }
 
     /**
@@ -122,9 +121,9 @@ public class UserKeyService {
      * 获取指定用户的所有 API 密钥
      */
     private List<UserKey> getUserKeysByUserId(String userId) {
-        UserKeyExample example = new UserKeyExample();
-        example.createCriteria().andCreateUserEqualTo(userId);
-        return userKeyMapper.selectByExample(example);
+        UserKey example = new UserKey();
+        example.setCreateUser(userId);
+        return userKeyMapper.select(example);
     }
 
     /**
@@ -147,7 +146,7 @@ public class UserKeyService {
      */
     private void updateUserKeyStatus(UserKey userKey, boolean enable) {
         userKey.setEnable(enable);
-        userKeyMapper.updateByPrimaryKeySelective(userKey);
+        userKeyMapper.updateById(userKey);
     }
 
     /**

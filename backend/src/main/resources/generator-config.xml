@@ -14,10 +14,8 @@
 
         <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
         <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"/>
-        <plugin type="io.demo.crm.tools.mybatis.swagger.ImportSwagger3Plugin"/>
-        <plugin type="io.demo.crm.tools.mybatis.validation.ImportValidatorPlugin"/>
-        <plugin type="com.itfsw.mybatis.generator.plugins.ModelColumnPlugin"/>
-        <plugin type="com.itfsw.mybatis.generator.plugins.BatchInsertPlugin"/>
+        <plugin type="io.metersphere.tools.mybatis.swagger.ImportSwagger3Plugin"/>
+        <plugin type="io.metersphere.tools.mybatis.validation.ImportValidatorPlugin"/>
 
         <!-- Lombok插件 -->
         <plugin type="com.itfsw.mybatis.generator.plugins.LombokPlugin">
@@ -35,7 +33,7 @@
         </plugin>
 
         <!-- 用来除去时间信息的，这在配合类似subversion的代码管理工具时使用很有效，因为可以减少没有必要的注释迁入 -->
-        <commentGenerator type="io.demo.crm.tools.mybatis.validation.SchemaAnnotationGenerator">
+        <commentGenerator type="io.metersphere.tools.mybatis.validation.SchemaAnnotationGenerator">
             <property name="suppressDate" value="true"/>
             <!--  关闭自动生成的注释  -->
             <property name="suppressAllComments" value="true"/>
@@ -43,8 +41,8 @@
 
 
         <!-- jdbc连接信息 --> <!-- EduLoanManage EduTestDataBase -->
-        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-                        connectionURL="${spring.datasource.url}&amp;nullCatalogMeansCurrent=true"
+        <jdbcConnection driverClass="org.mariadb.jdbc.Driver"
+                        connectionURL="${spring.datasource.url}"
                         userId="${spring.datasource.username}"
                         password="${spring.datasource.password}"/>
 
@@ -58,18 +56,15 @@
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
-        <!-- XML映射文件 -->
-        <sqlMapGenerator targetPackage="io.demo.crm.services.system.mapper" targetProject="src/main/java">
-            <property name="enableSubPackages" value="true"/>
-        </sqlMapGenerator>
-        <!-- 接口 -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="io.demo.crm.services.system.mapper"
-                             targetProject="src/main/java">
-            <property name="enableSubPackages" value="true"/>
-        </javaClientGenerator>
 
         <!--要生成的数据库表 -->
         <table tableName="user"/>
+        <table tableName="user_extend"/>
+        <table tableName="user_key"/>
+        <table tableName="operation_log"/>
+        <table tableName="operation_log_blob"/>
+        <table tableName="schedule"/>
+        <table tableName="worker_node"/>
 
     </context>
 </generatorConfiguration>

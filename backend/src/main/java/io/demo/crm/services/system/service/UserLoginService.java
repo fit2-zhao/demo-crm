@@ -1,25 +1,23 @@
 package io.demo.crm.services.system.service;
 
-import io.demo.crm.services.system.constants.HttpMethodConstants;
-import io.demo.crm.common.log.constants.LogConstants;
-import io.demo.crm.services.system.constants.UserSource;
-import io.demo.crm.common.exception.SystemException;
-import io.demo.crm.common.util.CodingUtils;
-import io.demo.crm.common.util.Translator;
-import io.demo.crm.common.response.handler.ResultHolder;
-import io.demo.crm.services.system.domain.User;
-import io.demo.crm.services.system.domain.UserExample;
-import io.demo.crm.common.dto.UserDTO;
 import io.demo.crm.common.dto.LoginRequest;
 import io.demo.crm.common.dto.SessionUser;
+import io.demo.crm.common.dto.UserDTO;
+import io.demo.crm.common.exception.SystemException;
+import io.demo.crm.common.log.constants.LogConstants;
 import io.demo.crm.common.log.constants.LogType;
 import io.demo.crm.common.log.dto.LogDTO;
 import io.demo.crm.common.log.service.LogService;
-import io.demo.crm.services.system.mapper.ext.ExtUserMapper;
-import io.demo.crm.services.system.mapper.UserMapper;
+import io.demo.crm.common.response.handler.ResultHolder;
+import io.demo.crm.common.util.CodingUtils;
 import io.demo.crm.common.util.SessionUtils;
+import io.demo.crm.common.util.Translator;
+import io.demo.crm.core.BaseMapper;
+import io.demo.crm.services.system.constants.HttpMethodConstants;
+import io.demo.crm.services.system.constants.UserSource;
+import io.demo.crm.services.system.domain.User;
+import io.demo.crm.services.system.mapper.ext.ExtUserMapper;
 import jakarta.annotation.Resource;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
@@ -29,7 +27,6 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -37,7 +34,7 @@ import java.util.List;
 @Transactional(rollbackFor = Exception.class)
 public class UserLoginService {
     @Resource
-    private UserMapper userMapper;
+    private BaseMapper<User> userMapper;
     @Resource
     private LogService logService;
     @Resource
@@ -55,16 +52,9 @@ public class UserLoginService {
     }
 
     public UserDTO getUserDTOByEmail(String email, String... source) {
-        UserExample example = new UserExample();
-        UserExample.Criteria criteria = example.createCriteria();
-        criteria.andEmailEqualTo(email);
-
-        if (!CollectionUtils.isEmpty(Arrays.asList(source))) {
-            criteria.andSourceIn(Arrays.asList(source));
-        }
-
-        List<User> users = userMapper.selectByExample(example);
-
+        User example = new User();
+        example.setEmail(email);
+        List<User> users = userMapper.select(example);
         if (users == null || users.isEmpty()) {
             return null;
         }
@@ -115,9 +105,10 @@ public class UserLoginService {
         if (StringUtils.isBlank(password)) {
             throw new SystemException(Translator.get("password_is_null"));
         }
-        UserExample example = new UserExample();
-        example.createCriteria().andIdEqualTo(userId).andPasswordEqualTo(CodingUtils.md5(password));
-        return userMapper.countByExample(example) > 0;
+        User example = new User();
+        example.setId(userId);
+        example.setPassword(CodingUtils.md5(password));
+        return userMapper.exist(example);
     }
 
     //保存日志

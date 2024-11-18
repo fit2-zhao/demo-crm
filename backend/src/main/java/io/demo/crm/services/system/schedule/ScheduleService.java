@@ -1,22 +1,18 @@
 package io.demo.crm.services.system.schedule;
 
 import io.demo.crm.common.exception.SystemException;
-import io.demo.crm.services.system.constants.ApplicationNumScope;
-import io.demo.crm.services.system.domain.Schedule;
 import io.demo.crm.common.uid.IDGenerator;
 import io.demo.crm.common.uid.NumGenerator;
-import io.demo.crm.services.system.domain.ScheduleExample;
-import io.demo.crm.services.system.mapper.ScheduleMapper;
+import io.demo.crm.core.BaseMapper;
+import io.demo.crm.services.system.constants.ApplicationNumScope;
+import io.demo.crm.services.system.domain.Schedule;
 import jakarta.annotation.Resource;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.quartz.JobKey;
 import org.quartz.SchedulerException;
 import org.quartz.TriggerKey;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /**
  * 定时任务服务类，负责调度任务的创建、编辑、删除及相关操作。
@@ -28,7 +24,7 @@ import java.util.List;
 public class ScheduleService {
 
     @Resource
-    private ScheduleMapper scheduleMapper;
+    private BaseMapper<Schedule> scheduleMapper;
 
     @Resource
     private ScheduleManager scheduleManager;
@@ -74,87 +70,7 @@ public class ScheduleService {
      */
     public int editSchedule(Schedule schedule) {
         schedule.setUpdateTime(System.currentTimeMillis());
-        return scheduleMapper.updateByPrimaryKeySelective(schedule);
-    }
-
-    /**
-     * 根据资源 ID 和任务名查询定时任务。
-     *
-     * @param resourceId 资源 ID
-     * @param job        任务名称
-     * @return 匹配的定时任务对象，若没有则返回 null
-     */
-    public Schedule getScheduleByResource(String resourceId, String job) {
-        ScheduleExample example = new ScheduleExample();
-        example.createCriteria().andResourceIdEqualTo(resourceId).andJobEqualTo(job);
-        List<Schedule> schedules = scheduleMapper.selectByExample(example);
-        if (CollectionUtils.isNotEmpty(schedules)) {
-            return schedules.getFirst();
-        }
-        return null;
-    }
-
-    /**
-     * 根据资源 ID 删除任务，并移除调度器中的对应任务。
-     *
-     * @param scenarioId 资源 ID
-     * @param jobKey     任务标识
-     * @param triggerKey 触发器标识
-     * @return 删除的记录数
-     */
-    public int deleteByResourceId(String scenarioId, JobKey jobKey, TriggerKey triggerKey) {
-        ScheduleExample scheduleExample = new ScheduleExample();
-        scheduleExample.createCriteria().andResourceIdEqualTo(scenarioId);
-
-        // 移除调度器中的任务
-        scheduleManager.removeJob(jobKey, triggerKey);
-        return scheduleMapper.deleteByExample(scheduleExample);
-    }
-
-    /**
-     * 根据资源 ID 删除任务并移除调度器中的对应任务。
-     *
-     * @param resourceId 资源 ID
-     * @param group      任务组
-     * @return 删除的记录数
-     */
-    public int deleteByResourceId(String resourceId, String group) {
-        ScheduleExample scheduleExample = new ScheduleExample();
-        scheduleExample.createCriteria().andResourceIdEqualTo(resourceId);
-        removeJob(resourceId, group);
-        return scheduleMapper.deleteByExample(scheduleExample);
-    }
-
-    /**
-     * 根据资源 ID 列表删除任务，并移除调度器中的对应任务。
-     *
-     * @param resourceIds 资源 ID 列表
-     * @param group       任务组
-     * @return 删除的记录数
-     */
-    public int deleteByResourceIds(List<String> resourceIds, String group) {
-        ScheduleExample scheduleExample = new ScheduleExample();
-        scheduleExample.createCriteria().andResourceIdIn(resourceIds);
-        for (String resourceId : resourceIds) {
-            removeJob(resourceId, group);
-        }
-        return scheduleMapper.deleteByExample(scheduleExample);
-    }
-
-    /**
-     * 根据项目 ID 删除任务，并移除调度器中的对应任务。
-     *
-     * @param projectId 项目 ID
-     * @return 删除的记录数
-     */
-    public int deleteByProjectId(String projectId) {
-        ScheduleExample scheduleExample = new ScheduleExample();
-        scheduleExample.createCriteria().andProjectIdEqualTo(projectId);
-        List<Schedule> schedules = scheduleMapper.selectByExample(scheduleExample);
-        schedules.forEach(item -> {
-            removeJob(item.getKey(), item.getJob());
-        });
-        return scheduleMapper.deleteByExample(scheduleExample);
+        return scheduleMapper.update(schedule);
     }
 
     /**

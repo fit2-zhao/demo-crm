@@ -247,7 +247,7 @@ public class LogAspect {
 
         // 根据日志数量决定是单条保存还是批量保存
         if (logDTOList.size() == 1) {
-            logService.add(logDTOList.get(0));
+            logService.add(logDTOList.getFirst());
         } else {
             logService.batchAdd(logDTOList);
         }
