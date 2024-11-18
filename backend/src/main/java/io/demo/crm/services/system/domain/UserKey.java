@@ -43,9 +43,8 @@ public class UserKey implements Serializable {
     @Schema(description = "到期时间")
     private Long expireTime;
 
-    @Schema(description = "描述")
+    @Schema(description = "")
     private String description;
 
     private static final long serialVersionUID = 1L;
-
 }

@@ -11,8 +11,9 @@ import java.io.Serializable;
 
 @Data
 public class OperationLog implements Serializable {
-    @Schema(description = "主键", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "ID", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "{operation_log.id.not_blank}", groups = {Updated.class})
+    @Size(min = 1, max = 50, message = "{operation_log.id.length_range}", groups = {Created.class, Updated.class})
     private String id;
 
     @Schema(description = "项目id", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -44,7 +45,7 @@ public class OperationLog implements Serializable {
     @Size(min = 1, max = 20, message = "{operation_log.type.length_range}", groups = {Created.class, Updated.class})
     private String type;
 
-    @Schema(description = "")
+    @Schema(description = "操作模块/api/case/scenario/ui")
     private String module;
 
     @Schema(description = "操作详情")

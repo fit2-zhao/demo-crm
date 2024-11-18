@@ -66,11 +66,8 @@ public class User implements Serializable {
     @NotNull(message = "{user.deleted.not_blank}", groups = {Created.class})
     private Boolean deleted;
 
-    @Schema(description = "身份令牌", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotBlank(message = "{user.cft_token.not_blank}", groups = {Created.class})
-    @Size(min = 1, max = 255, message = "{user.cft_token.length_range}", groups = {Created.class, Updated.class})
+    @Schema(description = "CFT Token")
     private String cftToken;
 
     private static final long serialVersionUID = 1L;
-
 }

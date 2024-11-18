@@ -34,7 +34,7 @@ public class Schedule implements Serializable {
     @Size(min = 1, max = 64, message = "{schedule.job.length_range}", groups = {Created.class, Updated.class})
     private String job;
 
-    @Schema(description = "资源类型 API/TESL_PLAN", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "资源类型 API_IMPORT,API_SCENARIO,UI_SCENARIO,LOAD_TEST,TEST_PLAN,CLEAN_REPORT,BUG_SYNC", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "{schedule.resource_type.not_blank}", groups = {Created.class})
     @Size(min = 1, max = 50, message = "{schedule.resource_type.length_range}", groups = {Created.class, Updated.class})
     private String resourceType;
