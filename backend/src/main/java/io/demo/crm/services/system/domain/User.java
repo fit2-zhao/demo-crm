@@ -1,14 +1,11 @@
 package io.demo.crm.services.system.domain;
 
-import io.demo.crm.common.groups.Created;
-import io.demo.crm.common.groups.Updated;
+import io.demo.crm.common.groups.*;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.Data;
-
+import jakarta.validation.constraints.*;
+import java.io.Serial;
 import java.io.Serializable;
+import lombok.Data;
 
 @Data
 public class User implements Serializable {
@@ -69,5 +66,6 @@ public class User implements Serializable {
     @Schema(description = "CFT Token")
     private String cftToken;
 
+    @Serial
     private static final long serialVersionUID = 1L;
 }

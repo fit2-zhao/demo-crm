@@ -3,6 +3,7 @@ package io.demo.crm.services.system.domain;
 import io.demo.crm.common.groups.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
+import java.io.Serial;
 import java.io.Serializable;
 import lombok.Data;
 
@@ -19,5 +20,6 @@ public class UserExtend implements Serializable {
     @Schema(description = "其他平台对接信息")
     private byte[] platformInfo;
 
+    @Serial
     private static final long serialVersionUID = 1L;
 }

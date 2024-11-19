@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 @Data
@@ -54,5 +55,6 @@ public class OperationLog implements Serializable {
     @Schema(description = "操作路径")
     private String path;
 
+    @Serial
     private static final long serialVersionUID = 1L;
 }

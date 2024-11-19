@@ -12,7 +12,7 @@
         <property name="beginningDelimiter" value="`"/>
         <property name="endingDelimiter" value="`"/>
 
-        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <plugin type="io.metersphere.tools.mybatis.validation.CustomSerializablePlugin"/>
         <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"/>
         <plugin type="io.metersphere.tools.mybatis.swagger.ImportSwagger3Plugin"/>
         <plugin type="io.metersphere.tools.mybatis.validation.ImportValidatorPlugin"/>
