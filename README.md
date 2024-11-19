@@ -102,6 +102,7 @@ spring.datasource.username=username
 │       │   │               │   ├── security   # 安全性相关
 │       │   │               │   ├── uid        # 唯一标识符生成
 │       │   │               │   └── util       # 工具类
+│       │   │               ├── dao            # 封装通用数据访问层（DAL）
 │       │   │               ├── config         # 配置类
 │       │   │               ├── listener       # 事件监听器
 │       │   │               └── services       # 服务层
