@@ -18,9 +18,9 @@ import java.util.stream.Stream;
 /**
  * 通用 Mapper接口，提供基本的增删改查方法。
  *
- * @param <Entity> 实体类型
+ * @param <E> 实体类型
  */
-public interface BaseMapper<Entity> {
+public interface BaseMapper<E> {
 
     /**
      * 插入一条记录。
@@ -30,7 +30,7 @@ public interface BaseMapper<Entity> {
      */
     @InsertProvider(type = InsertSqlProvider.class, method = "invoke")
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    Integer insert(Entity entity);
+    Integer insert(E entity);
 
     /**
      * 批量插入记录。
@@ -40,7 +40,7 @@ public interface BaseMapper<Entity> {
      */
     @InsertProvider(type = BatchInsertSqlProvider.class, method = "invoke")
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    Integer batchInsert(List<Entity> entities);
+    Integer batchInsert(List<E> entities);
 
     /**
      * 根据主键更新记录。
@@ -49,7 +49,7 @@ public interface BaseMapper<Entity> {
      * @return 更新的行数
      */
     @UpdateProvider(type = UpdateSqlProvider.class, method = "invoke")
-    Integer updateById(Entity entity);
+    Integer updateById(E entity);
 
     /**
      * 选择性更新记录（仅更新非空字段）。
@@ -58,7 +58,7 @@ public interface BaseMapper<Entity> {
      * @return 更新的行数
      */
     @UpdateProvider(type = UpdateSelectiveSqlProvider.class, method = "invoke")
-    Integer update(Entity entity);
+    Integer update(E entity);
 
     /**
      * 根据主键删除记录。
@@ -76,7 +76,7 @@ public interface BaseMapper<Entity> {
      * @return 删除的行数
      */
     @DeleteProvider(type = DeleteByCriteriaSqlProvider.class, method = "invoke")
-    Integer delete(Entity criteria);
+    Integer delete(E criteria);
 
     /**
      * 根据主键查询记录。
@@ -85,7 +85,7 @@ public interface BaseMapper<Entity> {
      * @return 查询到的实体
      */
     @SelectProvider(type = SelectByIdSqlProvider.class, method = "invoke")
-    Entity selectByPrimaryKey(Serializable id);
+    E selectByPrimaryKey(Serializable id);
 
     /**
      * 查询所有记录。
@@ -94,7 +94,7 @@ public interface BaseMapper<Entity> {
      * @return 查询到的实体列表
      */
     @SelectProvider(type = SelectAllSqlProvider.class, method = "invoke")
-    List<Entity> selectAll(String orderBy);
+    List<E> selectAll(String orderBy);
 
     /**
      * 根据条件查询记录。
@@ -103,7 +103,7 @@ public interface BaseMapper<Entity> {
      * @return 查询到的实体列表
      */
     @SelectProvider(type = SelectByCriteriaSqlProvider.class, method = "invoke")
-    List<Entity> select(Entity criteria);
+    List<E> select(E criteria);
 
     /**
      * 根据条件查询单条记录。
@@ -112,7 +112,7 @@ public interface BaseMapper<Entity> {
      * @return 查询到的实体
      */
     @SelectProvider(type = SelectByCriteriaSqlProvider.class, method = "invoke")
-    Entity selectOne(Entity criteria);
+    E selectOne(E criteria);
 
     /**
      * 根据列和值查询记录。
@@ -122,7 +122,7 @@ public interface BaseMapper<Entity> {
      * @return 查询到的实体列表
      */
     @SelectProvider(type = SelectInSqlProvider.class, method = "invoke")
-    List<Entity> selectByColumn(@Param("column") String column, @Param("array") Serializable[] ids);
+    List<E> selectByColumn(@Param("column") String column, @Param("array") Serializable[] ids);
 
     /**
      * 根据条件统计记录数。
@@ -131,7 +131,7 @@ public interface BaseMapper<Entity> {
      * @return 记录数
      */
     @SelectProvider(type = CountByCriteriaSqlProvider.class, method = "invoke")
-    Long countByExample(Entity criteria);
+    Long countByExample(E criteria);
 
     /**
      * 自定义SQL查询。
@@ -141,7 +141,7 @@ public interface BaseMapper<Entity> {
      * @return 查询到的实体列表
      */
     @SelectProvider(type = SelectBySqlProvider.class, method = "invoke")
-    List<Entity> query(@Param("sqlBuild") Function<SQL, SQL> sqlBuild, @Param("entity") Object criteria);
+    List<E> query(@Param("sqlBuild") Function<SQL, SQL> sqlBuild, @Param("entity") Object criteria);
 
     /**
      * 根据主键数组查询记录。
@@ -149,7 +149,7 @@ public interface BaseMapper<Entity> {
      * @param ids 主键值数组
      * @return 查询到的实体列表
      */
-    default List<Entity> selectByIds(@Param("array") Serializable[] ids) {
+    default List<E> selectByIds(@Param("array") Serializable[] ids) {
         return selectByColumn("id", ids);
     }
 
@@ -159,7 +159,7 @@ public interface BaseMapper<Entity> {
      * @param criteria 查询条件
      * @return 如果存在返回true，否则返回false
      */
-    default boolean exist(Entity criteria) {
+    default boolean exist(E criteria) {
         Long count = countByExample(criteria);
         return count != null && count > 0;
     }
@@ -170,7 +170,7 @@ public interface BaseMapper<Entity> {
      * @param criteria 查询条件
      * @return 执行的行数
      */
-    default Integer upsert(Entity criteria) {
+    default Integer upsert(E criteria) {
         return exist(criteria) ? updateById(criteria) : insert(criteria);
     }
 

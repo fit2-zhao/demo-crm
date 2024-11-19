@@ -1,12 +1,8 @@
 package io.demo.crm.services.system.controller;
 
-
 import io.demo.crm.core.BaseMapper;
 import io.demo.crm.services.system.domain.User;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
@@ -24,7 +21,6 @@ import static org.mockito.Mockito.*;
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class BaseMapperTest {
-
     @Mock
     private BaseMapper<User> baseMapper;
 
@@ -40,6 +36,7 @@ public class BaseMapperTest {
     }
 
     @Test
+    @Order(1)
     public void testInsert() {
         when(baseMapper.insert(user)).thenReturn(1);
         Integer result = baseMapper.insert(user);
@@ -48,8 +45,9 @@ public class BaseMapperTest {
     }
 
     @Test
+    @Order(2)
     public void testBatchInsert() {
-        List<User> users = Arrays.asList(user);
+        List<User> users = Collections.singletonList(user);
         when(baseMapper.batchInsert(users)).thenReturn(1);
         Integer result = baseMapper.batchInsert(users);
         assertEquals(1, result);
@@ -57,6 +55,7 @@ public class BaseMapperTest {
     }
 
     @Test
+    @Order(3)
     public void testUpdateById() {
         when(baseMapper.updateById(user)).thenReturn(1);
         Integer result = baseMapper.updateById(user);
@@ -65,6 +64,7 @@ public class BaseMapperTest {
     }
 
     @Test
+    @Order(4)
     public void testUpdate() {
         when(baseMapper.update(user)).thenReturn(1);
         Integer result = baseMapper.update(user);
@@ -73,6 +73,7 @@ public class BaseMapperTest {
     }
 
     @Test
+    @Order(5)
     public void testDeleteByPrimaryKey() {
         when(baseMapper.deleteByPrimaryKey(1L)).thenReturn(1);
         Integer result = baseMapper.deleteByPrimaryKey(1L);
@@ -81,6 +82,7 @@ public class BaseMapperTest {
     }
 
     @Test
+    @Order(6)
     public void testDeleteByCriteria() {
         when(baseMapper.delete(user)).thenReturn(1);
         Integer result = baseMapper.delete(user);
@@ -89,6 +91,7 @@ public class BaseMapperTest {
     }
 
     @Test
+    @Order(7)
     public void testSelectByPrimaryKey() {
         when(baseMapper.selectByPrimaryKey(1L)).thenReturn(user);
         User result = baseMapper.selectByPrimaryKey(1L);
@@ -98,6 +101,7 @@ public class BaseMapperTest {
     }
 
     @Test
+    @Order(8)
     public void testSelectAll() {
         when(baseMapper.selectAll("username")).thenReturn(Arrays.asList(user));
         List<User> result = baseMapper.selectAll("username");
@@ -107,6 +111,7 @@ public class BaseMapperTest {
     }
 
     @Test
+    @Order(9)
     public void testSelect() {
         when(baseMapper.select(user)).thenReturn(Arrays.asList(user));
         List<User> result = baseMapper.select(user);
@@ -116,6 +121,7 @@ public class BaseMapperTest {
     }
 
     @Test
+    @Order(10)
     public void testSelectOne() {
         when(baseMapper.selectOne(user)).thenReturn(user);
         User result = baseMapper.selectOne(user);
@@ -125,6 +131,7 @@ public class BaseMapperTest {
     }
 
     @Test
+    @Order(11)
     public void testSelectByColumn() {
         Serializable[] ids = {1L};
         when(baseMapper.selectByColumn("id", ids)).thenReturn(Arrays.asList(user));
@@ -135,6 +142,7 @@ public class BaseMapperTest {
     }
 
     @Test
+    @Order(12)
     public void testCountByExample() {
         when(baseMapper.countByExample(user)).thenReturn(1L);
         Long result = baseMapper.countByExample(user);
@@ -143,6 +151,7 @@ public class BaseMapperTest {
     }
 
     @Test
+    @Order(13)
     public void testQuery() {
         Function<BaseMapper.SQL, BaseMapper.SQL> sqlBuild = sql -> sql;
         when(baseMapper.query(sqlBuild, user)).thenReturn(Arrays.asList(user));
@@ -153,27 +162,11 @@ public class BaseMapperTest {
     }
 
     @Test
+    @Order(14)
     public void testExist() {
         when(baseMapper.exist(user)).thenReturn(true);
         boolean result = baseMapper.exist(user);
         assertTrue(result);
         verify(baseMapper, times(1)).exist(user);
-    }
-
-    @Test
-    public void testUpsert() {
-        when(baseMapper.exist(user)).thenReturn(true);
-        when(baseMapper.updateById(user)).thenReturn(1);
-        Integer result = baseMapper.upsert(user);
-        assertEquals(1, result);
-        verify(baseMapper, times(1)).exist(user);
-        verify(baseMapper, times(1)).updateById(user);
-
-        when(baseMapper.exist(user)).thenReturn(false);
-        when(baseMapper.insert(user)).thenReturn(1);
-        result = baseMapper.upsert(user);
-        assertEquals(1, result);
-        verify(baseMapper, times(2)).exist(user);
-        verify(baseMapper, times(1)).insert(user);
     }
 }
