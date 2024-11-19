@@ -12,6 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Create pull request
-        uses: peter-evans/create-pull-request@v4
+        uses: jumpserver/action-generic-handler@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
