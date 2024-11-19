@@ -3,7 +3,7 @@ package io.demo.crm.common.log.service;
 import io.demo.crm.common.log.dto.LogDTO;
 import io.demo.crm.common.uid.IDGenerator;
 import io.demo.crm.common.util.BeanUtils;
-import io.demo.crm.core.BaseMapper;
+import io.demo.crm.dao.BaseMapper;
 import io.demo.crm.services.system.domain.OperationLog;
 import io.demo.crm.services.system.domain.OperationLogBlob;
 import jakarta.annotation.Resource;

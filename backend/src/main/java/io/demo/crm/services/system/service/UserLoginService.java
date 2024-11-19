@@ -12,7 +12,7 @@ import io.demo.crm.common.response.handler.ResultHolder;
 import io.demo.crm.common.util.CodingUtils;
 import io.demo.crm.common.util.SessionUtils;
 import io.demo.crm.common.util.Translator;
-import io.demo.crm.core.BaseMapper;
+import io.demo.crm.dao.BaseMapper;
 import io.demo.crm.services.system.constants.HttpMethodConstants;
 import io.demo.crm.services.system.constants.UserSource;
 import io.demo.crm.services.system.domain.User;

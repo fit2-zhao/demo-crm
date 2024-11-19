@@ -1,4 +1,4 @@
-package io.demo.crm.core;
+package io.demo.crm.dao;
 
 import lombok.Getter;
 

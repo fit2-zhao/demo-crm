@@ -3,7 +3,7 @@ package io.demo.crm.services.system.schedule;
 import io.demo.crm.common.exception.SystemException;
 import io.demo.crm.common.uid.IDGenerator;
 import io.demo.crm.common.uid.NumGenerator;
-import io.demo.crm.core.BaseMapper;
+import io.demo.crm.dao.BaseMapper;
 import io.demo.crm.services.system.constants.ApplicationNumScope;
 import io.demo.crm.services.system.domain.Schedule;
 import jakarta.annotation.Resource;

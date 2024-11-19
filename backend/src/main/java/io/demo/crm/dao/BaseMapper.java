@@ -1,4 +1,4 @@
-package io.demo.crm.core;
+package io.demo.crm.dao;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.*;

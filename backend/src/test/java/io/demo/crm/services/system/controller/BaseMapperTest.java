@@ -1,6 +1,6 @@
 package io.demo.crm.services.system.controller;
 
-import io.demo.crm.core.BaseMapper;
+import io.demo.crm.dao.BaseMapper;
 import io.demo.crm.services.system.domain.User;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;

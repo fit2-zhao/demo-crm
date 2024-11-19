@@ -1,7 +1,7 @@
 package io.demo.crm.config;
 
-import io.demo.crm.core.BaseMapper;
-import io.demo.crm.core.DataAccessLayer;
+import io.demo.crm.dao.BaseMapper;
+import io.demo.crm.dao.DataAccessLayer;
 import jakarta.annotation.Resource;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.InjectionPoint;

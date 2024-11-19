@@ -2,7 +2,7 @@ package io.demo.crm.services.system.service;
 
 import io.demo.crm.common.util.JSON;
 import io.demo.crm.common.util.LogUtils;
-import io.demo.crm.core.BaseMapper;
+import io.demo.crm.dao.BaseMapper;
 import io.demo.crm.services.system.domain.Schedule;
 import io.demo.crm.services.system.mapper.ext.ExtScheduleMapper;
 import io.demo.crm.services.system.schedule.ScheduleManager;
