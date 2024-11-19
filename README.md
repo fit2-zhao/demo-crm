@@ -33,6 +33,17 @@
 -   中间件: [MariaDB](https://mariadb.com/),  [MinIO（可选）](https://min.io/), [Redis](https://redis.com/)
 -   基础设施: [Docker](https://www.docker.com/)
 
+## 架构概述
+
+遵循[多层架构](https://en.wikipedia.org/wiki/Multitier_architecture)，这意味着表示、业务逻辑和数据存储是分开的。更具体地说，它使用三层架构（图片来自维基百科）：
+
+![Overview_of_a_three-tier.png](Overview_of_a_three-tier.png)
+
+三层架构
+
+表示层是 VUE.js、HTML5、JavaScript 和 CSS 的组合。逻辑层完全用 Java 编写，而数据层仅支持 MariaDB 作为 RDBMS。
+
+
 ## 快速开始
 
 ### 环境准备
