@@ -67,7 +67,7 @@ public class UserKeyService {
      */
     public void deleteUserKey(String id) {
         UserKey userKey = validateAndGetUserKey(id);
-        userKeyMapper.deleteById(userKey.getId());
+        userKeyMapper.deleteByPrimaryKey(userKey.getId());
     }
 
     /**

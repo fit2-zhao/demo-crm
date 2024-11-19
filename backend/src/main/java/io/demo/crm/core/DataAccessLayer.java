@@ -29,7 +29,7 @@ public class DataAccessLayer implements ApplicationContextAware {
     private static ApplicationContext applicationContext;
     private SqlSession sqlSession;
     private Configuration configuration;
-    private final Map<Class<?>, BaseMapper.TableInfo> cachedTableInfo = new ConcurrentHashMap<>();
+    private final Map<Class<?>, EntityTable> cachedTableInfo = new ConcurrentHashMap<>();
 
     private DataAccessLayer() {
     }
@@ -80,11 +80,11 @@ public class DataAccessLayer implements ApplicationContextAware {
     public static <T> Executor<T> with(Class<T> clazz, SqlSession sqlSession) {
         DataAccessLayer instance = Holder.instance;
         instance.initSession(sqlSession);
-        BaseMapper.TableInfo tableInfo = null;
+        EntityTable entityTable = null;
         if (clazz != null) {
-            tableInfo = instance.cachedTableInfo.computeIfAbsent(clazz, BaseMapper.Util::tableInfo);
+            entityTable = instance.cachedTableInfo.computeIfAbsent(clazz, EntityTableMapper::extractTableInfo);
         }
-        return instance.new Executor<>(tableInfo);
+        return instance.new Executor<>(entityTable);
     }
 
     /**
@@ -101,10 +101,10 @@ public class DataAccessLayer implements ApplicationContextAware {
     }
 
     public class Executor<E> implements BaseMapper<E> {
-        private final BaseMapper.TableInfo table;
+        private final EntityTable table;
         private final Class<?> resultType;
 
-        Executor(BaseMapper.TableInfo table) {
+        Executor(EntityTable table) {
             this.table = table;
             this.resultType = table != null ? table.getEntityClass() : null;
         }
@@ -193,7 +193,7 @@ public class DataAccessLayer implements ApplicationContextAware {
         }
 
         @Override
-        public Integer deleteById(Serializable criteria) {
+        public Integer deleteByPrimaryKey(Serializable criteria) {
             String sql = new BaseMapper.DeleteSqlProvider().buildSql(criteria, this.table);
             String msId = execute(sql, table.getEntityClass(), int.class, SqlCommandType.DELETE);
             return sqlSession.delete(msId, criteria);

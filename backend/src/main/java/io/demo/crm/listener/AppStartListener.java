@@ -3,6 +3,7 @@ package io.demo.crm.listener;
 import io.demo.crm.common.file.storage.*;
 import io.demo.crm.common.uid.impl.DefaultUidGenerator;
 import io.demo.crm.common.util.CommonBeanFactory;
+import io.demo.crm.common.util.HikariCPUtils;
 import io.demo.crm.common.util.LogUtils;
 import io.demo.crm.common.util.rsa.RsaKey;
 import io.demo.crm.common.util.rsa.RsaUtils;
@@ -55,6 +56,8 @@ public class AppStartListener implements ApplicationRunner {
 
         LogUtils.info("初始化定时任务");
         extScheduleService.startEnableSchedules();
+
+        HikariCPUtils.printHikariCPStatus();
 
         LogUtils.info("===== 完成初始化配置 =====");
     }
