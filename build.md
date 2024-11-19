@@ -10,7 +10,6 @@
 ./mvnw clean install -DskipTests -DskipAntRunForJenkins --file backend/pom.xml
 
 ```
-
 ### 整体打包
 
 ```bash
