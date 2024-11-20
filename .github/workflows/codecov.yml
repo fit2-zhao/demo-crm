@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - v3.*
+      - main
     paths:
       - "backend/**"
       - "pom.xml"
@@ -12,7 +12,7 @@ on:
       - "backend/**"
       - "pom.xml"
 
-name: demo 覆盖率统计
+name: 覆盖率统计
 
 permissions:
   pull-requests: write

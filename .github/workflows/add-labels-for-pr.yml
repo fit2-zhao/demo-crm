@@ -1,6 +1,6 @@
 on: pull_request
 
-name: Demo 通用 PR 处理
+name: 通用 PR 处理
 
 permissions:
   pull-requests: write

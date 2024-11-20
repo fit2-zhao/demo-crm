@@ -4,7 +4,7 @@ on:
       - 'pr@**'
       - 'repr@**'
 
-name: demo 自动创建 PR
+name: 自动创建 PR
 
 jobs:
   generic_handler:

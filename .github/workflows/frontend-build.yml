@@ -10,7 +10,7 @@ on:
     paths:
       - "frontend/**"
 
-name: demo 前端代码校验
+name: 前端代码校验
 
 permissions:
   pull-requests: write
