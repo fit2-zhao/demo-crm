@@ -1,12 +1,12 @@
 on:
   push:
     branches:
-      - v3.*
+      - main
     paths:
       - "frontend/**"
   pull_request:
     branches:
-      - v3.*
+      - main
     paths:
       - "frontend/**"
 

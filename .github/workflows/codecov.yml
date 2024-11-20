@@ -7,7 +7,7 @@ on:
       - "pom.xml"
   pull_request:
     branches:
-      - v3.*
+      - main
     paths:
       - "backend/**"
       - "pom.xml"
@@ -31,9 +31,6 @@ jobs:
           cache: 'maven'
           cache-dependency-path: '**/pom.xml' # optional
           check-latest: true
-
-      - name: Remove monitoring-engine JAR
-        run: rm -rf ~/.m2/repository/io/demo/monitoring-engine
 
       - name: Build with Maven - other
         run: mvn -B package -DskipAntRunForJenkins --file pom.xml -pl '!frontend'

@@ -2,7 +2,7 @@ name: SonarCloud
 on:
   push:
     branches:
-      - v3.x
+      - main
     paths:
       - "backend/**"
       - "pom.xml"
