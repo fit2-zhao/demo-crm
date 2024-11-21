@@ -2,15 +2,11 @@ package io.demo.crm.dao;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.*;
-import org.apache.ibatis.builder.annotation.ProviderContext;
 import org.apache.ibatis.jdbc.AbstractSQL;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -332,84 +328,6 @@ public interface BaseMapper<E> {
         @Override
         public SQL getSelf() {
             return this;
-        }
-    }
-
-    abstract class AbstractSqlProviderSupport {
-        private static final Map<Class<?>, EntityTable> tableCache = new ConcurrentHashMap<>(256);
-
-        abstract SQL sql(Object criteria);
-
-        protected EntityTable table;
-
-        String invoke(Object criteria, ProviderContext context) {
-            return buildSql(criteria, tableInfo(context));
-        }
-
-        String buildSql(Object criteria, EntityTable table) {
-            this.table = table;
-            SQL sql = sql(criteria);
-            beforeInterceptor(criteria, sql);
-            return String.format("<script>%s</script>", sql.toString());
-        }
-
-        void beforeInterceptor(Object obj, SQL sql) {
-            if (obj instanceof Interceptor && this instanceof WriteType) {
-                ((Interceptor) obj).prePersist();
-            }
-        }
-
-        String[] ignoreNullAndCombined(Object criteria, Function<Field, String> func, boolean ignorePk) {
-            return Stream.of(table.getFields())
-                    .filter(field -> {
-                        Object value = value(criteria, field);
-                        // 过滤空字符串
-                        boolean noNull = value != null;
-                        return ignorePk ? (noNull && !table.getPrimaryKeyColumn().equals(columnName(field))) : noNull;
-                    })
-                    .map(func)
-                    .toArray(String[]::new);
-        }
-
-        String[] ignoreNullAndCombined(Object criteria, Function<Field, String> func) {
-            return ignoreNullAndCombined(criteria, func, false);
-        }
-
-        /**
-         * 获取并缓存表信息结构
-         */
-        EntityTable tableInfo(ProviderContext context) {
-            return tableCache.computeIfAbsent(context.getMapperType(), t -> EntityTableMapper.extractTableInfo(entityType(context)));
-        }
-
-        /**
-         * 获取BaseMapper接口中的泛型类型
-         *
-         * @param context ProviderContext
-         * @return clz
-         */
-        Class<?> entityType(ProviderContext context) {
-            return Stream.of(context.getMapperType().getGenericInterfaces())
-                    .filter(ParameterizedType.class::isInstance)
-                    .map(ParameterizedType.class::cast)
-                    .filter(type -> type.getRawType() == BaseMapper.class)
-                    .findFirst()
-                    .map(type -> type.getActualTypeArguments()[0])
-                    .filter(Class.class::isInstance)
-                    .map(Class.class::cast)
-                    .orElseThrow(() -> new IllegalStateException("未找到 BaseMapper 的泛型类 " + context.getMapperType().getName() + "."));
-        }
-
-        String bindParameter(Field field) {
-            return String.format("#{%s}", field.getName());
-        }
-
-        String columnName(Field field) {
-            return EntityTableMapper.getColumnName(field);
-        }
-
-        Object value(Object bean, Field field) {
-            return EntityTableMapper.getFieldValue(bean, field);
         }
     }
 }
