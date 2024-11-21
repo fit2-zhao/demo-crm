@@ -216,9 +216,9 @@ public class DataAccessLayer implements ApplicationContextAware {
         }
 
         @Override
-        public Integer batchInsert(List<E> es) {
+        public Integer batchInsert(List<E> entities) {
             // 使用 BatchInsertSqlProvider 构建 SQL 语句
-            String sql = new BaseMapper.BatchInsertSqlProvider().buildSql(es, this.table);
+            String sql = new BaseMapper.BatchInsertSqlProvider().buildSql(entities, this.table);
 
             // 获取 MyBatis 映射的 SQL ID
             String msId = execute(sql, table.getEntityClass(), int.class, SqlCommandType.INSERT);
@@ -230,9 +230,7 @@ public class DataAccessLayer implements ApplicationContextAware {
             try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH, false)) {
 
                 // 执行批量插入操作
-                for (E entity : es) {
-                    sqlSession.insert(msId, entity);
-                }
+                entities.forEach(entity -> sqlSession.insert(msId, entity));
 
                 // 刷新批处理中的所有语句
                 sqlSession.flushStatements();
@@ -241,7 +239,7 @@ public class DataAccessLayer implements ApplicationContextAware {
                 sqlSession.commit();
 
                 // 返回成功插入的记录数
-                return es.size();
+                return entities.size();
             } catch (Exception e) {
                 // 记录异常信息
                 LogUtils.error("Error occurred during batch insert: ", e);
