@@ -1,4 +1,4 @@
-package io.demo.crm.common.security.realm;
+package io.demo.crm.modules.system.security.realm;
 
 
 import io.demo.crm.config.SessionConstants;

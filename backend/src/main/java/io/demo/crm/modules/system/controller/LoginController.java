@@ -11,7 +11,7 @@ import io.demo.crm.common.response.result.MsHttpResultCode;
 import io.demo.crm.common.dto.UserDTO;
 import io.demo.crm.common.dto.LoginRequest;
 import io.demo.crm.common.dto.SessionUser;
-import io.demo.crm.common.log.constants.LogType;
+import io.demo.crm.modules.system.logger.constants.LogType;
 import io.demo.crm.modules.system.service.UserLoginService;
 import io.demo.crm.common.util.SessionUtils;
 import io.swagger.v3.oas.annotations.Operation;

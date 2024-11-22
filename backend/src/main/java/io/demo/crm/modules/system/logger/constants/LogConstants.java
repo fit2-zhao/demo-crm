@@ -1,4 +1,4 @@
-package io.demo.crm.common.log.constants;
+package io.demo.crm.modules.system.logger.constants;
 
 public class LogConstants {
     public static final String SYSTEM = "SYSTEM";

@@ -1,6 +1,6 @@
-package io.demo.crm.common.log.service;
+package io.demo.crm.modules.system.logger.service;
 
-import io.demo.crm.common.log.dto.LogDTO;
+import io.demo.crm.modules.system.logger.dto.LogDTO;
 import io.demo.crm.common.uid.IDGenerator;
 import io.demo.crm.common.util.BeanUtils;
 import io.demo.crm.modules.system.domain.OperationLog;

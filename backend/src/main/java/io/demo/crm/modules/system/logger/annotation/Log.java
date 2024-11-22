@@ -1,6 +1,6 @@
-package io.demo.crm.common.log.annotation;
+package io.demo.crm.modules.system.logger.annotation;
 
-import io.demo.crm.common.log.constants.LogType;
+import io.demo.crm.modules.system.logger.constants.LogType;
 
 import java.lang.annotation.*;
 

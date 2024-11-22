@@ -1,4 +1,4 @@
-package io.demo.crm.common.log.dto;
+package io.demo.crm.modules.system.logger.dto;
 
 import io.demo.crm.modules.system.domain.OperationLog;
 import io.swagger.v3.oas.annotations.media.Schema;

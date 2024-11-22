@@ -1,9 +1,9 @@
 package io.demo.crm.config;
 
-import io.demo.crm.common.security.ShiroFilter;
-import io.demo.crm.common.security.ApiKeyFilter;
-import io.demo.crm.common.security.CsrfFilter;
-import io.demo.crm.common.security.realm.LocalRealm;
+import io.demo.crm.modules.system.security.ShiroFilter;
+import io.demo.crm.modules.system.security.ApiKeyFilter;
+import io.demo.crm.modules.system.security.CsrfFilter;
+import io.demo.crm.modules.system.security.realm.LocalRealm;
 import org.apache.shiro.aop.AnnotationResolver;
 import org.apache.shiro.authz.aop.*;
 import org.apache.shiro.cache.CacheManager;

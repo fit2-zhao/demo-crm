@@ -1,4 +1,4 @@
-package io.demo.crm.common.log.constants;
+package io.demo.crm.modules.system.logger.constants;
 
 /**
  * 操作日志类型枚举类。

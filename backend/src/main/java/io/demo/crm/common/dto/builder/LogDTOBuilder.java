@@ -1,6 +1,6 @@
 package io.demo.crm.common.dto.builder;
 
-import io.demo.crm.common.log.dto.LogDTO;
+import io.demo.crm.modules.system.logger.dto.LogDTO;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

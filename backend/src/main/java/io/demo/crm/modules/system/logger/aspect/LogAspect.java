@@ -1,11 +1,11 @@
-package io.demo.crm.common.log.aspect;
+package io.demo.crm.modules.system.logger.aspect;
 
 import io.demo.crm.common.util.JSON;
 import io.demo.crm.common.util.LogUtils;
-import io.demo.crm.common.log.annotation.Log;
-import io.demo.crm.common.log.constants.LogType;
-import io.demo.crm.common.log.dto.LogDTO;
-import io.demo.crm.common.log.service.LogService;
+import io.demo.crm.modules.system.logger.annotation.Log;
+import io.demo.crm.modules.system.logger.constants.LogType;
+import io.demo.crm.modules.system.logger.dto.LogDTO;
+import io.demo.crm.modules.system.logger.service.LogService;
 import io.demo.crm.common.util.SessionUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -67,7 +67,7 @@ public class LogAspect {
     /**
      * 定义切点，拦截带有 @Log 注解的方法
      */
-    @Pointcut("@annotation(io.demo.crm.common.log.annotation.Log)")
+    @Pointcut("@annotation(io.demo.crm.modules.system.logger.annotation.Log)")
     public void logPointCut() {
     }
 

@@ -1,4 +1,4 @@
-package io.demo.crm.common.security;
+package io.demo.crm.modules.system.security;
 
 import java.util.HashMap;
 import java.util.Map;
