@@ -2,12 +2,12 @@ package io.demo.crm.common.security.realm;
 
 
 import io.demo.crm.config.SessionConstants;
-import io.demo.crm.services.system.constants.UserSource;
+import io.demo.crm.modules.system.constants.UserSource;
 import io.demo.crm.common.util.LogUtils;
 import io.demo.crm.common.util.Translator;
 import io.demo.crm.common.dto.SessionUser;
 import io.demo.crm.common.dto.UserDTO;
-import io.demo.crm.services.system.service.UserLoginService;
+import io.demo.crm.modules.system.service.UserLoginService;
 import io.demo.crm.common.util.SessionUtils;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;

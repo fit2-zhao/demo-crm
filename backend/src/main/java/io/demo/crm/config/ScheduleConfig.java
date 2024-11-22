@@ -1,7 +1,7 @@
 package io.demo.crm.config;
 
-import io.demo.crm.services.system.schedule.ScheduleManager;
-import io.demo.crm.services.system.schedule.ScheduleService;
+import io.demo.crm.modules.system.schedule.ScheduleManager;
+import io.demo.crm.modules.system.schedule.ScheduleService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

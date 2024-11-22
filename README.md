@@ -117,7 +117,7 @@ spring.datasource.username=username
 │       │   │               ├── dao            # 封装通用数据访问层（DAL）
 │       │   │               ├── config         # 配置类
 │       │   │               ├── listener       # 事件监听器
-│       │   │               └── services       # 服务层
+│       │   │               └── modules        # 各个业务模块
 │       │   │                   ├── customer   # 客户模块服务
 │       │   │                   ├── marketing  # 营销模块服务
 │       │   │                   ├── order      # 订单模块服务

@@ -1,6 +1,6 @@
 package io.demo.crm.common.log.dto;
 
-import io.demo.crm.services.system.domain.OperationLog;
+import io.demo.crm.modules.system.domain.OperationLog;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
