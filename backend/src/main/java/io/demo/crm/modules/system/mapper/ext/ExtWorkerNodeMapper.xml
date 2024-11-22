@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="io.demo.crm.modules.system.mapper.ExtWorkerNodeMapper">
+<mapper namespace="io.demo.crm.modules.system.mapper.ext.ExtWorkerNodeMapper">
 
   <insert id="insert" parameterType="io.demo.crm.modules.system.domain.WorkerNode" useGeneratedKeys="true" keyProperty="id">
     insert into worker_node (host_name, port, type, launch_date, modified, created)
