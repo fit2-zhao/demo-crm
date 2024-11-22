@@ -1,4 +1,4 @@
-package io.demo.crm.common.dto;
+package io.demo.crm.common.pager.condition;
 
 import com.google.common.base.CaseFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
