@@ -3,9 +3,10 @@ package io.demo.crm.common.log.service;
 import io.demo.crm.common.log.dto.LogDTO;
 import io.demo.crm.common.uid.IDGenerator;
 import io.demo.crm.common.util.BeanUtils;
-import io.demo.crm.dao.BaseMapper;
 import io.demo.crm.services.system.domain.OperationLog;
 import io.demo.crm.services.system.domain.OperationLogBlob;
+import io.demo.crm.services.system.mapper.OperationLogBlobMapper;
+import io.demo.crm.services.system.mapper.OperationLogMapper;
 import jakarta.annotation.Resource;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -25,10 +26,10 @@ import java.util.List;
 public class LogService {
 
     @Resource
-    private BaseMapper<OperationLog> operationLogMapper;
+    private OperationLogMapper operationLogMapper;
 
     @Resource
-    private BaseMapper<OperationLogBlob> operationLogBlobMapper;
+    private OperationLogBlobMapper operationLogBlobMapper;
 
     /**
      * 根据 LogDTO 创建一个 OperationLogBlob 实体对象。
@@ -107,7 +108,7 @@ public class LogService {
                 .map(this::getBlob)
                 .toList();
         // 批量插入操作日志和日志Blob数据
-        operationLogMapper.batchInsert(items);
-        operationLogBlobMapper.batchInsert(blobs);
+        operationLogMapper.insert(items);
+        operationLogBlobMapper.insert(blobs);
     }
 }

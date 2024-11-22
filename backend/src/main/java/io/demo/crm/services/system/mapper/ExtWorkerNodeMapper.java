@@ -1,4 +1,4 @@
-package io.demo.crm.services.system.mapper.ext;
+package io.demo.crm.services.system.mapper;
 
 
 import io.demo.crm.services.system.domain.WorkerNode;

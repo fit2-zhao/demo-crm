@@ -1,9 +1,10 @@
 package io.demo.crm.services.system.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.demo.crm.common.util.JSON;
 import io.demo.crm.common.util.LogUtils;
-import io.demo.crm.dao.BaseMapper;
 import io.demo.crm.services.system.domain.Schedule;
+import io.demo.crm.services.system.mapper.ScheduleMapper;
 import io.demo.crm.services.system.mapper.ext.ExtScheduleMapper;
 import io.demo.crm.services.system.schedule.ScheduleManager;
 import jakarta.annotation.Resource;
@@ -19,7 +20,7 @@ import java.util.List;
 public class ExtScheduleService {
 
     @Resource
-    private BaseMapper<Schedule> scheduleMapper;
+    private ScheduleMapper scheduleMapper;
     @Resource
     private ScheduleManager scheduleManager;
     @Resource
@@ -30,7 +31,7 @@ public class ExtScheduleService {
     );
 
     public void startEnableSchedules() {
-        long count = scheduleMapper.countByExample(new Schedule());
+        long count = scheduleMapper.selectCount(new QueryWrapper<>());
         long pages = (long) Math.ceil(count / 100.0);
 
         for (int i = 0; i < pages; i++) {

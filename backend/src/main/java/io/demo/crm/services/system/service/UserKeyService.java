@@ -1,5 +1,6 @@
 package io.demo.crm.services.system.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.demo.crm.common.dto.builder.LogDTOBuilder;
 import io.demo.crm.common.exception.SystemException;
 import io.demo.crm.common.log.constants.LogConstants;
@@ -10,9 +11,9 @@ import io.demo.crm.common.log.service.LogService;
 import io.demo.crm.common.uid.IDGenerator;
 import io.demo.crm.common.util.JSON;
 import io.demo.crm.common.util.Translator;
-import io.demo.crm.dao.BaseMapper;
 import io.demo.crm.services.system.constants.HttpMethodConstants;
 import io.demo.crm.services.system.domain.UserKey;
+import io.demo.crm.services.system.mapper.UserKeyMapper;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ import java.util.List;
 public class UserKeyService {
 
     @Resource
-    private BaseMapper<UserKey> userKeyMapper;
+    private UserKeyMapper userKeyMapper;
 
     @Resource
     private UserLoginService userLoginService;
@@ -38,9 +39,9 @@ public class UserKeyService {
      * 获取指定用户的 API 密钥信息
      */
     public List<UserKey> getUserKeysInfo(String userId) {
-        UserKey example = new UserKey();
-        example.setCreateUser(userId);
-        return userKeyMapper.select(example);
+        QueryWrapper<UserKey> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("create_user", userId);
+        return userKeyMapper.selectList(queryWrapper);
     }
 
     /**
@@ -67,7 +68,7 @@ public class UserKeyService {
      */
     public void deleteUserKey(String id) {
         UserKey userKey = validateAndGetUserKey(id);
-        userKeyMapper.deleteByPrimaryKey(userKey.getId());
+        userKeyMapper.deleteById(userKey.getId());
     }
 
     /**
@@ -93,7 +94,9 @@ public class UserKeyService {
         UserKey example = new UserKey();
         example.setAccessKey(accessKey);
         example.setEnable(true);
-        List<UserKey> userKeysList = userKeyMapper.select(example);
+        QueryWrapper<UserKey> queryWrapper = new QueryWrapper<>(example);
+        List<UserKey> userKeysList = userKeyMapper.selectList(queryWrapper);
+
         return CollectionUtils.isEmpty(userKeysList) ? null : userKeysList.getFirst();
     }
 
@@ -101,7 +104,7 @@ public class UserKeyService {
      * 校验 API 密钥是否存在
      */
     private UserKey validateAndGetUserKey(String id) {
-        UserKey userKey = userKeyMapper.selectByPrimaryKey(id);
+        UserKey userKey = userKeyMapper.selectById(id);
         if (userKey == null) {
             throw new SystemException(Translator.get("api_key_not_exist"));
         }
@@ -123,7 +126,9 @@ public class UserKeyService {
     private List<UserKey> getUserKeysByUserId(String userId) {
         UserKey example = new UserKey();
         example.setCreateUser(userId);
-        return userKeyMapper.select(example);
+
+        QueryWrapper<UserKey> queryWrapper = new QueryWrapper<>(example);
+        return userKeyMapper.selectList(queryWrapper);
     }
 
     /**

@@ -1,4 +1,4 @@
-package io.demo.crm.common.util.pager;
+package io.demo.crm.common.pager;
 
 import lombok.Data;
 

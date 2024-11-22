@@ -1,5 +1,7 @@
 package io.demo.crm.services.system.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import io.demo.crm.common.dto.LoginRequest;
 import io.demo.crm.common.dto.SessionUser;
 import io.demo.crm.common.dto.UserDTO;
@@ -12,10 +14,10 @@ import io.demo.crm.common.response.handler.ResultHolder;
 import io.demo.crm.common.util.CodingUtils;
 import io.demo.crm.common.util.SessionUtils;
 import io.demo.crm.common.util.Translator;
-import io.demo.crm.dao.BaseMapper;
 import io.demo.crm.services.system.constants.HttpMethodConstants;
 import io.demo.crm.services.system.constants.UserSource;
 import io.demo.crm.services.system.domain.User;
+import io.demo.crm.services.system.mapper.UserMapper;
 import io.demo.crm.services.system.mapper.ext.ExtUserMapper;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.BooleanUtils;
@@ -34,7 +36,7 @@ import java.util.List;
 @Transactional(rollbackFor = Exception.class)
 public class UserLoginService {
     @Resource
-    private BaseMapper<User> userMapper;
+    private UserMapper userMapper;
     @Resource
     private LogService logService;
     @Resource
@@ -52,9 +54,9 @@ public class UserLoginService {
     }
 
     public UserDTO getUserDTOByEmail(String email, String... source) {
-        User example = new User();
-        example.setEmail(email);
-        List<User> users = userMapper.select(example);
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("email", email);
+        List<User> users = userMapper.selectList(queryWrapper);
         if (users == null || users.isEmpty()) {
             return null;
         }
@@ -108,12 +110,17 @@ public class UserLoginService {
         User example = new User();
         example.setId(userId);
         example.setPassword(CodingUtils.md5(password));
-        return userMapper.exist(example);
+
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", userId);
+        queryWrapper.eq("password", CodingUtils.md5(password));
+
+        return userMapper.exists(queryWrapper);
     }
 
     //保存日志
     public void saveLog(String userId, String method, String path, String content, String type) {
-        User user = userMapper.selectByPrimaryKey(userId);
+        User user = userMapper.selectById(userId);
         LogDTO dto = new LogDTO(
                 LogConstants.SYSTEM,
                 LogConstants.SYSTEM,

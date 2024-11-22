@@ -3,9 +3,9 @@ package io.demo.crm.services.system.schedule;
 import io.demo.crm.common.exception.SystemException;
 import io.demo.crm.common.uid.IDGenerator;
 import io.demo.crm.common.uid.NumGenerator;
-import io.demo.crm.dao.BaseMapper;
 import io.demo.crm.services.system.constants.ApplicationNumScope;
 import io.demo.crm.services.system.domain.Schedule;
+import io.demo.crm.services.system.mapper.ScheduleMapper;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ScheduleService {
 
     @Resource
-    private BaseMapper<Schedule> scheduleMapper;
+    private ScheduleMapper scheduleMapper;
 
     @Resource
     private ScheduleManager scheduleManager;
@@ -59,7 +59,7 @@ public class ScheduleService {
      * @return 定时任务对象
      */
     public Schedule getSchedule(String scheduleId) {
-        return scheduleMapper.selectByPrimaryKey(scheduleId);
+        return scheduleMapper.selectById(scheduleId);
     }
 
     /**
@@ -70,7 +70,7 @@ public class ScheduleService {
      */
     public int editSchedule(Schedule schedule) {
         schedule.setUpdateTime(System.currentTimeMillis());
-        return scheduleMapper.update(schedule);
+        return scheduleMapper.updateById(schedule);
     }
 
     /**
