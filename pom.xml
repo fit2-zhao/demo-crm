@@ -11,7 +11,7 @@
     </parent>
 
     <packaging>pom</packaging>
-    <groupId>io.demo.crm</groupId>
+    <groupId>io.demo</groupId>
     <artifactId>demo</artifactId>
     <version>${revision}</version>
     <name>demo</name>
@@ -47,6 +47,7 @@
         <commons-io.version>2.15.1</commons-io.version>
         <testcontainers.version>1.20.3</testcontainers.version>
         <mybatis.generator.version>1.4.2</mybatis.generator.version>
+        <guava.version>31.1-jre</guava.version>
     </properties>
 
     <modules>

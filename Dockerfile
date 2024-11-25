@@ -15,7 +15,7 @@ ADD frontend/public /app/static
 
 
 ENV JAVA_CLASSPATH=/app:/opt/jmeter/lib/ext/*:/app/lib/*
-ENV JAVA_MAIN_CLASS=io.metersphere.Application
+ENV JAVA_MAIN_CLASS=io.demo.Application
 ENV AB_OFF=true
 ENV MS_VERSION=${MS_VERSION}
 ENV JAVA_OPTIONS="-Dfile.encoding=utf-8 -Djava.awt.headless=true --add-opens java.base/jdk.internal.loader=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED"
