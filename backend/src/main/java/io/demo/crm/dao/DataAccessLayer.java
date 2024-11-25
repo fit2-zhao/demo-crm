@@ -1,6 +1,7 @@
 package io.demo.crm.dao;
 
 import io.demo.crm.common.util.LogUtils;
+import io.demo.crm.dao.lambda.LambdaQueryWrapper;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.SqlCommandType;
@@ -132,6 +133,13 @@ public class DataAccessLayer implements ApplicationContextAware {
             String sql = new BaseMapper.SelectByCriteriaSqlProvider().buildSql(criteria, this.table);
             String msId = execute(sql, table.getEntityClass(), resultType, SqlCommandType.SELECT);
             return sqlSession.selectList(msId, criteria);
+        }
+
+        @Override
+        public List<E> selectListByLambda(LambdaQueryWrapper<E> wrapper) {
+            String sql = new BaseMapper.SelectByLambdaSqlProvider().buildSql(wrapper, this.table);
+            String msId = execute(sql, table.getEntityClass(), resultType, SqlCommandType.SELECT);
+            return sqlSession.selectList(msId, wrapper);
         }
 
         @Override

@@ -1,5 +1,6 @@
 package io.demo.crm.dao;
 
+import io.demo.crm.dao.lambda.LambdaQueryWrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.jdbc.AbstractSQL;
@@ -100,6 +101,15 @@ public interface BaseMapper<E> {
      */
     @SelectProvider(type = SelectByCriteriaSqlProvider.class, method = "invoke")
     List<E> select(E criteria);
+
+    /**
+     * 使用 LambdaQueryWrapper 查询记录列表。
+     *
+     * @param wrapper LambdaQueryWrapper 查询条件
+     * @return 查询结果列表
+     */
+    @SelectProvider(type = SelectByLambdaSqlProvider.class, method = "invoke")
+    List<E> selectListByLambda(@Param("wrapper") LambdaQueryWrapper<E> wrapper);
 
     /**
      * 根据条件查询单条记录。
@@ -298,6 +308,32 @@ public interface BaseMapper<E> {
             );
         }
     }
+
+    class SelectByLambdaSqlProvider extends AbstractSqlProviderSupport {
+        @Override
+        public SQL sql(Object criteria) {
+            LambdaQueryWrapper<?> wrapper = (LambdaQueryWrapper<?>) criteria;
+
+            SQL sql = new SQL()
+                    .SELECT(table.getSelectColumns())
+                    .FROM(table.getTableName());
+
+            // 将 LambdaQueryWrapper 的条件解析为 WHERE 子句
+            String whereClause = wrapper.getWhereClause();
+            if (StringUtils.isNotBlank(whereClause)) {
+                sql.WHERE(whereClause);
+            }
+
+            // 解析排序条件
+            String orderByClause = wrapper.getOrderByClause();
+            if (StringUtils.isNotBlank(orderByClause)) {
+                sql.ORDER_BY(orderByClause);
+            }
+
+            return sql;
+        }
+    }
+
 
     class CountByCriteriaSqlProvider extends AbstractSqlProviderSupport {
         @Override
