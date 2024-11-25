@@ -1,6 +1,6 @@
 package io.demo.crm.common.dto;
 
-import io.demo.crm.services.system.domain.User;
+import io.demo.crm.modules.system.domain.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 

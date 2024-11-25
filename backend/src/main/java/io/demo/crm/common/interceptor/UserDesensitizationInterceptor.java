@@ -1,6 +1,6 @@
 package io.demo.crm.common.interceptor;
 
-import io.demo.crm.services.system.domain.User;
+import io.demo.crm.modules.system.domain.User;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;

@@ -2,8 +2,8 @@
 package io.demo.crm.common.uid.worker;
 
 import io.demo.crm.common.util.LogUtils;
-import io.demo.crm.services.system.domain.WorkerNode;
-import io.demo.crm.services.system.mapper.ext.ExtWorkerNodeMapper;
+import io.demo.crm.modules.system.domain.WorkerNode;
+import io.demo.crm.modules.system.mapper.ExtWorkerNodeMapper;
 import io.demo.crm.common.uid.utils.DockerUtils;
 import io.demo.crm.common.uid.utils.NetUtils;
 import jakarta.annotation.Resource;

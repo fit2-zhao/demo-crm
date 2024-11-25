@@ -1,6 +1,6 @@
 package io.demo.crm.common.uid;
 
-import io.demo.crm.services.system.constants.ApplicationNumScope;
+import io.demo.crm.modules.system.constants.ApplicationNumScope;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.Redisson;

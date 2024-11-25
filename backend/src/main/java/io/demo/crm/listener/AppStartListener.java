@@ -7,7 +7,7 @@ import io.demo.crm.common.util.HikariCPUtils;
 import io.demo.crm.common.util.LogUtils;
 import io.demo.crm.common.util.rsa.RsaKey;
 import io.demo.crm.common.util.rsa.RsaUtils;
-import io.demo.crm.services.system.service.ExtScheduleService;
+import io.demo.crm.modules.system.service.ExtScheduleService;
 import io.minio.MinioClient;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.SerializationUtils;

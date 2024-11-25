@@ -2,8 +2,8 @@ package io.demo.crm.common.security;
 
 import io.demo.crm.common.util.CodingUtils;
 import io.demo.crm.common.util.CommonBeanFactory;
-import io.demo.crm.services.system.domain.UserKey;
-import io.demo.crm.services.system.service.UserKeyService;
+import io.demo.crm.modules.system.domain.UserKey;
+import io.demo.crm.modules.system.service.UserKeyService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
