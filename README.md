@@ -95,55 +95,88 @@ spring.datasource.username=username
 ## 项目结构
 
 ```plaintext
-.
-├── backend                   # 后端服务代码目录
-│   └── src
-│       ├── main              # 主应用代码
-│       │   ├── java          # Java 源代码
-│       │   │   └── io
-│       │   │       └── demo
-│       │   │           └── crm
-│       │   │               ├── common         # 公共模块
-│       │   │               │   ├── response # 响应内容封装处理
-│       │   │               │   ├── dto        # 数据传输对象（Data Transfer Objects）
-│       │   │               │   ├── exception  # 异常处理类
-│       │   │               │   ├── file       # 文件相关处理
-│       │   │               │   ├── groups     # 分组类，用于校验等
-│       │   │               │   ├── interceptor# 拦截器
-│       │   │               │   ├── log        # 日志管理
-│       │   │               │   ├── security   # 安全性相关
-│       │   │               │   ├── uid        # 唯一标识符生成
-│       │   │               │   └── util       # 工具类
-│       │   │               ├── dao            # 封装通用数据访问层（DAL）
-│       │   │               ├── config         # 配置类
-│       │   │               ├── listener       # 事件监听器
-│       │   │               └── services       # 服务层
-│       │   │                   ├── customer   # 客户模块服务
-│       │   │                   ├── marketing  # 营销模块服务
-│       │   │                   ├── order      # 订单模块服务
-│       │   │                   ├── reporting  # 报告模块服务
-│       │   │                   ├── sales      # 销售模块服务
-│       │   │                   └── system     # 系统模块服务
-│       │   └── resources      # 资源文件目录
-│       │       ├── i18n       # 国际化文件
-│       │       └── migration  # 数据库迁移脚本
-│       │           └── 1.0.0
-│       │               ├── ddl # 数据定义语言（Data Definition Language）
-│       │               └── dml # 数据操作语言（Data Manipulation Language）
-│       └── test               # 测试代码
-│           ├── java           # Java 测试代码
-│           │   └── io
-│           │       └── demo
-│           │           └── crm
-│           │               └── services
-│           │                   └── system # 系统模块测试代码
-│           └── resources      # 测试资源
-│               └── dml        # 数据操作语言文件，用于测试数据
-└── frontend                   # 前端代码目录
-    ├── public                # 公共资源
-    └── src                   # 前端源代码
-        ├── assets            # 静态资源（图片、样式等）
-        └── components        # 组件
+├── backend                       # 后端代码
+│   ├── framework                  # 框架层
+│   │   ├── src                    # 源代码
+│   │   │   └── main               # 主代码
+│   │   │       ├── java           # Java代码
+│   │   │       │   └── io         # IO层
+│   │   │       │       └── demo   # 示例代码
+│   │   │       │           ├── aspectj  # AOP相关
+│   │   │       │           │   ├── annotation    # 注解
+│   │   │       │           │   ├── aspect        # 切面
+│   │   │       │           │   ├── builder       # 构建器
+│   │   │       │           │   ├── constants     # 常量
+│   │   │       │           │   ├── dto           # 数据传输对象
+│   │   │       │           │   └── event         # 事件
+│   │   │       │           ├── common  # 公共功能
+│   │   │       │           │   ├── constants     # 常量
+│   │   │       │           │   ├── exception     # 异常
+│   │   │       │           │   ├── groups        # 分组
+│   │   │       │           │   ├── pager         # 分页
+│   │   │       │           │   │   └── condition  # 条件分页
+│   │   │       │           │   ├── response      # 响应处理
+│   │   │       │           │   │   ├── handler    # 响应处理器
+│   │   │       │           │   │   └── result     # 结果
+│   │   │       │           │   ├── uid           # 唯一标识符
+│   │   │       │           │   │   ├── buffer    # 缓冲区
+│   │   │       │           │   │   ├── impl      # 实现
+│   │   │       │           │   │   ├── utils     # 工具
+│   │   │       │           │   │   └── worker    # 工作单元
+│   │   │       │           │   └── util          # 工具类
+│   │   │       │           │       └── rsa       # RSA加密
+│   │   │       │           ├── config      # 配置
+│   │   │       │           ├── file        # 文件
+│   │   │       │           │   └── engine   # 引擎
+│   │   │       │           ├── mybatis     # MyBatis配置
+│   │   │       │           │   ├── interceptor  # 拦截器
+│   │   │       │           │   └── lambda       # Lambda
+│   │   │       │           └── security    # 安全性
+│   └── module-crm                # CRM模块
+│       ├── src                    # 源代码
+│       │   ├── main               # 主代码
+│       │   │   ├── java           # Java代码
+│       │   │   │   └── io         # IO层
+│       │   │   │       └── demo   # 示例代码
+│       │   │   │           ├── common  # 公共功能
+│       │   │   │           │   ├── constants  # 常量
+│       │   │   │           │   ├── interceptor  # 拦截器
+│       │   │   │           │   ├── request     # 请求
+│       │   │   │           │   ├── schedule    # 调度
+│       │   │   │           │   └── security    # 安全性
+│       │   │   │           │       └── realm   # 领域
+│       │   │   │           ├── config      # 配置
+│       │   │   │           ├── listener    # 监听器
+│       │   │   │           └── modules     # 模块
+│       │   │   │               ├── customer    # 客户模块
+│       │   │   │               ├── marketing   # 市场模块
+│       │   │   │               ├── order       # 订单模块
+│       │   │   │               ├── reporting   # 报告模块
+│       │   │   │               ├── sales       # 销售模块
+│       │   │   │               └── system      # 系统模块
+│       │   │   │                   ├── controller   # 控制器
+│       │   │   │                   ├── domain       # 领域模型
+│       │   │   │                   ├── mapper       # 映射器
+│       │   │   │                   └── service      # 服务
+│       │   │   └── resources       # 资源
+│       │   │       ├── i18n        # 国际化
+│       │   │       ├── migration   # 数据库迁移
+│       │   │       │   └── 1.0.0   # 迁移版本
+│       │   │       └── static      # 静态文件
+│       │   │           ├── css     # CSS样式
+│       │   │           └── js      # JS脚本
+│       │   └── test                # 测试代码
+│       │       ├── java           # 测试代码
+│       │       │   └── io         # IO层
+│       │       │       └── demo   # 示例代码
+└── frontend                      # 前端代码
+    ├── dist                      # 发布版本
+    │   ├── css                   # CSS文件
+    │   └── js                    # JavaScript文件
+    ├── public                    # 公共静态资源
+    └── src                       # 源代码
+        ├── assets                 # 静态资源
+        └── components             # 组件
 
 ```
 
