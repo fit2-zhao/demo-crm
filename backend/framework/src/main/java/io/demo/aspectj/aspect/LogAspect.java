@@ -246,7 +246,7 @@ public class LogAspect {
             logDTO.setPath(getPath());
         });
 
-        logService.publishEvent(logDTOList);
+        logService.publishLogEvent(logDTOList);
     }
 
     /**
