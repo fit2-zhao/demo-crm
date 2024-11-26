@@ -41,10 +41,8 @@ public class LogEventPublisherService {
         if (logs == null || logs.isEmpty()) {
             throw new IllegalArgumentException("日志列表不能为空！");
         }
-        // 转换为不可变集合，确保数据安全性
-        List<LogDTO> immutableLogs = List.copyOf(logs);
         // 创建并发布日志事件
-        LogEvent event = new LogEvent(immutableLogs);
+        LogEvent event = new LogEvent(logs);
         eventPublisher.publishEvent(event);
     }
 }
