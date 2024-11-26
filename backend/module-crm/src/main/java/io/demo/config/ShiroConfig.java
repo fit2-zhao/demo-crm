@@ -1,6 +1,6 @@
 package io.demo.config;
 
-import io.demo.common.security.ShiroFilter;
+import io.demo.security.ShiroFilter;
 import io.demo.common.security.ApiKeyFilter;
 import io.demo.common.security.CsrfFilter;
 import io.demo.common.security.realm.LocalRealm;

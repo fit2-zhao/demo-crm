@@ -9,14 +9,7 @@
         <version>${revision}</version>
     </parent>
 
-    <packaging>pom</packaging>
-    <groupId>io.demo</groupId>
     <artifactId>framework</artifactId>
     <version>${revision}</version>
-
-    <modules>
-        <module>common</module>
-        <module>mybatis</module>
-    </modules>
 
 </project>

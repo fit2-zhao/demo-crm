@@ -2,8 +2,9 @@ package io.demo.common.security;
 
 import io.demo.common.util.CodingUtils;
 import io.demo.common.util.CommonBeanFactory;
-import io.demo.common.dto.SessionUser;
-import io.demo.common.util.SessionUtils;
+import io.demo.security.SessionConstants;
+import io.demo.security.SessionUser;
+import io.demo.security.SessionUtils;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;

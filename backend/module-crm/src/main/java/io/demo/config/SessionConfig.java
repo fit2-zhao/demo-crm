@@ -1,7 +1,7 @@
 package io.demo.config;
 
 import com.fit2cloud.quartz.anno.QuartzScheduled;
-import io.demo.common.security.SessionConstants;
+import io.demo.security.SessionConstants;
 import io.demo.common.util.JSON;
 import io.demo.common.util.LogUtils;
 import jakarta.annotation.Resource;

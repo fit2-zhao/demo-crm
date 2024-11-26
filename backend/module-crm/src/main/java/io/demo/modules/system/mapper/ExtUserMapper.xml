@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="io.demo.modules.system.mapper.ExtUserMapper">
 
-    <select id="selectById" resultType="io.demo.common.dto.UserDTO">
+    <select id="selectById" resultType="io.demo.security.UserDTO">
         SELECT *
         FROM user
                  LEFT JOIN user_extend ON user.id = user_extend.id

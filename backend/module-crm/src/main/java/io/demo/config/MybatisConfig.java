@@ -3,8 +3,8 @@ package io.demo.config;
 import com.fit2cloud.quartz.anno.QuartzDataSource;
 import com.github.pagehelper.PageInterceptor;
 import com.zaxxer.hikari.HikariDataSource;
-import io.demo.common.interceptor.MybatisInterceptor;
 import io.demo.common.interceptor.UserDesensitizationInterceptor;
+import io.demo.mybatis.interceptor.MybatisInterceptor;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
@@ -30,7 +30,7 @@ import java.util.Properties;
  * @version 1.0
  */
 @Configuration
-@MapperScan(basePackages = {"io.demo.modules.*.mapper", "io.demo.modules.*.mapper.ext"}, sqlSessionFactoryRef = "sqlSessionFactory")
+@MapperScan(basePackages = {"io.demo.modules.*.mapper"}, sqlSessionFactoryRef = "sqlSessionFactory")
 @EnableTransactionManagement
 public class MybatisConfig {
 

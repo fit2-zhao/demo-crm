@@ -1,6 +1,6 @@
 package io.demo;
 
-import io.demo.common.file.storage.MinioProperties;
+import io.demo.file.engine.MinioProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.ldap.LdapAutoConfiguration;
@@ -29,3 +29,5 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 }
+
+

@@ -1,19 +1,19 @@
 package io.demo.modules.system.controller;
 
+import io.demo.aspectj.constants.LogType;
+import io.demo.common.constants.HttpMethodConstants;
+import io.demo.common.constants.UserSource;
+import io.demo.common.request.LoginRequest;
 import io.demo.common.exception.SystemException;
 import io.demo.common.response.handler.ResultHolder;
 import io.demo.common.response.result.MsHttpResultCode;
 import io.demo.common.util.Translator;
 import io.demo.common.util.rsa.RsaKey;
 import io.demo.common.util.rsa.RsaUtils;
-import io.demo.common.constants.HttpMethodConstants;
-import io.demo.common.constants.UserSource;
-import io.demo.common.dto.LoginRequest;
-import io.demo.common.dto.SessionUser;
-import io.demo.common.dto.UserDTO;
-import io.demo.common.logger.constants.LogType;
 import io.demo.modules.system.service.UserLoginService;
-import io.demo.common.util.SessionUtils;
+import io.demo.security.SessionUser;
+import io.demo.security.SessionUtils;
+import io.demo.security.UserDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -43,11 +43,10 @@ public class LoginController {
      *
      * @param response HTTP 响应对象。
      * @return 返回用户会话信息，未登录则返回 401 错误。
-     * @throws Exception 可能抛出的异常。
      */
     @GetMapping(value = "/is-login")
     @Operation(summary = "是否登录")
-    public ResultHolder isLogin(HttpServletResponse response) throws Exception {
+    public ResultHolder isLogin(HttpServletResponse response) {
         SessionUser user = SessionUtils.getUser();
         if (user != null) {
             UserDTO userDTO = userLoginService.getUserDTO(user.getId());
@@ -98,11 +97,10 @@ public class LoginController {
      * 退出登录。
      *
      * @return 返回退出成功信息。
-     * @throws Exception 可能抛出的异常。
      */
     @GetMapping(value = "/signout")
     @Operation(summary = "退出登录")
-    public ResultHolder logout() throws Exception {
+    public ResultHolder logout() {
         if (SessionUtils.getUser() == null) {
             return ResultHolder.success("logout success");
         }
