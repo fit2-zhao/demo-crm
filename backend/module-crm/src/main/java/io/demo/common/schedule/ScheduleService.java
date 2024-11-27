@@ -1,6 +1,6 @@
 package io.demo.common.schedule;
 
-import io.demo.common.exception.SystemException;
+import io.demo.common.exception.GenericException;
 import io.demo.mybatis.BaseMapper;
 import io.demo.common.constants.ApplicationNumScope;
 import io.demo.modules.system.domain.Schedule;
@@ -101,14 +101,14 @@ public class ScheduleService {
                 scheduleManager.addOrUpdateCronJob(jobKey, triggerKey, clazz, cronExpression,
                         scheduleManager.getDefaultJobDataMap(request, cronExpression, request.getCreateUser()));
             } catch (SchedulerException e) {
-                throw new SystemException("定时任务开启异常: " + e.getMessage());
+                throw new GenericException("定时任务开启异常: " + e.getMessage());
             }
         } else {
             try {
                 // 移除定时任务
                 scheduleManager.removeJob(jobKey, triggerKey);
             } catch (Exception e) {
-                throw new SystemException("定时任务关闭异常: " + e.getMessage());
+                throw new GenericException("定时任务关闭异常: " + e.getMessage());
             }
         }
     }

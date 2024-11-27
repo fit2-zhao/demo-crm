@@ -1,6 +1,6 @@
 package io.demo.modules.system.service;
 
-import io.demo.common.exception.SystemException;
+import io.demo.common.exception.GenericException;
 import io.demo.common.response.handler.ResultHolder;
 import io.demo.common.util.CodingUtils;
 import io.demo.common.util.Translator;
@@ -80,7 +80,7 @@ public class UserLoginService {
                 SessionUtils.putUser(sessionUser);
                 return ResultHolder.success(sessionUser);
             } else {
-                throw new SystemException(Translator.get("login_fail"));
+                throw new GenericException(Translator.get("login_fail"));
             }
         } catch (ExcessiveAttemptsException e) {
             throw new ExcessiveAttemptsException(Translator.get("excessive_attempts"));
@@ -99,10 +99,10 @@ public class UserLoginService {
 
     public boolean checkUserPassword(String userId, String password) {
         if (StringUtils.isBlank(userId)) {
-            throw new SystemException(Translator.get("user_name_is_null"));
+            throw new GenericException(Translator.get("user_name_is_null"));
         }
         if (StringUtils.isBlank(password)) {
-            throw new SystemException(Translator.get("password_is_null"));
+            throw new GenericException(Translator.get("password_is_null"));
         }
         User example = new User();
         example.setId(userId);

@@ -1,7 +1,7 @@
 
 package io.demo.common.uid.impl;
 
-import io.demo.common.exception.SystemException;
+import io.demo.common.exception.GenericException;
 import io.demo.common.uid.BitsAllocator;
 import io.demo.common.uid.utils.TimeUtils;
 import io.demo.common.uid.worker.WorkerIdAssigner;
@@ -66,7 +66,7 @@ public class DefaultUidGenerator implements DisposableBean {
         LogUtils.info("Initialized bits(1, {}, {}, {}) for workerID:{}", timeBits, workerBits, seqBits, workerId);
     }
 
-    public long getUID() throws SystemException {
+    public long getUID() throws GenericException {
         try {
             return nextId();
         } catch (Exception e) {
@@ -99,7 +99,7 @@ public class DefaultUidGenerator implements DisposableBean {
      * Get UID
      *
      * @return UID
-     * @throws SystemException in the case: Clock moved backwards; Exceeds the max timestamp
+     * @throws GenericException in the case: Clock moved backwards; Exceeds the max timestamp
      */
     protected synchronized long nextId() {
         long currentSecond = getCurrentSecond();
@@ -107,7 +107,7 @@ public class DefaultUidGenerator implements DisposableBean {
         // Clock moved backwards, refuse to generate uid
         if (currentSecond < lastSecond) {
             long refusedSeconds = lastSecond - currentSecond;
-            throw new SystemException("Clock moved backwards. Refusing for %d seconds" + refusedSeconds);
+            throw new GenericException("Clock moved backwards. Refusing for %d seconds" + refusedSeconds);
         }
 
         // At the same second, increase sequence
@@ -147,7 +147,7 @@ public class DefaultUidGenerator implements DisposableBean {
     private long getCurrentSecond() {
         long currentSecond = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
         if (currentSecond - epochSeconds > bitsAllocator.getMaxDeltaSeconds()) {
-            throw new SystemException("Timestamp bits is exhausted. Refusing UID generate. Now: " + currentSecond);
+            throw new GenericException("Timestamp bits is exhausted. Refusing UID generate. Now: " + currentSecond);
         }
 
         return currentSecond;

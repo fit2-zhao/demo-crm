@@ -1,6 +1,6 @@
 package io.demo.mybatis.lambda;
 
-import io.demo.common.exception.SystemException;
+import io.demo.common.exception.GenericException;
 
 import java.io.*;
 
@@ -32,7 +32,7 @@ public class SerializedLambda implements Serializable {
      *
      * @param serializable 可序列化对象，通常为 Lambda 表达式。
      * @return 提取的 {@link SerializedLambda} 对象。
-     * @throws SystemException 如果序列化或反序列化过程中出现异常。
+     * @throws GenericException 如果序列化或反序列化过程中出现异常。
      */
     public static SerializedLambda extract(Serializable serializable) {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -49,7 +49,7 @@ public class SerializedLambda implements Serializable {
                 return (SerializedLambda) ois.readObject();
             }
         } catch (IOException | ClassNotFoundException e) {
-            throw new SystemException("提取 Lambda 表达式时发生异常", e);
+            throw new GenericException("提取 Lambda 表达式时发生异常", e);
         }
     }
 

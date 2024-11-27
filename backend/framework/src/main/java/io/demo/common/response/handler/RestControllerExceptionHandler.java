@@ -1,7 +1,7 @@
 package io.demo.common.response.handler;
 
 import io.demo.common.exception.IResultCode;
-import io.demo.common.exception.SystemException;
+import io.demo.common.exception.GenericException;
 import io.demo.common.util.Translator;
 import io.demo.common.response.result.MsHttpResultCode;
 import io.demo.common.util.ServiceUtils;
@@ -69,8 +69,8 @@ public class RestControllerExceptionHandler {
      * @param e MSException 异常
      * @return ResponseEntity 返回响应实体，包含错误信息
      */
-    @ExceptionHandler(SystemException.class)
-    public ResponseEntity<ResultHolder> handlerMSException(SystemException e) {
+    @ExceptionHandler(GenericException.class)
+    public ResponseEntity<ResultHolder> handlerMSException(GenericException e) {
         IResultCode errorCode = e.getErrorCode();
         if (errorCode == null) {
             // 未设置 errorCode，返回内部服务器错误

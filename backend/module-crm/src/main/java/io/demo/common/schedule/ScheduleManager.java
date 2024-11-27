@@ -1,6 +1,6 @@
 package io.demo.common.schedule;
 
-import io.demo.common.exception.SystemException;
+import io.demo.common.exception.GenericException;
 import io.demo.common.util.LogUtils;
 import io.demo.modules.system.domain.Schedule;
 import jakarta.annotation.Resource;
@@ -76,7 +76,7 @@ public class ScheduleManager {
 
         } catch (Exception e) {
             LogUtils.error(e);
-            throw new SystemException("定时任务配置异常: " + e.getMessage(), e);
+            throw new GenericException("定时任务配置异常: " + e.getMessage(), e);
         }
     }
 

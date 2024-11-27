@@ -1,6 +1,6 @@
 package io.demo.modules.system.service;
 
-import io.demo.common.exception.SystemException;
+import io.demo.common.exception.GenericException;
 import io.demo.common.uid.IDGenerator;
 import io.demo.common.util.JSON;
 import io.demo.common.util.Translator;
@@ -52,7 +52,7 @@ public class UserKeyService {
 
         // 如果该用户已有 5 个密钥，抛出限制异常
         if (!CollectionUtils.isEmpty(userKeysList) && userKeysList.size() >= 5) {
-            throw new SystemException(Translator.get("user_apikey_limit"));
+            throw new GenericException(Translator.get("user_apikey_limit"));
         }
 
         UserKey userKey = generateUserKey(userId);
@@ -102,7 +102,7 @@ public class UserKeyService {
     private UserKey validateAndGetUserKey(String id) {
         UserKey userKey = userKeyMapper.selectByPrimaryKey(id);
         if (userKey == null) {
-            throw new SystemException(Translator.get("api_key_not_exist"));
+            throw new GenericException(Translator.get("api_key_not_exist"));
         }
         return userKey;
     }
@@ -112,7 +112,7 @@ public class UserKeyService {
      */
     private void validateUserExistence(String userId) {
         if (userLoginService.getUserDTO(userId) == null) {
-            throw new SystemException(Translator.get("user_not_exist") + userId);
+            throw new GenericException(Translator.get("user_not_exist") + userId);
         }
     }
 

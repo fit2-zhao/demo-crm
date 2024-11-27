@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * SystemException 是自定义的运行时异常，包含错误代码和详细信息。
  */
-public class SystemException extends RuntimeException {
+public class GenericException extends RuntimeException {
 
     /**
      * 错误代码
@@ -17,7 +17,7 @@ public class SystemException extends RuntimeException {
      *
      * @param message 错误信息
      */
-    public SystemException(String message) {
+    public GenericException(String message) {
         super(message);
     }
 
@@ -26,7 +26,7 @@ public class SystemException extends RuntimeException {
      *
      * @param t 异常对象
      */
-    public SystemException(Throwable t) {
+    public GenericException(Throwable t) {
         super(t);
     }
 
@@ -35,7 +35,7 @@ public class SystemException extends RuntimeException {
      *
      * @param errorCode 错误代码
      */
-    public SystemException(IResultCode errorCode) {
+    public GenericException(IResultCode errorCode) {
         super(StringUtils.EMPTY);
         if (errorCode == null) {
             throw new IllegalArgumentException("errorCode cannot be null");
@@ -49,7 +49,7 @@ public class SystemException extends RuntimeException {
      * @param errorCode 错误代码
      * @param message   错误信息
      */
-    public SystemException(IResultCode errorCode, String message) {
+    public GenericException(IResultCode errorCode, String message) {
         super(message);
         if (errorCode == null) {
             throw new IllegalArgumentException("errorCode cannot be null");
@@ -63,7 +63,7 @@ public class SystemException extends RuntimeException {
      * @param errorCode 错误代码
      * @param t         异常对象
      */
-    public SystemException(IResultCode errorCode, Throwable t) {
+    public GenericException(IResultCode errorCode, Throwable t) {
         super(t);
         if (errorCode == null) {
             throw new IllegalArgumentException("errorCode cannot be null");
@@ -77,7 +77,7 @@ public class SystemException extends RuntimeException {
      * @param message 错误信息
      * @param t       异常对象
      */
-    public SystemException(String message, Throwable t) {
+    public GenericException(String message, Throwable t) {
         super(message, t);
     }
 

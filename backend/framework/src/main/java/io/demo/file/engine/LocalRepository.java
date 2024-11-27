@@ -1,6 +1,6 @@
 package io.demo.file.engine;
 
-import io.demo.common.exception.SystemException;
+import io.demo.common.exception.GenericException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.util.FileUtil;
@@ -174,11 +174,11 @@ public class LocalRepository implements FileRepository {
      * 复制文件到指定目录（未实现）。
      *
      * @param request 文件复制请求信息。
-     * @throws SystemException 如果复制文件时发生不支持的操作，抛出系统异常。
+     * @throws GenericException 如果复制文件时发生不支持的操作，抛出系统异常。
      */
     @Override
     public void copyFile(FileCopyRequest request) throws Exception {
-        throw new SystemException("Not support copy file");
+        throw new GenericException("Not support copy file");
     }
 
     /**

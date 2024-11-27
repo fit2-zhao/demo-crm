@@ -4,7 +4,7 @@ import io.demo.aspectj.constants.LogType;
 import io.demo.common.constants.HttpMethodConstants;
 import io.demo.common.constants.UserSource;
 import io.demo.common.request.LoginRequest;
-import io.demo.common.exception.SystemException;
+import io.demo.common.exception.GenericException;
 import io.demo.common.response.handler.ResultHolder;
 import io.demo.common.response.result.MsHttpResultCode;
 import io.demo.common.util.Translator;
@@ -76,7 +76,7 @@ public class LoginController {
      *
      * @param request 登录请求对象，包含用户名和密码。
      * @return 登录结果。
-     * @throws SystemException 如果已登录且当前用户与请求用户名不同，抛出异常。
+     * @throws GenericException 如果已登录且当前用户与请求用户名不同，抛出异常。
      */
     @PostMapping(value = "/login")
     @Operation(summary = "登录")
@@ -85,7 +85,7 @@ public class LoginController {
         if (sessionUser != null) {
             // 如果当前用户已登录且用户名与请求用户名不匹配，抛出异常
             if (!StringUtils.equals(sessionUser.getId(), request.getUsername())) {
-                throw new SystemException(Translator.get("please_logout_current_user"));
+                throw new GenericException(Translator.get("please_logout_current_user"));
             }
         }
         // 设置认证方式为 LOCAL

@@ -1,6 +1,6 @@
 package io.demo.mybatis.lambda;
 
-import io.demo.common.exception.SystemException;
+import io.demo.common.exception.GenericException;
 import org.apache.ibatis.io.Resources;
 
 import java.util.Arrays;
@@ -68,13 +68,13 @@ public final class ClassUtils {
      * @param name        类的全限定名。
      * @param classLoader 类加载器。
      * @return 与类名对应的类对象。
-     * @throws SystemException 如果类无法找到或加载。
+     * @throws GenericException 如果类无法找到或加载。
      */
     public static Class<?> toClassConfident(String name, ClassLoader classLoader) {
         try {
             return loadClass(name, getClassLoaders(classLoader));
         } catch (ClassNotFoundException e) {
-            throw new SystemException("找不到指定的class！请仅在明确确定会有class的时候，调用该方法", e);
+            throw new GenericException("找不到指定的class！请仅在明确确定会有class的时候，调用该方法", e);
         }
     }
 

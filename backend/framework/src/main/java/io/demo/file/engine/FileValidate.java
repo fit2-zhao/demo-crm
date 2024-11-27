@@ -1,6 +1,6 @@
 package io.demo.file.engine;
 
-import io.demo.common.exception.SystemException;
+import io.demo.common.exception.GenericException;
 import io.demo.common.util.LogUtils;
 import io.demo.common.util.Translator;
 import org.apache.commons.io.FileUtils;
@@ -20,13 +20,13 @@ public class FileValidate {
      * Validates the file names to ensure they do not contain illegal characters.
      *
      * @param fileNames The file names to validate.
-     * @throws SystemException if any file name is invalid.
+     * @throws GenericException if any file name is invalid.
      */
     public static void validateFileName(String... fileNames) {
         if (fileNames != null) {
             for (String fileName : fileNames) {
                 if (StringUtils.isNotBlank(fileName) && fileName.contains("." + File.separator)) {
-                    throw new SystemException(Translator.get("invalid_parameter"));
+                    throw new GenericException(Translator.get("invalid_parameter"));
                 }
             }
         }

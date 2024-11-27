@@ -1,6 +1,6 @@
 package io.demo.file.engine;
 
-import io.demo.common.exception.SystemException;
+import io.demo.common.exception.GenericException;
 import io.demo.common.util.LogUtils;
 import io.minio.*;
 import io.minio.messages.Item;
@@ -77,12 +77,12 @@ public class MinioRepository implements FileRepository {
      *
      * @param request 文件请求对象
      * @return 文件路径
-     * @throws SystemException 如果文件夹名无效抛出异常
+     * @throws GenericException 如果文件夹名无效抛出异常
      */
     private String getPath(FileRequest request) {
         String folder = request.getFolder();
         if (!StringUtils.startsWithAny(folder, "system", "project", "organization")) {
-            throw new SystemException("folder.error");
+            throw new GenericException("folder.error");
         }
         return StringUtils.join(folder, "/", request.getFileName());
     }
