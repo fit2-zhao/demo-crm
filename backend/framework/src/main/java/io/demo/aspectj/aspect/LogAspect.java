@@ -3,7 +3,8 @@ package io.demo.aspectj.aspect;
 import io.demo.aspectj.annotation.Log;
 import io.demo.aspectj.constants.LogType;
 import io.demo.aspectj.dto.LogDTO;
-import io.demo.aspectj.event.LogEventPublisherService;
+import io.demo.aspectj.handler.OperationLogHandler;
+import io.demo.common.util.CommonBeanFactory;
 import io.demo.common.util.JSON;
 import io.demo.common.util.LogUtils;
 import io.demo.security.SessionUtils;
@@ -16,7 +17,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.StandardReflectionParameterNameDiscoverer;
 import org.springframework.expression.ExpressionParser;
@@ -46,8 +46,7 @@ public class LogAspect {
     @Resource
     private ApplicationContext applicationContext;
 
-    @Autowired
-    private LogEventPublisherService logService;
+    private OperationLogHandler operationLogHandler = CommonBeanFactory.getBean(OperationLogHandler.class);
 
     // 保存方法执行前的日志数据
     private final ThreadLocal<List<LogDTO>> beforeValues = new ThreadLocal<>();
@@ -246,7 +245,12 @@ public class LogAspect {
             logDTO.setPath(getPath());
         });
 
-        logService.publishLogEvent(logDTOList);
+        if (operationLogHandler == null) {
+            operationLogHandler = CommonBeanFactory.getBean(OperationLogHandler.class);
+        }
+
+        assert operationLogHandler != null;
+        operationLogHandler.handleLog(logDTOList);
     }
 
     /**

@@ -1,7 +1,7 @@
 package io.demo.modules.system.service;
 
 import io.demo.aspectj.dto.LogDTO;
-import io.demo.aspectj.event.LogEvent;
+import io.demo.aspectj.handler.OperationLogHandler;
 import io.demo.common.uid.IDGenerator;
 import io.demo.common.util.BeanUtils;
 import io.demo.modules.system.domain.OperationLog;
@@ -10,7 +10,6 @@ import io.demo.mybatis.BaseMapper;
 import jakarta.annotation.Resource;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,18 +22,13 @@ import java.util.List;
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class LogService {
+public class LogService implements OperationLogHandler {
 
     @Resource
     private BaseMapper<OperationLog> operationLogMapper;
 
     @Resource
     private BaseMapper<OperationLogBlob> operationLogBlobMapper;
-
-    @EventListener
-    public void handleLogEvent(LogEvent event) {
-        batchAdd(event.getLogs());
-    }
 
     /**
      * 根据 LogDTO 创建一个 OperationLogBlob 实体对象。
@@ -115,5 +109,10 @@ public class LogService {
         // 批量插入操作日志和日志Blob数据
         operationLogMapper.batchInsert(items);
         operationLogBlobMapper.batchInsert(blobs);
+    }
+
+    @Override
+    public void handleLog(List<LogDTO> operationLogs) {
+        batchAdd(operationLogs);
     }
 }
