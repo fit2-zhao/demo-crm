@@ -23,7 +23,7 @@
 - 全局异常处理
 - 封装通用数据访问层（DAL）
 - 统一的响应格式
-- 基本的数据库配置（支持 MariaDB）
+- 基本的数据库配置（支持 MySQL）
 - 常用的工具类封装
 
 
@@ -31,7 +31,7 @@
 
 -   后端: [Spring Boot](https://www.tutorialspoint.com/spring_boot/spring_boot_introduction.htm)
 -   前端: [Vue.js](https://vuejs.org/)
--   中间件: [MariaDB](https://mariadb.com/),  [MinIO（可选）](https://min.io/), [Redis](https://redis.com/)
+-   中间件: [MySQL](https://mysql.com/),  [MinIO（可选）](https://min.io/), [Redis](https://redis.com/)
 -   基础设施: [Docker](https://www.docker.com/)
 
 ## 架构概述
@@ -42,7 +42,7 @@
 
 三层架构
 
-表示层是 VUE.js、HTML5、JavaScript 和 CSS 的组合。逻辑层完全用 Java 编写，而数据层仅支持 MariaDB 作为 RDBMS。
+表示层是 VUE.js、HTML5、JavaScript 和 CSS 的组合。逻辑层完全用 Java 编写，而数据层仅支持 MySQL 作为 RDBMS。
 
 
 ## 快速开始
@@ -51,7 +51,7 @@
 
 1. 确保已安装 Java 21 或更高版本。
 2. 确保已安装 Maven 3.6 或更高版本。
-3. 确保已配置好 MariaDB 数据库（或其他支持的数据库）。
+3. 确保已配置好 MySQL 数据库（或其他支持的数据库）。
 
 ### 克隆项目
 
@@ -65,7 +65,7 @@ cd demo-crm
 修改 `/opt/demo/conf/demo.properties` 文件，设置数据库连接信息：
 
 ``` Properties
-spring.datasource.url=jdbc:mariadb://ip:3306/database?autoReconnect=false&useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false
+spring.datasource.url=jdbc:mysql://ip:3306/database?autoReconnect=false&useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false
 spring.datasource.password=pwd
 spring.datasource.username=username
 
