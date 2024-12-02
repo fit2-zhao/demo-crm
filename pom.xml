@@ -33,21 +33,19 @@
         <mockserver-client-java.version>5.15.0</mockserver-client-java.version>
         <mysql-connector-java.version>8.3.0</mysql-connector-java.version>
         <!-- frontend -->
-        <frontend-maven-plugin.version>1.12.1</frontend-maven-plugin.version>
-        <node.version>v20.8.1</node.version>
-        <pnpm.version>8.4.0</pnpm.version>
+        <frontend-maven-plugin.version>1.15.1</frontend-maven-plugin.version>
+        <node.version>v22.11.0</node.version>
+        <pnpm.version>9.14.4</pnpm.version>
         <!--        -->
         <skipAntRunForJenkins>false</skipAntRunForJenkins>
         <jacoco.version>0.8.12</jacoco.version>
         <!--   sonar     -->
         <sonar.organization>demo</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <swagger-core-jakarta.revision>2.2.20</swagger-core-jakarta.revision>
         <commons-collections4.version>4.4</commons-collections4.version>
         <commons-io.version>2.15.1</commons-io.version>
         <testcontainers.version>1.20.3</testcontainers.version>
         <mybatis.generator.version>1.4.2</mybatis.generator.version>
-        <guava.version>31.1-jre</guava.version>
         <kotlin.version>2.0.21</kotlin.version>
     </properties>
 
