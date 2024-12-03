@@ -1,16 +1,16 @@
 package io.demo.aspectj.aop;
 
+import io.demo.aspectj.builder.MethodExecuteResult;
 import io.demo.aspectj.builder.OperationLog;
 import io.demo.aspectj.builder.OperationLogBuilder;
-import io.demo.aspectj.builder.MethodExecuteResult;
+import io.demo.aspectj.builder.parse.OperationLogFunctionParser;
+import io.demo.aspectj.builder.parse.OperationLogValueParser;
 import io.demo.aspectj.constants.CodeVariableType;
 import io.demo.aspectj.context.OperationLogContext;
 import io.demo.aspectj.handler.OperationLogService;
-import io.demo.aspectj.builder.parse.OperationLogFunctionParser;
-import io.demo.aspectj.builder.parse.OperationLogValueParser;
 import io.demo.common.util.CommonBeanFactory;
+import io.demo.common.util.LogUtils;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang3.StringUtils;
@@ -29,16 +29,12 @@ import java.util.*;
  * 该类支持基于注解的日志模板解析，能够在方法执行的前后记录业务操作日志。
  * </p>
  */
-@Slf4j
 public class OperationOperationLogInterceptor extends OperationLogValueParser implements MethodInterceptor, Serializable, SmartInitializingSingleton {
 
     @Setter
     private OperationLogSource operationLogSource;
 
     private OperationLogService operationLogService;
-
-    @Setter
-    private boolean joinTransaction;
 
     /**
      * 拦截方法执行，进行日志记录逻辑的处理。
@@ -78,7 +74,7 @@ public class OperationOperationLogInterceptor extends OperationLogValueParser im
         try {
             operations = operationLogSource.computeLogRecordOperations(method, targetClass);
         } catch (Exception e) {
-            log.error("日志解析异常", e);
+            LogUtils.error("日志解析异常", e);
         }
 
         try {
@@ -129,10 +125,7 @@ public class OperationOperationLogInterceptor extends OperationLogValueParser im
                     handleSuccessLog(methodExecuteResult, functionNameAndReturnMap, operation);
                 }
             } catch (Exception e) {
-                log.error("日志执行异常", e);
-                if (joinTransaction) {
-                    throw e;
-                }
+                LogUtils.error("日志执行异常", e);
             }
         }
     }
@@ -146,7 +139,7 @@ public class OperationOperationLogInterceptor extends OperationLogValueParser im
      */
     private void handleSuccessLog(MethodExecuteResult methodExecuteResult, Map<String, String> functionNameAndReturnMap,
                                   OperationLogBuilder operation) {
-        String action = resolveTemplate(methodExecuteResult, operation, functionNameAndReturnMap, true);
+        String action = resolveTemplate(methodExecuteResult, operation, functionNameAndReturnMap);
         if (StringUtils.isEmpty(action)) {
             return;
         }
@@ -220,13 +213,13 @@ public class OperationOperationLogInterceptor extends OperationLogValueParser im
     }
 
     private String resolveTemplate(MethodExecuteResult methodExecuteResult, OperationLogBuilder operation,
-                                   Map<String, String> functionNameAndReturnMap, boolean isSuccess) {
+                                   Map<String, String> functionNameAndReturnMap) {
         if (StringUtils.isNotEmpty(operation.getIsSuccess())) {
             String condition = singleProcessTemplate(methodExecuteResult, operation.getIsSuccess(), functionNameAndReturnMap);
-            return StringUtils.equalsIgnoreCase(condition, "true") == isSuccess
+            return StringUtils.equalsIgnoreCase(condition, "true")
                     ? operation.getSuccessLogTemplate() : operation.getFailLogTemplate();
         }
-        return isSuccess ? operation.getSuccessLogTemplate() : null;
+        return operation.getSuccessLogTemplate();
     }
 
     private Map<CodeVariableType, Object> resolveCodeVariable(Method method) {
