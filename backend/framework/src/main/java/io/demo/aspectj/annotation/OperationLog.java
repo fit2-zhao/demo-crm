@@ -2,16 +2,12 @@ package io.demo.aspectj.annotation;
 
 import java.lang.annotation.*;
 
-/**
- * @author muzhantong
- * create on 2020/4/29 3:22 下午
- */
-@Repeatable(LogRecords.class)
+@Repeatable(OperationLogs.class)
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-public @interface LogRecord {
+public @interface OperationLog {
     /**
      * @return 方法执行成功后的日志模版
      */
@@ -28,19 +24,19 @@ public @interface LogRecord {
     String operator() default "";
 
     /**
-     * @return 操作日志的类型，比如：订单类型、商品类型
+     * @return 操作日志的类型，如：新增、修改、删除
      */
     String type();
 
     /**
-     * @return 日志的子类型，比如订单的C端日志，和订单的B端日志，type都是订单类型，但是子类型不一样
+     * @return 业务模块名
      */
-    String subType() default "";
+    String module() default "";
 
     /**
      * @return 日志绑定的业务标识
      */
-    String bizNo();
+    String resourceId();
 
     /**
      * @return 日志的额外信息

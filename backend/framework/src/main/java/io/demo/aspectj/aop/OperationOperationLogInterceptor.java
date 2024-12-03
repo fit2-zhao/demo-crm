@@ -1,13 +1,13 @@
-package io.demo.aspectj.support.aop;
+package io.demo.aspectj.aop;
 
-import io.demo.aspectj.builder.LogRecord;
-import io.demo.aspectj.builder.LogRecordBuilder;
+import io.demo.aspectj.builder.OperationLog;
+import io.demo.aspectj.builder.OperationLogBuilder;
 import io.demo.aspectj.builder.MethodExecuteResult;
 import io.demo.aspectj.constants.CodeVariableType;
-import io.demo.aspectj.context.LogRecordContext;
-import io.demo.aspectj.handler.LogRecordService;
-import io.demo.aspectj.support.parse.LogFunctionParser;
-import io.demo.aspectj.support.parse.LogRecordValueParser;
+import io.demo.aspectj.context.OperationLogContext;
+import io.demo.aspectj.handler.OperationLogService;
+import io.demo.aspectj.builder.parse.OperationLogFunctionParser;
+import io.demo.aspectj.builder.parse.OperationLogValueParser;
 import io.demo.common.util.CommonBeanFactory;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -30,12 +30,12 @@ import java.util.*;
  * </p>
  */
 @Slf4j
-public class LogRecordInterceptor extends LogRecordValueParser implements MethodInterceptor, Serializable, SmartInitializingSingleton {
+public class OperationOperationLogInterceptor extends OperationLogValueParser implements MethodInterceptor, Serializable, SmartInitializingSingleton {
 
     @Setter
-    private LogRecordOperationSource logRecordOperationSource;
+    private OperationLogSource operationLogSource;
 
-    private LogRecordService logRecordService;
+    private OperationLogService operationLogService;
 
     @Setter
     private boolean joinTransaction;
@@ -71,12 +71,12 @@ public class LogRecordInterceptor extends LogRecordValueParser implements Method
         Class<?> targetClass = getTargetClass(target);
         Object ret = null;
         MethodExecuteResult methodExecuteResult = new MethodExecuteResult(method, args, targetClass);
-        LogRecordContext.putEmptySpan();
-        Collection<LogRecordBuilder> operations = new ArrayList<>();
+        OperationLogContext.putEmptySpan();
+        Collection<OperationLogBuilder> operations = new ArrayList<>();
         Map<String, String> functionNameAndReturnMap = new HashMap<>();
 
         try {
-            operations = logRecordOperationSource.computeLogRecordOperations(method, targetClass);
+            operations = operationLogSource.computeLogRecordOperations(method, targetClass);
         } catch (Exception e) {
             log.error("日志解析异常", e);
         }
@@ -108,12 +108,12 @@ public class LogRecordInterceptor extends LogRecordValueParser implements Method
      * @param operations               日志操作集合
      */
     private void processLogRecords(MethodExecuteResult methodExecuteResult, Map<String, String> functionNameAndReturnMap,
-                                   Collection<LogRecordBuilder> operations) {
+                                   Collection<OperationLogBuilder> operations) {
         if (CollectionUtils.isEmpty(operations)) {
             return;
         }
 
-        for (LogRecordBuilder operation : operations) {
+        for (OperationLogBuilder operation : operations) {
             try {
                 if (StringUtils.isAllEmpty(operation.getSuccessLogTemplate(), operation.getFailLogTemplate())) {
                     continue;
@@ -145,7 +145,7 @@ public class LogRecordInterceptor extends LogRecordValueParser implements Method
      * @param operation                日志操作信息
      */
     private void handleSuccessLog(MethodExecuteResult methodExecuteResult, Map<String, String> functionNameAndReturnMap,
-                                  LogRecordBuilder operation) {
+                                  OperationLogBuilder operation) {
         String action = resolveTemplate(methodExecuteResult, operation, functionNameAndReturnMap, true);
         if (StringUtils.isEmpty(action)) {
             return;
@@ -166,7 +166,7 @@ public class LogRecordInterceptor extends LogRecordValueParser implements Method
      * @param operation                日志操作信息
      */
     private void handleFailureLog(MethodExecuteResult methodExecuteResult, Map<String, String> functionNameAndReturnMap,
-                                  LogRecordBuilder operation) {
+                                  OperationLogBuilder operation) {
         if (StringUtils.isEmpty(operation.getFailLogTemplate())) {
             return;
         }
@@ -189,15 +189,15 @@ public class LogRecordInterceptor extends LogRecordValueParser implements Method
      * @param action           操作描述
      * @param expressionValues 模板解析后的值
      */
-    private void saveLogRecord(Method method, boolean isFailure, LogRecordBuilder operation, String operatorId,
+    private void saveLogRecord(Method method, boolean isFailure, OperationLogBuilder operation, String operatorId,
                                String action, Map<String, String> expressionValues) {
         if (StringUtils.isEmpty(expressionValues.get(action))) {
             return;
         }
 
-        LogRecord logRecord = LogRecord.builder()
+        OperationLog operationLog = OperationLog.builder()
                 .type(expressionValues.get(operation.getType()))
-                .bizNo(expressionValues.get(operation.getBizNo()))
+                .resourceId(expressionValues.get(operation.getResourceId()))
                 .operator(expressionValues.get(operatorId))
                 .subType(expressionValues.get(operation.getSubType()))
                 .extra(expressionValues.get(operation.getExtra()))
@@ -207,11 +207,11 @@ public class LogRecordInterceptor extends LogRecordValueParser implements Method
                 .createTime(new Date())
                 .build();
 
-        logRecordService.record(logRecord);
+        operationLogService.record(operationLog);
     }
 
     private boolean evaluateCondition(MethodExecuteResult methodExecuteResult, Map<String, String> functionNameAndReturnMap,
-                                      LogRecordBuilder operation) {
+                                      OperationLogBuilder operation) {
         if (StringUtils.isNotEmpty(operation.getCondition())) {
             String condition = singleProcessTemplate(methodExecuteResult, operation.getCondition(), functionNameAndReturnMap);
             return StringUtils.equalsIgnoreCase(condition, "false");
@@ -219,7 +219,7 @@ public class LogRecordInterceptor extends LogRecordValueParser implements Method
         return false;
     }
 
-    private String resolveTemplate(MethodExecuteResult methodExecuteResult, LogRecordBuilder operation,
+    private String resolveTemplate(MethodExecuteResult methodExecuteResult, OperationLogBuilder operation,
                                    Map<String, String> functionNameAndReturnMap, boolean isSuccess) {
         if (StringUtils.isNotEmpty(operation.getIsSuccess())) {
             String condition = singleProcessTemplate(methodExecuteResult, operation.getIsSuccess(), functionNameAndReturnMap);
@@ -236,7 +236,7 @@ public class LogRecordInterceptor extends LogRecordValueParser implements Method
         );
     }
 
-    private String resolveOperatorId(LogRecordBuilder operation, List<String> templates) {
+    private String resolveOperatorId(OperationLogBuilder operation, List<String> templates) {
         if (StringUtils.isEmpty(operation.getOperatorId())) {
             throw new IllegalArgumentException("[LogRecord] 操作人 ID 不能为空");
         }
@@ -248,10 +248,10 @@ public class LogRecordInterceptor extends LogRecordValueParser implements Method
         return AopProxyUtils.ultimateTargetClass(target);
     }
 
-    private List<String> getSpElTemplates(LogRecordBuilder operation, String... actions) {
+    private List<String> getSpElTemplates(OperationLogBuilder operation, String... actions) {
         List<String> spElTemplates = new ArrayList<>();
         spElTemplates.add(operation.getType());
-        spElTemplates.add(operation.getBizNo());
+        spElTemplates.add(operation.getResourceId());
         spElTemplates.add(operation.getSubType());
         spElTemplates.add(operation.getExtra());
         spElTemplates.addAll(Arrays.asList(actions));
@@ -260,8 +260,8 @@ public class LogRecordInterceptor extends LogRecordValueParser implements Method
 
     @Override
     public void afterSingletonsInstantiated() {
-        logRecordService = CommonBeanFactory.getBean(LogRecordService.class);
-        this.setLogFunctionParser(new LogFunctionParser());
+        operationLogService = CommonBeanFactory.getBean(OperationLogService.class);
+        this.setOperationLogFunctionParser(new OperationLogFunctionParser());
     }
 
 }

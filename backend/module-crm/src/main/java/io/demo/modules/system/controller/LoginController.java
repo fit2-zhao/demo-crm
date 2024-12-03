@@ -1,9 +1,6 @@
 package io.demo.modules.system.controller;
 
-import io.demo.aspectj.constants.LogModule;
-import io.demo.aspectj.constants.LogType;
-import io.demo.aspectj.context.LogRecordContext;
-import io.demo.aspectj.annotation.LogRecord;
+import io.demo.aspectj.context.OperationLogContext;
 import io.demo.common.constants.UserSource;
 import io.demo.common.exception.GenericException;
 import io.demo.common.request.LoginRequest;
@@ -100,19 +97,12 @@ public class LoginController {
      *
      * @return 返回退出成功信息。
      */
-    @LogRecord(
-            type = LogModule.SYSTEM,
-            subType = LogType.LOGIN,
-            operator = "{{#username}}",
-            bizNo = "{{#username}}",
-            success = "登出成功")
-    @GetMapping(value = "/signout")
     @Operation(summary = "退出登录")
     public ResultHolder logout() {
         if (SessionUtils.getUser() == null) {
             return ResultHolder.success("logout success");
         }
-        LogRecordContext.putVariable("username", SessionUtils.getUser().getId());
+        OperationLogContext.putVariable("username", SessionUtils.getUser().getId());
         // 退出当前会话
         SecurityUtils.getSubject().logout();
         return ResultHolder.success("logout success");

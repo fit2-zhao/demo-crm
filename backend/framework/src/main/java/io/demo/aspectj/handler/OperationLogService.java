@@ -3,7 +3,7 @@ package io.demo.aspectj.handler;
 import io.demo.aspectj.dto.LogExtraDTO;
 import io.demo.common.util.ServletUtils;
 import io.demo.aspectj.dto.LogDTO;
-import io.demo.aspectj.builder.LogRecord;
+import io.demo.aspectj.builder.OperationLog;
 import io.demo.common.util.JSON;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,19 +13,18 @@ import org.springframework.stereotype.Service;
  * 操作日志 ILogRecordService 实现类
  * <p>
  * 基于 {@link OperationLogHandler} 实现，记录操作日志
- * 使用参考 {@link <a href="https://github.com/mouzt/mzt-biz-log">...</a>}
  */
 @Service
-public class LogRecordService {
+public class OperationLogService {
 
     @Resource
     private OperationLogHandler operationLogHandler;
 
-    public void record(LogRecord logRecord) {
+    public void record(OperationLog operationLog) {
         // 1. 补全通用字段
         LogDTO reqDTO = new LogDTO();
         // 补全模块信息
-        fillModuleFields(reqDTO, logRecord);
+        fillModuleFields(reqDTO, operationLog);
         // 补全请求信息
         fillRequestFields(reqDTO);
 
@@ -37,17 +36,17 @@ public class LogRecordService {
     }
 
 
-    public static void fillModuleFields(LogDTO reqDTO, LogRecord logRecord) {
+    public static void fillModuleFields(LogDTO reqDTO, OperationLog operationLog) {
         reqDTO.setCreateTime(System.currentTimeMillis());
-        reqDTO.setType(logRecord.getType()); // 大模块类型，例如：CRM 客户
-        reqDTO.setCreateUser(logRecord.getOperator());
-        reqDTO.setModule(logRecord.getSubType());// 操作类型：CURD
-        reqDTO.setSourceId(logRecord.getBizNo()); // 资源id
-        reqDTO.setContent(logRecord.getAction());// 操作内容，例如：修改编号为 1 的用户信息，将性别从男改成女
+        reqDTO.setType(operationLog.getType()); // 大模块类型，例如：CRM 客户
+        reqDTO.setCreateUser(operationLog.getOperator());
+        reqDTO.setModule(operationLog.getSubType());// 操作类型：CURD
+        reqDTO.setSourceId(operationLog.getResourceId()); // 资源id
+        reqDTO.setContent(operationLog.getAction());// 操作内容，例如：修改编号为 1 的用户信息，将性别从男改成女
 
         // 变更原始内容
-        if (logRecord.getExtra() != null) {
-            reqDTO.setExtra(JSON.parseObject(logRecord.getExtra(), LogExtraDTO.class));
+        if (operationLog.getExtra() != null) {
+            reqDTO.setExtra(JSON.parseObject(operationLog.getExtra(), LogExtraDTO.class));
         }
     }
 

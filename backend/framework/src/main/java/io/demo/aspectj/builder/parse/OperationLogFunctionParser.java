@@ -1,4 +1,4 @@
-package io.demo.aspectj.support.parse;
+package io.demo.aspectj.builder.parse;
 
 import lombok.AllArgsConstructor;
 import lombok.Setter;
@@ -9,7 +9,7 @@ import java.util.Map;
 
 @Setter
 @AllArgsConstructor
-public class LogFunctionParser {
+public class OperationLogFunctionParser {
     public String getFunctionReturnValue(Map<String, String> beforeFunctionNameAndReturnMap, Object value, String expression, String functionName) {
         if (StringUtils.isEmpty(functionName)) {
             return value == null ? Strings.EMPTY : value.toString();

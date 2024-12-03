@@ -15,7 +15,7 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class LogRecord {
+public class OperationLog {
     /**
      * id
      */
@@ -38,9 +38,9 @@ public class LogRecord {
     /**
      * 日志绑定的业务标识
      */
-    @NotBlank(message = "bizNo required")
-    @Length(max = 200, message = "bizNo max length is 200")
-    private String bizNo;
+    @NotBlank(message = "resourceId required")
+    @Length(max = 100, message = "resourceId max length is 100")
+    private String resourceId;
     /**
      * 操作人
      */

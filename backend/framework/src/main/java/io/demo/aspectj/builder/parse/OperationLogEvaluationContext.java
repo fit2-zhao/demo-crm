@@ -1,6 +1,6 @@
-package io.demo.aspectj.support.parse;
+package io.demo.aspectj.builder.parse;
 
-import io.demo.aspectj.context.LogRecordContext;
+import io.demo.aspectj.context.OperationLogContext;
 import org.springframework.context.expression.MethodBasedEvaluationContext;
 import org.springframework.core.ParameterNameDiscoverer;
 
@@ -12,7 +12,7 @@ import java.util.Map;
  * 该类在构造时会将方法参数、返回值、错误信息以及全局变量和当前上下文的变量注入到表达式上下文中，
  * 以便在日志记录时进行动态解析。
  */
-public class LogRecordEvaluationContext extends MethodBasedEvaluationContext {
+public class OperationLogEvaluationContext extends MethodBasedEvaluationContext {
 
     /**
      * 构造方法，初始化日志记录表达式上下文。
@@ -23,14 +23,14 @@ public class LogRecordEvaluationContext extends MethodBasedEvaluationContext {
      * @param ret                       方法返回值
      * @param errorMsg                 错误信息
      */
-    public LogRecordEvaluationContext(Method method, Object[] arguments,
-                                      ParameterNameDiscoverer parameterNameDiscoverer, Object ret, String errorMsg) {
+    public OperationLogEvaluationContext(Method method, Object[] arguments,
+                                         ParameterNameDiscoverer parameterNameDiscoverer, Object ret, String errorMsg) {
         // 调用父类构造方法初始化
         super(null, method, arguments, parameterNameDiscoverer);
 
         // 获取日志记录上下文中的变量
-        Map<String, Object> variables = LogRecordContext.getVariables();
-        Map<String, Object> globalVariables = LogRecordContext.getGlobalVariableMap();
+        Map<String, Object> variables = OperationLogContext.getVariables();
+        Map<String, Object> globalVariables = OperationLogContext.getGlobalVariableMap();
 
         // 设置当前上下文中的变量
         if (variables != null) {

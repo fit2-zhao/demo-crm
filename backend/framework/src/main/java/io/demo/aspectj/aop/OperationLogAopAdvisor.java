@@ -1,4 +1,4 @@
-package io.demo.aspectj.support.aop;
+package io.demo.aspectj.aop;
 
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
@@ -20,12 +20,12 @@ import java.util.regex.Pattern;
  * </p>
  */
 @Setter
-public class LogRecordAopAdvisor extends AbstractBeanFactoryPointcutAdvisor implements Serializable {
+public class OperationLogAopAdvisor extends AbstractBeanFactoryPointcutAdvisor implements Serializable {
 
     /**
      * 日志记录操作源，用于获取方法的日志记录操作配置。
      */
-    private LogRecordOperationSource logRecordOperationSource;
+    private OperationLogSource operationLogSource;
 
     /**
      * 获取日志记录的切点，用于定义拦截哪些方法。
@@ -34,7 +34,7 @@ public class LogRecordAopAdvisor extends AbstractBeanFactoryPointcutAdvisor impl
      */
     @Override
     public @NotNull Pointcut getPointcut() {
-        return new LogRecordPointcut(logRecordOperationSource);
+        return new LogRecordPointcut(operationLogSource);
     }
 
     /**
@@ -42,10 +42,10 @@ public class LogRecordAopAdvisor extends AbstractBeanFactoryPointcutAdvisor impl
      */
     private static class LogRecordPointcut extends StaticMethodMatcherPointcut implements Serializable {
 
-        private final LogRecordOperationSource logRecordOperationSource;
+        private final OperationLogSource operationLogSource;
 
-        public LogRecordPointcut(LogRecordOperationSource logRecordOperationSource) {
-            this.logRecordOperationSource = logRecordOperationSource;
+        public LogRecordPointcut(OperationLogSource operationLogSource) {
+            this.operationLogSource = operationLogSource;
         }
 
         @Override
@@ -63,7 +63,7 @@ public class LogRecordAopAdvisor extends AbstractBeanFactoryPointcutAdvisor impl
             }
 
             // 检查方法是否有日志操作配置
-            return !CollectionUtils.isEmpty(logRecordOperationSource.computeLogRecordOperations(method, targetClass));
+            return !CollectionUtils.isEmpty(operationLogSource.computeLogRecordOperations(method, targetClass));
         }
     }
 }

@@ -1,4 +1,4 @@
-package io.demo.aspectj.support.parse;
+package io.demo.aspectj.builder.parse;
 
 import io.demo.aspectj.builder.MethodExecuteResult;
 import lombok.Setter;
@@ -19,14 +19,14 @@ import java.util.regex.Pattern;
 /**
  * 解析需要存储的日志里面的SpeEL表达式
  */
-public class LogRecordValueParser implements BeanFactoryAware {
+public class OperationLogValueParser implements BeanFactoryAware {
 
     private static final Pattern pattern = Pattern.compile("\\{\\s*(\\w*)\\s*\\{(.*?)}}");
-    private final LogRecordExpressionEvaluator expressionEvaluator = new LogRecordExpressionEvaluator();
+    private final OperationLogExpressionEvaluator expressionEvaluator = new OperationLogExpressionEvaluator();
     protected BeanFactory beanFactory;
 
     @Setter
-    private LogFunctionParser logFunctionParser;
+    private OperationLogFunctionParser operationLogFunctionParser;
 
 
     public String singleProcessTemplate(MethodExecuteResult methodExecuteResult,
@@ -53,7 +53,7 @@ public class LogRecordValueParser implements BeanFactoryAware {
                     String expression = matcher.group(2);
                     String functionName = matcher.group(1);
                     Object value = expressionEvaluator.parseExpression(expression, annotatedElementKey, evaluationContext);
-                    expression = logFunctionParser.getFunctionReturnValue(beforeFunctionNameAndReturnMap, value, expression, functionName);
+                    expression = operationLogFunctionParser.getFunctionReturnValue(beforeFunctionNameAndReturnMap, value, expression, functionName);
 
                     matcher.appendReplacement(parsedStr, Matcher.quoteReplacement(expression == null ? "" : expression));
                 }

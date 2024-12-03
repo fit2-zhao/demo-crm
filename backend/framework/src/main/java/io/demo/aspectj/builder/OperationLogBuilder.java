@@ -5,12 +5,12 @@ import lombok.Data;
 
 @Data
 @Builder
-public class LogRecordBuilder {
+public class OperationLogBuilder {
     private String successLogTemplate;
     private String failLogTemplate;
     private String operatorId;
     private String type;
-    private String bizNo;
+    private String resourceId;
     private String subType;
     private String extra;
     private String condition;

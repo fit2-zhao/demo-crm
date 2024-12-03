@@ -1,8 +1,8 @@
-package io.demo.aspectj.support.aop;
+package io.demo.aspectj.aop;
 
-import io.demo.aspectj.builder.LogRecordBuilder;
-import io.demo.aspectj.annotation.LogRecord;
-import io.demo.aspectj.annotation.LogRecords;
+import io.demo.aspectj.builder.OperationLogBuilder;
+import io.demo.aspectj.annotation.OperationLog;
+import io.demo.aspectj.annotation.OperationLogs;
 import org.springframework.core.BridgeMethodResolver;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.util.ClassUtils;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 /**
  * 该类负责解析和计算基于注解的日志记录操作。
  */
-public class LogRecordOperationSource {
+public class OperationLogSource {
 
     /**
      * 缓存方法与其对应接口方法的映射关系。
@@ -32,7 +32,7 @@ public class LogRecordOperationSource {
      * @param targetClass 目标类
      * @return 日志记录构建器的集合
      */
-    public Collection<LogRecordBuilder> computeLogRecordOperations(Method method, Class<?> targetClass) {
+    public Collection<OperationLogBuilder> computeLogRecordOperations(Method method, Class<?> targetClass) {
         if (!Modifier.isPublic(method.getModifiers())) {
             return Collections.emptyList();
         }
@@ -40,12 +40,12 @@ public class LogRecordOperationSource {
         Method specificMethod = ClassUtils.getMostSpecificMethod(method, targetClass);
         specificMethod = BridgeMethodResolver.findBridgedMethod(specificMethod);
 
-        Collection<LogRecordBuilder> logRecordOps = parseLogRecordAnnotations(specificMethod);
-        Collection<LogRecordBuilder> logRecordsOps = parseLogRecordsAnnotations(specificMethod);
-        Collection<LogRecordBuilder> abstractLogRecordOps = parseLogRecordAnnotations(getInterfaceMethodIfPossible(method));
-        Collection<LogRecordBuilder> abstractLogRecordsOps = parseLogRecordsAnnotations(getInterfaceMethodIfPossible(method));
+        Collection<OperationLogBuilder> logRecordOps = parseLogRecordAnnotations(specificMethod);
+        Collection<OperationLogBuilder> logRecordsOps = parseLogRecordsAnnotations(specificMethod);
+        Collection<OperationLogBuilder> abstractLogRecordOps = parseLogRecordAnnotations(getInterfaceMethodIfPossible(method));
+        Collection<OperationLogBuilder> abstractLogRecordsOps = parseLogRecordsAnnotations(getInterfaceMethodIfPossible(method));
 
-        Set<LogRecordBuilder> result = new HashSet<>();
+        Set<OperationLogBuilder> result = new HashSet<>();
         result.addAll(logRecordOps);
         result.addAll(abstractLogRecordOps);
         result.addAll(logRecordsOps);
@@ -85,9 +85,9 @@ public class LogRecordOperationSource {
      * @param ae 被注解的元素
      * @return 日志记录构建器的集合
      */
-    private Collection<LogRecordBuilder> parseLogRecordsAnnotations(AnnotatedElement ae) {
-        return AnnotatedElementUtils.findAllMergedAnnotations(ae, LogRecords.class).stream()
-                .flatMap(logRecords -> Arrays.stream(logRecords.value())
+    private Collection<OperationLogBuilder> parseLogRecordsAnnotations(AnnotatedElement ae) {
+        return AnnotatedElementUtils.findAllMergedAnnotations(ae, OperationLogs.class).stream()
+                .flatMap(operationLogs -> Arrays.stream(operationLogs.value())
                         .map(logRecord -> parseLogRecordAnnotation(ae, logRecord)))
                 .collect(Collectors.toList());
     }
@@ -98,8 +98,8 @@ public class LogRecordOperationSource {
      * @param ae 被注解的元素
      * @return 日志记录构建器的集合
      */
-    private Collection<LogRecordBuilder> parseLogRecordAnnotations(AnnotatedElement ae) {
-        return AnnotatedElementUtils.findAllMergedAnnotations(ae, LogRecord.class).stream()
+    private Collection<OperationLogBuilder> parseLogRecordAnnotations(AnnotatedElement ae) {
+        return AnnotatedElementUtils.findAllMergedAnnotations(ae, OperationLog.class).stream()
                 .map(recordAnnotation -> parseLogRecordAnnotation(ae, recordAnnotation))
                 .collect(Collectors.toList());
     }
@@ -111,14 +111,14 @@ public class LogRecordOperationSource {
      * @param recordAnnotation {@code LogRecord} 注解
      * @return 日志记录构建器
      */
-    private LogRecordBuilder parseLogRecordAnnotation(AnnotatedElement ae, LogRecord recordAnnotation) {
-        LogRecordBuilder recordOps = LogRecordBuilder.builder()
+    private OperationLogBuilder parseLogRecordAnnotation(AnnotatedElement ae, OperationLog recordAnnotation) {
+        OperationLogBuilder recordOps = OperationLogBuilder.builder()
                 .successLogTemplate(recordAnnotation.success())
                 .failLogTemplate(recordAnnotation.fail())
                 .type(recordAnnotation.type())
-                .bizNo(recordAnnotation.bizNo())
+                .resourceId(recordAnnotation.resourceId())
                 .operatorId(recordAnnotation.operator())
-                .subType(recordAnnotation.subType())
+                .subType(recordAnnotation.module())
                 .extra(recordAnnotation.extra())
                 .condition(recordAnnotation.condition())
                 .isSuccess(recordAnnotation.successCondition())
@@ -134,7 +134,7 @@ public class LogRecordOperationSource {
      * @param recordOps 日志记录构建器
      * @throws IllegalStateException 如果配置不合法
      */
-    private void validateLogRecordOperation(AnnotatedElement ae, LogRecordBuilder recordOps) {
+    private void validateLogRecordOperation(AnnotatedElement ae, OperationLogBuilder recordOps) {
         if (!StringUtils.hasText(recordOps.getSuccessLogTemplate()) && !StringUtils.hasText(recordOps.getFailLogTemplate())) {
             throw new IllegalStateException("无效的日志记录注解配置: '" +
                     ae.toString() + "'. 必须设置 'successTemplate' 或 'failLogTemplate' 属性。");

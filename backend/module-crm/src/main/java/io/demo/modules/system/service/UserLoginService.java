@@ -1,8 +1,5 @@
 package io.demo.modules.system.service;
 
-import io.demo.aspectj.constants.LogModule;
-import io.demo.aspectj.constants.LogType;
-import io.demo.aspectj.annotation.LogRecord;
 import io.demo.common.constants.UserSource;
 import io.demo.common.exception.GenericException;
 import io.demo.common.request.LoginRequest;
@@ -93,13 +90,6 @@ public class UserLoginService {
         }
     }
 
-    @LogRecord(
-            type = LogModule.SYSTEM,
-            subType = LogType.LOGIN,
-            operator = "{{#userId}}",
-            bizNo = "{{#userId}}",
-            success = "登录成功",
-            fail = "登录失败")
     public boolean checkUserPassword(String userId, String password) {
         if (StringUtils.isBlank(userId)) {
             throw new GenericException(Translator.get("user_name_is_null"));

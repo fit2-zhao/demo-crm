@@ -9,6 +9,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-public @interface LogRecords {
-    LogRecord[] value();
+public @interface OperationLogs {
+    OperationLog[] value();
 }
