@@ -4,12 +4,15 @@ import io.demo.aspectj.dto.LogDTO;
 import io.demo.aspectj.handler.OperationLogHandler;
 import io.demo.common.uid.IDGenerator;
 import io.demo.common.util.BeanUtils;
+import io.demo.common.util.JSON;
 import io.demo.modules.system.domain.OperationLog;
 import io.demo.modules.system.domain.OperationLogBlob;
 import io.demo.mybatis.BaseMapper;
 import jakarta.annotation.Resource;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,8 +42,13 @@ public class LogService implements OperationLogHandler {
     private OperationLogBlob getBlob(LogDTO log) {
         OperationLogBlob blob = new OperationLogBlob();
         blob.setId(log.getId());
-        blob.setOriginalValue(log.getOriginalValue());
-        blob.setModifiedValue(log.getModifiedValue());
+
+        if (log.getExtra() != null && ObjectUtils.isNotEmpty(log.getExtra().getOriginalValue())) {
+            blob.setOriginalValue(JSON.toJSONBytes(log.getExtra().getOriginalValue()));
+        }
+        if (log.getExtra() != null && ObjectUtils.isNotEmpty(log.getExtra().getModifiedValue())) {
+            blob.setModifiedValue(JSON.toJSONBytes(log.getExtra().getModifiedValue()));
+        }
         return blob;
     }
 
@@ -62,10 +70,14 @@ public class LogService implements OperationLogHandler {
      *
      * @param log 日志数据传输对象
      */
+    @Async
     public void add(LogDTO log) {
         // 如果项目ID为空，设置为“none”
         if (StringUtils.isBlank(log.getProjectId())) {
             log.setProjectId("none");
+        }
+        if (StringUtils.isBlank(log.getOrganizationId())) {
+            log.setOrganizationId("none");
         }
         // 如果创建用户为空，设置为“admin”
         if (StringUtils.isBlank(log.getCreateUser())) {
@@ -76,8 +88,7 @@ public class LogService implements OperationLogHandler {
 
         // 插入操作日志和日志Blob数据
         log.setId(IDGenerator.nextStr());
-        OperationLog operationLog = new OperationLog();
-        operationLogMapper.insert(BeanUtils.copyBean(operationLog, log));
+        operationLogMapper.insert(BeanUtils.copyBean(new OperationLog(), log));
         operationLogBlobMapper.insert(getBlob(log));
     }
 
@@ -86,6 +97,7 @@ public class LogService implements OperationLogHandler {
      *
      * @param logs 日志数据传输对象列表
      */
+    @Async
     public void batchAdd(List<LogDTO> logs) {
         // 如果日志列表为空，直接返回
         if (CollectionUtils.isEmpty(logs)) {
@@ -112,7 +124,7 @@ public class LogService implements OperationLogHandler {
     }
 
     @Override
-    public void handleLog(List<LogDTO> operationLogs) {
-        batchAdd(operationLogs);
+    public void handleLog(LogDTO operationLog) {
+        add(operationLog);
     }
 }

@@ -1,5 +1,6 @@
 package io.demo.aspectj.builder;
 
+import io.demo.aspectj.dto.LogExtraDTO;
 import io.demo.aspectj.dto.LogDTO;
 import lombok.Builder;
 import lombok.Getter;
@@ -78,8 +79,7 @@ public class LogDTOBuilder {
         LogDTO logDTO = new LogDTO(projectId, organizationId, sourceId, createUser, type, module, content);
         logDTO.setPath(path);
         logDTO.setMethod(method);
-        logDTO.setOriginalValue(originalValue);
-        logDTO.setModifiedValue(modifiedValue);
+        logDTO.setExtra(LogExtraDTO.builder().originalValue(originalValue).modifiedValue(modifiedValue).build());
         return logDTO;
     }
 }

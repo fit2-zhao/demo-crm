@@ -44,6 +44,7 @@ public class ShiroFilter {
 
         // 403 错误页面路径
         filterChainDefinitionMap.put("/403", "anon");
+        filterChainDefinitionMap.put("/test", "anon");
 
         // 匿名路径
         filterChainDefinitionMap.put("/anonymous/**", "anon");

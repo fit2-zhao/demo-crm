@@ -1,21 +1,20 @@
 package io.demo.modules.system.service;
 
+import io.demo.aspectj.constants.LogModule;
+import io.demo.aspectj.constants.LogType;
+import io.demo.aspectj.annotation.LogRecord;
+import io.demo.common.constants.UserSource;
 import io.demo.common.exception.GenericException;
+import io.demo.common.request.LoginRequest;
 import io.demo.common.response.handler.ResultHolder;
 import io.demo.common.util.CodingUtils;
 import io.demo.common.util.Translator;
-import io.demo.mybatis.BaseMapper;
-import io.demo.common.constants.HttpMethodConstants;
-import io.demo.common.constants.UserSource;
 import io.demo.modules.system.domain.User;
-import io.demo.common.request.LoginRequest;
-import io.demo.security.SessionUser;
-import io.demo.security.UserDTO;
-import io.demo.aspectj.constants.LogConstants;
-import io.demo.aspectj.constants.LogType;
-import io.demo.aspectj.dto.LogDTO;
 import io.demo.modules.system.mapper.ExtUserMapper;
+import io.demo.mybatis.BaseMapper;
+import io.demo.security.SessionUser;
 import io.demo.security.SessionUtils;
+import io.demo.security.UserDTO;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -34,8 +33,6 @@ import java.util.List;
 public class UserLoginService {
     @Resource
     private BaseMapper<User> userMapper;
-    @Resource
-    private LogService logService;
     @Resource
     private ExtUserMapper extUserMapper;
 
@@ -73,7 +70,6 @@ public class UserLoginService {
         Subject subject = SecurityUtils.getSubject();
         try {
             subject.login(token);
-            saveLog(SessionUtils.getUserId(), HttpMethodConstants.POST.name(), "/login", "登录成功", LogType.LOGIN.name());
             if (subject.isAuthenticated()) {
                 SessionUser sessionUser = SessionUtils.getUser();
                 // 放入session中
@@ -97,6 +93,13 @@ public class UserLoginService {
         }
     }
 
+    @LogRecord(
+            type = LogModule.SYSTEM,
+            subType = LogType.LOGIN,
+            operator = "{{#userId}}",
+            bizNo = "{{#userId}}",
+            success = "登录成功",
+            fail = "登录失败")
     public boolean checkUserPassword(String userId, String password) {
         if (StringUtils.isBlank(userId)) {
             throw new GenericException(Translator.get("user_name_is_null"));
@@ -108,21 +111,5 @@ public class UserLoginService {
         example.setId(userId);
         example.setPassword(CodingUtils.md5(password));
         return userMapper.exist(example);
-    }
-
-    //保存日志
-    public void saveLog(String userId, String method, String path, String content, String type) {
-        User user = userMapper.selectByPrimaryKey(userId);
-        LogDTO dto = new LogDTO(
-                LogConstants.SYSTEM,
-                LogConstants.SYSTEM,
-                LogConstants.SYSTEM,
-                userId,
-                type,
-                LogConstants.SYSTEM,
-                StringUtils.join(user.getName(), StringUtils.EMPTY, content));
-        dto.setMethod(method);
-        dto.setPath(path);
-        logService.add(dto);
     }
 }

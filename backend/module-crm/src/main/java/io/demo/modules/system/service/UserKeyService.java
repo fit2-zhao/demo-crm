@@ -1,5 +1,8 @@
 package io.demo.modules.system.service;
 
+import io.demo.aspectj.dto.LogExtraDTO;
+import io.demo.aspectj.context.LogRecordContext;
+import io.demo.aspectj.annotation.LogRecord;
 import io.demo.common.exception.GenericException;
 import io.demo.common.uid.IDGenerator;
 import io.demo.common.util.JSON;
@@ -36,9 +39,18 @@ public class UserKeyService {
     /**
      * 获取指定用户的 API 密钥信息
      */
+    @LogRecord(
+            type = LogModule.SYSTEM,
+            subType = LogType.LOGIN,
+            operator = "{{#userId}}",
+            bizNo = "{{#userId}}",
+            extra = "{{#userObj}}",
+            success = "登录成功")
     public List<UserKey> getUserKeysInfo(String userId) {
         UserKey example = new UserKey();
         example.setCreateUser(userId);
+        // 记录上下文日志
+        LogRecordContext.putVariable("userObj", LogExtraDTO.builder().originalValue(example).build().toString());
         return userKeyMapper.select(example);
     }
 
@@ -58,7 +70,7 @@ public class UserKeyService {
         UserKey userKey = generateUserKey(userId);
         userKeyMapper.insert(userKey);
 
-        logApiKeyAction(userKey, LogType.ADD.name());
+        logApiKeyAction(userKey, LogType.ADD);
     }
 
     /**

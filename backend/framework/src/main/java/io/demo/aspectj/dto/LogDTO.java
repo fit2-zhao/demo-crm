@@ -52,7 +52,7 @@ public class LogDTO {
     @Size(min = 1, max = 20, message = "{operation_log.type.length_range}", groups = {Created.class, Updated.class})
     private String type;
 
-    @Schema(description = "操作模块/api/case/scenario/ui")
+    @Schema(description = "操作模块")
     private String module;
 
     @Schema(description = "操作详情")
@@ -61,22 +61,9 @@ public class LogDTO {
     @Schema(description = "操作路径")
     private String path;
     /**
-     * 变更前内容，采用字节数组存储，以便灵活处理不同类型的内容
+     * 变更内容，原始值，变更后的值
      */
-    @Schema(description = "变更前内容")
-    private byte[] originalValue;
-
-    /**
-     * 变更后内容，采用字节数组存储，以便灵活处理不同类型的内容
-     */
-    @Schema(description = "变更后内容")
-    private byte[] modifiedValue;
-
-    /**
-     * 是否需要历史记录的标志，默认为 false
-     */
-    @Schema(description = "是否需要历史记录")
-    private Boolean history = false;
+    private LogExtraDTO extra;
 
     /**
      * 默认构造函数
