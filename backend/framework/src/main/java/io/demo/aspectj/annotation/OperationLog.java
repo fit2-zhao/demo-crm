@@ -42,16 +42,4 @@ public @interface OperationLog {
      * @return 日志的额外信息
      */
     String extra() default "";
-
-    /**
-     * @return 是否记录日志
-     */
-    String condition() default "";
-
-    /**
-     * 记录成功日志的条件
-     *
-     * @return 表示成功的表达式，默认为空，代表不抛异常为成功
-     */
-    String successCondition() default "";
 }

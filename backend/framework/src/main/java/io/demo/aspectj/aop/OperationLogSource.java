@@ -120,8 +120,6 @@ public class OperationLogSource {
                 .operatorId(recordAnnotation.operator())
                 .subType(recordAnnotation.module())
                 .extra(recordAnnotation.extra())
-                .condition(recordAnnotation.condition())
-                .isSuccess(recordAnnotation.successCondition())
                 .build();
         validateLogRecordOperation(ae, recordOps);
         return recordOps;

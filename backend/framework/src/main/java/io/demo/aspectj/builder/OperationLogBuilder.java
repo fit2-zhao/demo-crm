@@ -13,6 +13,4 @@ public class OperationLogBuilder {
     private String resourceId;
     private String subType;
     private String extra;
-    private String condition;
-    private String isSuccess;
 }

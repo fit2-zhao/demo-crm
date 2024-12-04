@@ -115,10 +115,6 @@ public class OperationOperationLogInterceptor extends OperationLogValueParser im
                     continue;
                 }
 
-                if (evaluateCondition(methodExecuteResult, functionNameAndReturnMap, operation)) {
-                    continue;
-                }
-
                 if (!methodExecuteResult.isSuccess()) {
                     handleFailureLog(methodExecuteResult, functionNameAndReturnMap, operation);
                 } else {
@@ -139,7 +135,7 @@ public class OperationOperationLogInterceptor extends OperationLogValueParser im
      */
     private void handleSuccessLog(MethodExecuteResult methodExecuteResult, Map<String, String> functionNameAndReturnMap,
                                   OperationLogBuilder operation) {
-        String action = resolveTemplate(methodExecuteResult, operation, functionNameAndReturnMap);
+        String action = operation.getSuccessLogTemplate();
         if (StringUtils.isEmpty(action)) {
             return;
         }
@@ -201,25 +197,6 @@ public class OperationOperationLogInterceptor extends OperationLogValueParser im
                 .build();
 
         operationLogService.record(operationLog);
-    }
-
-    private boolean evaluateCondition(MethodExecuteResult methodExecuteResult, Map<String, String> functionNameAndReturnMap,
-                                      OperationLogBuilder operation) {
-        if (StringUtils.isNotEmpty(operation.getCondition())) {
-            String condition = singleProcessTemplate(methodExecuteResult, operation.getCondition(), functionNameAndReturnMap);
-            return StringUtils.equalsIgnoreCase(condition, "false");
-        }
-        return false;
-    }
-
-    private String resolveTemplate(MethodExecuteResult methodExecuteResult, OperationLogBuilder operation,
-                                   Map<String, String> functionNameAndReturnMap) {
-        if (StringUtils.isNotEmpty(operation.getIsSuccess())) {
-            String condition = singleProcessTemplate(methodExecuteResult, operation.getIsSuccess(), functionNameAndReturnMap);
-            return StringUtils.equalsIgnoreCase(condition, "true")
-                    ? operation.getSuccessLogTemplate() : operation.getFailLogTemplate();
-        }
-        return operation.getSuccessLogTemplate();
     }
 
     private Map<CodeVariableType, Object> resolveCodeVariable(Method method) {
