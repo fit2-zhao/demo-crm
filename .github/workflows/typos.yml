@@ -21,4 +21,4 @@ jobs:
         uses: crate-ci/typos@master
         with:
           write_changes: true
-          config: .github/typos.toml
+          args: --config .github/typos.toml
