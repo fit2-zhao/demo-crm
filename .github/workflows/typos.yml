@@ -17,6 +17,7 @@ jobs:
       - name: Checkout Actions Repository
         uses: actions/checkout@v2
 
-      - name: Check spelling in specific file types
-        run: |
-          find . -type f \( -name "*.java" -o -name "*.vue" \) | typos
+      - name: Check spelling
+        uses: crate-ci/typos@master
+        with:
+          args: "**/*.js **/*.md **/*.css **/*.xml **/*.html **/*.yml **/*.yaml **/*.json"
