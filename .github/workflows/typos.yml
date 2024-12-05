@@ -17,6 +17,9 @@ jobs:
       - name: Checkout Actions Repository
         uses: actions/checkout@v2
 
+      - name: List files in .github directory
+        run: ls -R .github
+
       - name: Check spelling
         uses: crate-ci/typos@master
         with:
