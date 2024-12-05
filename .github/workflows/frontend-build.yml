@@ -10,14 +10,14 @@ on:
     paths:
       - "frontend/**"
 
-name: 前端代码校验
+name: Frontend Code Checking
 
 permissions:
   pull-requests: write
 
 jobs:
   generic_handler:
-    name: 前端代码校验
+    name: Frontend Code Checking
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

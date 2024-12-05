@@ -1,4 +1,4 @@
-name: 拼写检查
+name: Typos Checking
 on:
   push:
     branches:

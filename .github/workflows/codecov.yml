@@ -12,14 +12,14 @@ on:
       - "backend/**"
       - "pom.xml"
 
-name: 覆盖率统计
+name: Code Coverage
 
 permissions:
   pull-requests: write
 
 jobs:
   generic_handler:
-    name: 覆盖率统计
+    name: Code Coverage
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

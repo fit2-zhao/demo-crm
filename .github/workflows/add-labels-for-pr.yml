@@ -1,17 +1,19 @@
-on: pull_request
+name: Add Labels
 
-name: 通用 PR 处理
-
-permissions:
-  pull-requests: write
+on:
+  pull_request:
+    types: opened
 
 jobs:
-  generic_handler:
-    name: 为 PR 添加标签
+  add_labels:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-ecosystem/action-add-labels@v1
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: add labels
+        uses: actions-ecosystem/action-add-labels@v1
+        if: ${{ startsWith(github.event.comment.body, '/add-labels') }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: ${{ github.base_ref }}
