@@ -35,4 +35,4 @@ jobs:
           title: "Automated PR for Main Updates"
           body: |
             This PR was automatically generated because code was pushed directly to the `main` branch.
-          labels: ["auto-generated"]
+          labels: "auto-generated"
