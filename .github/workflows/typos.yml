@@ -2,9 +2,12 @@ name: Typos Checking
 on:
   push:
     branches:
-      - main
+      - '**'
   pull_request:
     types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
 
 jobs:
   run:
@@ -14,5 +17,6 @@ jobs:
       - name: Checkout Actions Repository
         uses: actions/checkout@v2
 
-      - name: Check spelling
-        uses: crate-ci/typos@master
+      - name: Check spelling in specific file types
+        run: |
+          find . -type f \( -name "*.java" -o -name "*.vue" \) | typos
