@@ -29,7 +29,7 @@ public class RsaUtils {
     /**
      * RSA 加密算法名称。
      */
-    public static final String RSA_ALGORITHM = "RSA/ECB/PKCS1Padding";
+    public static final String RSA_ALGORITHM = "RSA/ECB/OAEPWITHSHA-256ANDMGF1PADDING";
 
     /**
      * RSA 密钥对，缓存的 RSA 公私钥对象。
