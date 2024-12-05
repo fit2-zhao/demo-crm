@@ -1,0 +1,32 @@
+name: Auto PR
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  create-pull-request:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Make changes (if needed)
+        run: |
+          # 在这里添加你的自动化任务
+          echo "Test Change" >> changes.txt
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Automated changes"
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: auto-update-branch
+          title: "Automated PR for Updates"
+          body: |
+            This PR is automatically created by GitHub Actions.
