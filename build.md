@@ -16,4 +16,3 @@
 ```bash
 ./mvnw clean package
 ```
-
