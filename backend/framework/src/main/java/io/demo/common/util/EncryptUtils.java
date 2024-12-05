@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 public class EncryptUtils extends CodingUtils {
 
     // 默认的加密密钥和向量
-    private static final String secretKey = "www.fit2cloud.crm";
-    private static final String iv = "1234567890123456";
+    private static final String secretKey = "www.fit2cloud.cn";
+    private static final String iv = "crm123405679";
 
     /**
      * AES加密方法
