@@ -23,4 +23,4 @@ jobs:
       - name: Check spelling
         uses: crate-ci/typos@master
         with:
-          config: ./ .github/typos.toml
+          config: .github/typos-extend-exclude.toml
