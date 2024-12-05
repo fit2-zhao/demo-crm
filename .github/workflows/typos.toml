@@ -1,2 +1,2 @@
 [files]
-extend-exclude = ["*.json", "**/*.json","**/*.js","**/*.html", "OWNERS", "CODEOWNERS", "LICENSE", "NOTICE"]
+extend-exclude = ["*.json", "**/*.json","**/*.js","**/*.html", "**/OWNERS", "**/CODEOWNERS", "**/LICENSE", "**/NOTICE"]
