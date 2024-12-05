@@ -1,32 +1,38 @@
-name: Auto PR
+name: Auto PR on Push to Main
 
 on:
   push:
     branches:
-      - main
+      - main  # 当代码推送到目标分支时触发
 
 jobs:
-  create-pull-request:
+  create-pr:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Make changes (if needed)
+      - name: Configure Git
         run: |
-          # 在这里添加你的自动化任务
-          echo "Test Change" >> changes.txt
-          git config user.name "GitHub Actions"
+          git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
-          git add .
-          git commit -m "Automated changes"
+
+      - name: Move changes to temporary branch
+        run: |
+          # 创建临时分支
+          TEMP_BRANCH="auto-pr-$(date +%Y%m%d%H%M%S)"
+          echo "TEMP_BRANCH=$TEMP_BRANCH" >> $GITHUB_ENV
+          git checkout -b "$TEMP_BRANCH"
+          git push origin "$TEMP_BRANCH"
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: auto-update-branch
-          title: "Automated PR for Updates"
+          branch: ${{ env.TEMP_BRANCH }}
+          base: main
+          title: "Automated PR for Main Updates"
           body: |
-            This PR is automatically created by GitHub Actions.
+            This PR was automatically generated because code was pushed directly to the `main` branch.
+          labels: ["auto-generated"]
