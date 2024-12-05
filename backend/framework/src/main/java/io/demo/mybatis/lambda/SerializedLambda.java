@@ -39,6 +39,7 @@ public class SerializedLambda implements Serializable {
              ObjectOutputStream oos = new ObjectOutputStream(baos)) {
             oos.writeObject(serializable);
             oos.flush();
+
             try (ObjectInputStream objectInputStream = new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray())) {
                 @Override
                 protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
