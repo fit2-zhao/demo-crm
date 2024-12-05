@@ -23,4 +23,4 @@ jobs:
       - name: Check spelling
         uses: crate-ci/typos@master
         with:
-          config: typos.toml
+          config: ./typos.toml
