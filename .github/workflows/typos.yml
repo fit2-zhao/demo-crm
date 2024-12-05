@@ -18,7 +18,8 @@ jobs:
         uses: actions/checkout@v2
 
       - name: List files in .github directory
-        run: ls -R .github
+        run: ls -l typos-extend-exclude.toml
+
 
       - name: Check spelling
         uses: crate-ci/typos@master
