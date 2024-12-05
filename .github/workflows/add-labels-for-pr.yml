@@ -1,4 +1,6 @@
-on: pull_request
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]  # 监听 PR 的创建、更新、重新打开事件
 
 name: 通用 PR 处理
 
@@ -10,8 +12,32 @@ jobs:
     name: 为 PR 添加标签
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-ecosystem/action-add-labels@v1
+      - name: Checkout the code
+        uses: actions/checkout@v3
+
+      - name: 获取 review 数量并添加标签
+        id: review_count
+        run: |
+          # 获取 PR 的编号
+          pr_number=${{ github.event.pull_request.number }}
+
+          # 使用 GitHub CLI 获取 PR 的 review 数量
+          review_count=$(gh pr view $pr_number --json reviews --jq '.reviews | length')
+
+          echo "Review count: $review_count"
+
+          # 添加标签：review 数量
+          gh pr edit $pr_number --add-label "review 数量: $review_count"
+
+          # 如果 review 数量大于 0，则添加 "已 review" 标签，否则添加 "待 review" 标签
+          if [[ $review_count -gt 0 ]]; then
+            gh pr edit $pr_number --add-label "已 review"
+          else
+            gh pr edit $pr_number --add-label "待 review"
+          fi
+
+      - name: 添加基础标签
+        uses: actions-ecosystem/action-add-labels@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          labels: ${{ github.base_ref }}
+          labels: ${{ github.base_ref }}  # 添加目标分支作为标签
