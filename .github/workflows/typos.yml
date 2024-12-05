@@ -20,4 +20,4 @@ jobs:
       - name: Check spelling
         uses: crate-ci/typos@master
         with:
-          args: --config .github/typos.toml
+          config: typos.toml
