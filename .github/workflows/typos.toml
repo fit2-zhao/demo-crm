@@ -4,3 +4,10 @@ include = [
     "**/*.java",
     "**/*.vue"
 ]
+# 排除特定文件
+exclude = [
+    "OWNERS",
+    "CODEOWNERS",
+    "LICENSE",
+    "NOTICE"
+]
