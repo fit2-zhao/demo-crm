@@ -39,14 +39,14 @@ public class SerializedLambda implements Serializable {
              ObjectOutputStream oos = new ObjectOutputStream(baos)) {
             oos.writeObject(serializable);
             oos.flush();
-            try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray())) {
+            try (ObjectInputStream objectInputStream = new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray())) {
                 @Override
                 protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
                     Class<?> clazz = super.resolveClass(desc);
                     return clazz == java.lang.invoke.SerializedLambda.class ? SerializedLambda.class : clazz;
                 }
             }) {
-                return (SerializedLambda) ois.readObject();
+                return (SerializedLambda) objectInputStream.readObject();
             }
         } catch (IOException | ClassNotFoundException e) {
             throw new GenericException("提取 Lambda 表达式时发生异常", e);
