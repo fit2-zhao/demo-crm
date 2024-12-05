@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: List files in .github directory
-        run: ls -l typos-extend-exclude.toml
+        run: ls typos-extend-exclude.toml
 
 
       - name: Check spelling
