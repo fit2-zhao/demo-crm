@@ -79,7 +79,7 @@ public class ApiKeyHandler {
         // 解密签名并验证
         String signatureDecrypt;
         try {
-            signatureDecrypt = CodingUtils.aesDecrypt(signature, userKey.getSecretKey(), accessKey);
+            signatureDecrypt = CodingUtils.aesDecrypt(signature, userKey.getSecretKey(), accessKey.getBytes());
         } catch (Throwable t) {
             throw new RuntimeException("invalid signature", t);
         }
