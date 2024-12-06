@@ -10,7 +10,6 @@ public class EncryptUtils extends CodingUtils {
 
     // 默认的加密密钥和向量
     private static final String secretKey = "www.fit2cloud.cn";
-    private static final String iv = "crm123405679";
 
     /**
      * AES加密方法
@@ -22,7 +21,7 @@ public class EncryptUtils extends CodingUtils {
         if (o == null) {
             return null;
         }
-        return aesEncrypt(o.toString(), secretKey, iv);
+        return aesEncrypt(o.toString(), secretKey, generateIv());
     }
 
     /**
@@ -35,7 +34,7 @@ public class EncryptUtils extends CodingUtils {
         if (o == null) {
             return null;
         }
-        return aesDecrypt(o.toString(), secretKey, iv);
+        return aesDecrypt(o.toString(), secretKey, generateIv());
     }
 
     /**
@@ -56,7 +55,7 @@ public class EncryptUtils extends CodingUtils {
                 .peek(element -> {
                     Object fieldValue = BeanUtils.getFieldValueByName(attrName, element);
                     if (fieldValue != null) {
-                        String decryptedValue = aesDecrypt(fieldValue.toString(), secretKey, iv);
+                        String decryptedValue = aesDecrypt(fieldValue.toString(), secretKey, generateIv());
                         BeanUtils.setFieldValueByName(element, attrName, decryptedValue, String.class);
                     }
                 })

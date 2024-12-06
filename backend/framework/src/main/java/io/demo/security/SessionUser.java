@@ -26,11 +26,6 @@ public class SessionUser extends UserDTO implements Serializable {
      */
     public static final String secret = "9a9rdqPlTqhpZzkq";
 
-    /**
-     * 加密偏移量，AES 加密的初始化向量。
-     */
-    public static final String iv = "1Av7hf9PgHusUHRm";
-
     @Serial
     private static final long serialVersionUID = -7149638440406959033L;
 
@@ -67,7 +62,7 @@ public class SessionUser extends UserDTO implements Serializable {
 
         try {
             // 使用 AES 加密生成 CSRF Token
-            sessionUser.csrfToken = CodingUtils.aesEncrypt(StringUtils.join(infos, "|"), secret, iv);
+            sessionUser.csrfToken = CodingUtils.aesEncrypt(StringUtils.join(infos, "|"), secret, CodingUtils.generateIv());
         } catch (Exception e) {
             // 异常处理：加密失败时可以记录日志或者返回默认值
             sessionUser.csrfToken = StringUtils.EMPTY;
