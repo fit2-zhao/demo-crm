@@ -15,6 +15,8 @@ AOP 模块包含多个子模块，包括注解、切面、构建器、常量、D
 
 使用示例
 
+设计思路来源：https://github.com/mouzt/mzt-biz-log 
+
 1. 普通的记录日志
 
 - `resourceId`：业务资源的 ID
