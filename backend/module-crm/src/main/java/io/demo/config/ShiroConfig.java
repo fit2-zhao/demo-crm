@@ -104,11 +104,11 @@ public class ShiroConfig {
      */
     @Bean(name = "securityManager")
     public DefaultWebSecurityManager securityManager(SessionManager sessionManager, CacheManager cacheManager, Realm localRealm) {
-        DefaultWebSecurityManager dwsm = new DefaultWebSecurityManager();
-        dwsm.setSessionManager(sessionManager);
-        dwsm.setCacheManager(cacheManager);
-        dwsm.setRealm(localRealm);
-        return dwsm;
+        DefaultWebSecurityManager defaultManager = new DefaultWebSecurityManager();
+        defaultManager.setSessionManager(sessionManager);
+        defaultManager.setCacheManager(cacheManager);
+        defaultManager.setRealm(localRealm);
+        return defaultManager;
     }
 
     /**
