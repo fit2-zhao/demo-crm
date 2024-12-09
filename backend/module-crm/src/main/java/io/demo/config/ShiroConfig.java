@@ -108,6 +108,7 @@ public class ShiroConfig {
         dwsm.setSessionManager(sessionManager);
         dwsm.setCacheManager(cacheManager);
         dwsm.setRealm(localRealm);
+
         return dwsm;
     }
 
