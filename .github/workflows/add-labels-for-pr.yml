@@ -26,8 +26,7 @@ jobs:
         uses: actions-ecosystem/action-add-labels@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          labels: |
-            ${{ github.base_ref }}
+          labels: ${{ github.base_ref }}
 
       # 对 PR 评论中以 / 开头的命令动态添加标签
       - name: Add labels via PR comment
@@ -35,4 +34,4 @@ jobs:
         uses: actions-ecosystem/action-add-labels@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          labels: ${{ github.event.comment.body }}
+          labels: ${{ github.event.comment.body.substring(1) }}
