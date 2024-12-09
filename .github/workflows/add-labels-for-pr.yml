@@ -29,9 +29,17 @@ jobs:
           labels: ${{ github.base_ref }}
 
       # 对 PR 评论中以 / 开头的命令动态添加标签
+      - name: Extract labels from comment
+        if: ${{ github.event_name == 'issue_comment' && github.event.issue.pull_request && startsWith(github.event.comment.body, '/') }}
+        id: extract_labels
+        run: |
+          labels=$(echo "${{ github.event.comment.body }}" | sed 's|^/||')
+          echo "Extracted labels: $labels"
+          echo "::set-output name=labels::$labels"
+
       - name: Add labels via PR comment
         if: ${{ github.event_name == 'issue_comment' && github.event.issue.pull_request && startsWith(github.event.comment.body, '/') }}
         uses: actions-ecosystem/action-add-labels@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          labels: ${{ github.event.comment.body.substring(1) }}
+          labels: ${{ steps.extract_labels.outputs.labels }}
