@@ -28,7 +28,6 @@ public class SystemInterceptor {
         // TODO：实现 blob 字段压缩功能
         // 添加自定义拦截器配置，例如压缩和解压缩功能
         // configList.add(new MybatisInterceptorConfig(TestResourcePoolBlob.class, "configuration", CompressUtils.class, "zip", "unzip"));
-
         return configList;
     }
 }
