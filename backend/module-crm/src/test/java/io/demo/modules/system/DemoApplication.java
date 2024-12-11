@@ -19,7 +19,7 @@ import org.springframework.context.annotation.ComponentScan;
         MinioProperties.class
 })
 @ServletComponentScan
-@ComponentScan(basePackages = {"io.demo.crm"})
+@ComponentScan(basePackages = {"io.demo"})
 public class DemoApplication {
 
     public static void main(String[] args) {
