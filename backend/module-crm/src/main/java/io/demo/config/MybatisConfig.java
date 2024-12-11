@@ -21,10 +21,10 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * 配置类，用于配置 MyBatis 和数据源相关的设置。
+ * Configuration class for setting up MyBatis and data source related settings.
  * <p>
- * 本类负责配置 MyBatis 的分页拦截器、用户信息脱敏拦截器、以及数据库源的配置，
- * 其中包括主数据源与 Quartz 相关的数据源配置。
+ * This class is responsible for configuring MyBatis pagination interceptor, user information desensitization interceptor,
+ * and database source configuration, including the main data source and Quartz related data source configuration.
  * </p>
  *
  * @version 1.0
@@ -35,12 +35,12 @@ import java.util.Properties;
 public class MybatisConfig {
 
     /**
-     * 配置 MyBatis 的分页拦截器。
+     * Configures the MyBatis pagination interceptor.
      * <p>
-     * 该方法创建并返回一个 {@link PageInterceptor} 实例，用于启用 MyBatis 分页功能。
+     * This method creates and returns a {@link PageInterceptor} instance to enable MyBatis pagination functionality.
      * </p>
      *
-     * @return 配置好的分页拦截器实例
+     * @return Configured pagination interceptor instance
      */
     @Bean
     public PageInterceptor pageInterceptor() {
@@ -56,13 +56,13 @@ public class MybatisConfig {
     }
 
     /**
-     * 配置 MyBatis 的自定义拦截器。
+     * Configures the custom MyBatis interceptor.
      * <p>
-     * 该方法创建并返回一个 {@link MybatisInterceptor} 实例，将多个拦截器配置合并到一个列表中。
+     * This method creates and returns a {@link MybatisInterceptor} instance, merging multiple interceptor configurations into a list.
      * </p>
      *
-     * @param interceptorConfigs 配置的拦截器列表
-     * @return 配置好的自定义拦截器实例
+     * @param interceptorConfigs List of configured interceptors
+     * @return Configured custom interceptor instance
      */
     @Bean
     public MybatisInterceptor dbInterceptor(List<MybatisInterceptorConfig>[] interceptorConfigs) {
@@ -70,20 +70,19 @@ public class MybatisConfig {
         for (List<MybatisInterceptorConfig> configList : interceptorConfigs) {
             mybatisInterceptorConfigs.addAll(configList);
         }
-        // 统一配置
+        // Unified configuration
         MybatisInterceptor interceptor = new MybatisInterceptor();
         interceptor.setInterceptorConfigList(mybatisInterceptorConfigs);
         return interceptor;
     }
 
     /**
-     * 配置用户信息脱敏的拦截器。
+     * Configures the user information desensitization interceptor.
      * <p>
-     * 该方法创建并返回一个 {@link UserDesensitizationInterceptor} 实例，
-     * 用于对用户信息进行脱敏处理。
+     * This method creates and returns a {@link UserDesensitizationInterceptor} instance for desensitizing user information.
      * </p>
      *
-     * @return 配置好的用户脱敏拦截器实例
+     * @return Configured user desensitization interceptor instance
      */
     @Bean
     public UserDesensitizationInterceptor userDesensitizationInterceptor() {
@@ -91,13 +90,13 @@ public class MybatisConfig {
     }
 
     /**
-     * 配置主数据源。
+     * Configures the main data source.
      * <p>
-     * 该方法根据配置文件中的属性创建一个主数据源，使用 {@link HikariDataSource} 作为数据源类型。
+     * This method creates a main data source based on the properties in the configuration file, using {@link HikariDataSource} as the data source type.
      * </p>
      *
-     * @param properties 数据源的基础配置
-     * @return 配置好的主数据源实例
+     * @param properties Basic configuration of the data source
+     * @return Configured main data source instance
      */
     @Bean
     @Primary
@@ -112,13 +111,13 @@ public class MybatisConfig {
     }
 
     /**
-     * 配置 Quartz 数据源。
+     * Configures the Quartz data source.
      * <p>
-     * 该方法根据配置文件中的属性创建一个 Quartz 数据源，使用 {@link HikariDataSource} 作为数据源类型。
+     * This method creates a Quartz data source based on the properties in the configuration file, using {@link HikariDataSource} as the data source type.
      * </p>
      *
-     * @param properties Quartz 数据源的基础配置
-     * @return 配置好的 Quartz 数据源实例
+     * @param properties Basic configuration of the Quartz data source
+     * @return Configured Quartz data source instance
      */
     @Bean
     @ConfigurationProperties(prefix = "spring.datasource.quartz.hikari")
@@ -133,13 +132,12 @@ public class MybatisConfig {
     }
 
     /**
-     * 配置主数据源的基础属性。
+     * Configures the basic properties of the main data source.
      * <p>
-     * 该方法创建并返回一个 {@link DataSourceProperties} 实例，
-     * 用于配置 Spring Boot 中的数据源属性。
+     * This method creates and returns a {@link DataSourceProperties} instance for configuring data source properties in Spring Boot.
      * </p>
      *
-     * @return 配置好的数据源属性实例
+     * @return Configured data source properties instance
      */
     @Bean("dataSourceProperties")
     @Primary
@@ -149,19 +147,16 @@ public class MybatisConfig {
     }
 
     /**
-     * 配置 Quartz 数据源的基础属性。
+     * Configures the basic properties of the Quartz data source.
      * <p>
-     * 该方法创建并返回一个 {@link DataSourceProperties} 实例，
-     * 用于配置 Quartz 数据源的相关属性。
+     * This method creates and returns a {@link DataSourceProperties} instance for configuring Quartz data source properties.
      * </p>
      *
-     * @return 配置好的 Quartz 数据源属性实例
+     * @return Configured Quartz data source properties instance
      */
     @Bean("quartzDataSourceProperties")
     @ConfigurationProperties(prefix = "spring.datasource.quartz")
     public DataSourceProperties quartzDataSourceProperties() {
         return new DataSourceProperties();
     }
-
-
 }

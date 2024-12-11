@@ -3,49 +3,49 @@ package io.demo.common.pager;
 import lombok.Data;
 
 /**
- * 分页类，封装分页数据。
+ * Pagination class that encapsulates pagination data.
  * <p>
- * 该类用于表示分页查询结果，包括数据列表、总记录数、每页记录数和当前页码等信息。
+ * This class is used to represent the results of a paginated query, including the data list, total record count, number of records per page, and current page number.
  * </p>
  *
- * @param <T> 数据列表的类型
+ * @param <T> Type of the data list
  */
 @Data
 public class Pager<T> {
 
     /**
-     * 数据列表，分页查询结果的具体数据。
+     * Data list, the specific data of the paginated query results.
      */
     private T list;
 
     /**
-     * 总记录数，表示符合查询条件的总条数。
+     * Total record count, indicating the total number of records that match the query criteria.
      */
     private long total;
 
     /**
-     * 每页记录数，表示每一页显示的数据条数。
+     * Number of records per page, indicating the number of records displayed on each page.
      */
     private long pageSize;
 
     /**
-     * 当前页码，表示当前显示的是哪一页。
+     * Current page number, indicating which page is currently displayed.
      */
     private long current;
 
     /**
-     * 无参构造函数，初始化一个空的分页对象。
+     * No-argument constructor, initializes an empty pagination object.
      */
     public Pager() {
     }
 
     /**
-     * 带参构造函数，用于初始化分页对象。
+     * Parameterized constructor, used to initialize the pagination object.
      *
-     * @param list      数据列表
-     * @param total     总记录数
-     * @param pageSize  每页记录数
-     * @param current   当前页码
+     * @param list      Data list
+     * @param total     Total record count
+     * @param pageSize  Number of records per page
+     * @param current   Current page number
      */
     public Pager(T list, long total, long pageSize, long current) {
         this.list = list;

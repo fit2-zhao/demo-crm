@@ -5,9 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Mybatis 拦截器配置类，主要用于配置 Mybatis 加密和解密拦截器。
+ * Mybatis interceptor configuration class, mainly used for configuring Mybatis encryption and decryption interceptors.
  * <p>
- * 该类用于定义与加密/解密相关的拦截器设置，包括模型类、属性名、拦截器类及方法等。
+ * This class is used to define interceptor settings related to encryption/decryption, including model class, attribute name, interceptor class, and methods.
  * </p>
  */
 @Getter
@@ -15,54 +15,54 @@ import lombok.Setter;
 public class MybatisInterceptorConfig {
 
     /**
-     * 模型类的名称。
+     * Name of the model class.
      */
     private String modelName;
 
     /**
-     * 需要拦截的属性名称。
+     * Name of the attribute to be intercepted.
      */
     private String attrName;
 
     /**
-     * 需要拦截的属性名称列表。
+     * List of attribute names to be intercepted.
      */
     private String attrNameForList;
 
     /**
-     * 拦截器类的名称。
+     * Name of the interceptor class.
      */
     private String interceptorClass;
 
     /**
-     * 拦截器的方法名。
+     * Name of the interceptor method.
      */
     private String interceptorMethod;
 
     /**
-     * 反操作类（例如解密操作类）的名称。
+     * Name of the undo class (e.g., decryption operation class).
      */
     private String undoClass;
 
     /**
-     * 反操作方法名（例如解密方法）。
+     * Name of the undo method (e.g., decryption method).
      */
     private String undoMethod;
 
     /**
-     * 默认构造函数，初始化一个空的拦截器配置。
+     * Default constructor, initializes an empty interceptor configuration.
      */
     public MybatisInterceptorConfig() {
     }
 
     /**
-     * 用于配置加密拦截器的构造函数。
+     * Constructor for configuring encryption interceptors.
      * <p>
-     * 默认使用 {@link EncryptUtils} 类的加密和解密方法。
+     * By default, it uses the encryption and decryption methods of the {@link EncryptUtils} class.
      * </p>
      *
-     * @param modelClass 模型类
-     * @param attrName   需要加密的属性名称
+     * @param modelClass Model class
+     * @param attrName   Name of the attribute to be encrypted
      */
     public MybatisInterceptorConfig(Class<?> modelClass, String attrName) {
         this.modelName = modelClass.getName();
@@ -74,16 +74,16 @@ public class MybatisInterceptorConfig {
     }
 
     /**
-     * 用于自定义拦截器的构造函数。
+     * Constructor for custom interceptors.
      * <p>
-     * 可以通过此构造函数传入自定义的拦截器类和方法。
+     * This constructor allows passing custom interceptor classes and methods.
      * </p>
      *
-     * @param modelClass        模型类
-     * @param attrName          需要拦截的属性名称
-     * @param interceptorClass  自定义拦截器类
-     * @param interceptorMethod 自定义拦截器方法
-     * @param undoMethod        自定义反操作方法
+     * @param modelClass        Model class
+     * @param attrName          Name of the attribute to be intercepted
+     * @param interceptorClass  Custom interceptor class
+     * @param interceptorMethod Custom interceptor method
+     * @param undoMethod        Custom undo method
      */
     public MybatisInterceptorConfig(Class<?> modelClass, String attrName, Class<?> interceptorClass, String interceptorMethod, String undoMethod) {
         this.modelName = modelClass.getName();

@@ -3,37 +3,37 @@ package io.demo.common.exception;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * SystemException 是自定义的运行时异常，包含错误代码和详细信息。
+ * GenericException is a custom runtime exception that includes an error code and detailed information.
  */
 public class GenericException extends RuntimeException {
 
     /**
-     * 错误代码
+     * Error code
      */
     protected IResultCode errorCode;
 
     /**
-     * 构造方法，接受错误信息。
+     * Constructor that accepts an error message.
      *
-     * @param message 错误信息
+     * @param message Error message
      */
     public GenericException(String message) {
         super(message);
     }
 
     /**
-     * 构造方法，接受一个异常对象。
+     * Constructor that accepts an exception object.
      *
-     * @param t 异常对象
+     * @param t Exception object
      */
     public GenericException(Throwable t) {
         super(t);
     }
 
     /**
-     * 构造方法，接受错误代码，默认没有详细信息。
+     * Constructor that accepts an error code, with no detailed information by default.
      *
-     * @param errorCode 错误代码
+     * @param errorCode Error code
      */
     public GenericException(IResultCode errorCode) {
         super(StringUtils.EMPTY);
@@ -44,10 +44,10 @@ public class GenericException extends RuntimeException {
     }
 
     /**
-     * 构造方法，接受错误代码和自定义错误信息。
+     * Constructor that accepts an error code and a custom error message.
      *
-     * @param errorCode 错误代码
-     * @param message   错误信息
+     * @param errorCode Error code
+     * @param message   Error message
      */
     public GenericException(IResultCode errorCode, String message) {
         super(message);
@@ -58,10 +58,10 @@ public class GenericException extends RuntimeException {
     }
 
     /**
-     * 构造方法，接受错误代码和异常对象。
+     * Constructor that accepts an error code and an exception object.
      *
-     * @param errorCode 错误代码
-     * @param t         异常对象
+     * @param errorCode Error code
+     * @param t         Exception object
      */
     public GenericException(IResultCode errorCode, Throwable t) {
         super(t);
@@ -72,31 +72,31 @@ public class GenericException extends RuntimeException {
     }
 
     /**
-     * 构造方法，接受自定义错误信息和异常对象。
+     * Constructor that accepts a custom error message and an exception object.
      *
-     * @param message 错误信息
-     * @param t       异常对象
+     * @param message Error message
+     * @param t       Exception object
      */
     public GenericException(String message, Throwable t) {
         super(message, t);
     }
 
     /**
-     * 获取错误代码。
+     * Get the error code.
      *
-     * @return 错误代码
+     * @return Error code
      */
     public IResultCode getErrorCode() {
         return errorCode;
     }
 
     /**
-     * 重写toString方法，提供更有用的错误信息。
+     * Override the toString method to provide more useful error information.
      *
-     * @return 错误代码和错误信息
+     * @return Error code and error message
      */
     @Override
     public String toString() {
-        return "MSException{errorCode=" + errorCode + ", message=" + getMessage() + "}";
+        return "GenericException{errorCode=" + errorCode + ", message=" + getMessage() + "}";
     }
 }

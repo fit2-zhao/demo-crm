@@ -8,60 +8,60 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * <p>登录请求的 DTO 类。</p>
- * <p>包含用户名、密码以及认证信息。用户名和密码经过 RSA 解密后使用。</p>
+ * <p>DTO class for login requests.</p>
+ * <p>Includes username, password, and authentication information. The username and password are used after RSA decryption.</p>
  */
 @Getter
 @Setter
 public class LoginRequest {
 
     /**
-     * 用户名，不能为空，最大长度为 256。
+     * Username, cannot be null, maximum length is 256.
      */
     @NotBlank(message = "{user_name_is_null}")
     @Size(max = 256, message = "{user_name_length_too_long}")
     private String username;
 
     /**
-     * 密码，不能为空，最大长度为 256。
+     * Password, cannot be null, maximum length is 256.
      */
     @NotBlank(message = "{password_is_null}")
     @Size(max = 256, message = "{password_length_too_long}")
     private String password;
 
     /**
-     * 认证信息，可选字段。
+     * Authentication information, optional field.
      */
     private String authenticate;
 
     /**
-     * 获取解密后的用户名。
-     * <p>如果解密失败，将返回原始的用户名。</p>
+     * Gets the decrypted username.
+     * <p>If decryption fails, the original username will be returned.</p>
      *
-     * @return 解密后的用户名
+     * @return The decrypted username
      */
     public String getUsername() {
         try {
             RsaKey rsaKey = RsaUtils.getRsaKey();
             return RsaUtils.privateDecrypt(username, rsaKey.getPrivateKey());
         } catch (Exception e) {
-            // 解密失败，返回原始用户名
+            // Decryption failed, return the original username
             return username;
         }
     }
 
     /**
-     * 获取解密后的密码。
-     * <p>如果解密失败，将返回原始的密码。</p>
+     * Gets the decrypted password.
+     * <p>If decryption fails, the original password will be returned.</p>
      *
-     * @return 解密后的密码
+     * @return The decrypted password
      */
     public String getPassword() {
         try {
             RsaKey rsaKey = RsaUtils.getRsaKey();
             return RsaUtils.privateDecrypt(password, rsaKey.getPrivateKey());
         } catch (Exception e) {
-            // 解密失败，返回原始密码
+            // Decryption failed, return the original password
             return password;
         }
     }

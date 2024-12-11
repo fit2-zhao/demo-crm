@@ -5,8 +5,8 @@ import jodd.util.StringPool;
 import java.lang.invoke.SerializedLambda;
 
 /**
- * 通过反射提供 Lambda 表达式元数据的类。
- * 该类提供了获取 Lambda 实现方法名称和实例化类的功能。
+ * Class providing metadata for Lambda expressions through reflection.
+ * This class provides functionality to get the name of the Lambda implementation method and the instantiated class.
  */
 public class ReflectLambdaMeta extends LambdaMeta {
 
@@ -14,10 +14,10 @@ public class ReflectLambdaMeta extends LambdaMeta {
     private final ClassLoader classLoader;
 
     /**
-     * 构造函数，初始化 ReflectLambdaMeta 实例。
+     * Constructor to initialize an instance of ReflectLambdaMeta.
      *
-     * @param lambda      被序列化的 Lambda 表达式
-     * @param classLoader 用于加载类的类加载器
+     * @param lambda      The serialized Lambda expression
+     * @param classLoader The class loader used to load classes
      */
     public ReflectLambdaMeta(SerializedLambda lambda, ClassLoader classLoader) {
         this.lambda = lambda;
@@ -25,9 +25,9 @@ public class ReflectLambdaMeta extends LambdaMeta {
     }
 
     /**
-     * 获取 Lambda 实现方法的名称，并转换为 snake_case 格式。
+     * Gets the name of the Lambda implementation method and converts it to snake\_case format.
      *
-     * @return Lambda 实现方法的名称（snake_case 格式）
+     * @return The name of the Lambda implementation method (in snake\_case format)
      */
     @Override
     public String getImplMethodName() {
@@ -35,10 +35,10 @@ public class ReflectLambdaMeta extends LambdaMeta {
     }
 
     /**
-     * 获取 Lambda 表达式实例化的类。
-     * 通过类加载器加载相应的类。
+     * Gets the class instantiated by the Lambda expression.
+     * Loads the corresponding class using the class loader.
      *
-     * @return Lambda 表达式实例化的类
+     * @return The class instantiated by the Lambda expression
      */
     @Override
     public Class<?> getInstantiatedClass() {

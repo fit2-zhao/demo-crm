@@ -14,33 +14,33 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
 /**
- * RSA 加密解密工具类，提供 RSA 算法相关的加密和解密操作。
+ * RSA encryption and decryption utility class, providing RSA algorithm-related encryption and decryption operations.
  * <p>
- * 该类支持使用 RSA 公钥和私钥进行加密、解密、密钥生成等操作。
+ * This class supports encryption, decryption, and key generation operations using RSA public and private keys.
  * </p>
  */
 public class RsaUtils {
 
     /**
-     * 默认字符集 UTF-8。
+     * Default character set UTF-8.
      */
     public static final String CHARSET = StandardCharsets.UTF_8.name();
 
     /**
-     * RSA 加密算法名称。
+     * RSA encryption algorithm name.
      */
     public static final String RSA_ALGORITHM = "RSA/ECB/OAEPWITHSHA-256ANDMGF1PADDING";
 
     /**
-     * RSA 密钥对，缓存的 RSA 公私钥对象。
+     * RSA key pair, cached RSA public and private key objects.
      */
     private static RsaKey rsaKey;
 
     /**
-     * 获取缓存的 RSA 密钥对，如果未创建则调用方法生成。
+     * Get the cached RSA key pair, generate it if not created.
      *
-     * @return 已缓存的 RSA 密钥对
-     * @throws NoSuchAlgorithmException 如果找不到指定的算法
+     * @return Cached RSA key pair
+     * @throws NoSuchAlgorithmException If the specified algorithm is not found
      */
     public static RsaKey getRsaKey() throws NoSuchAlgorithmException {
         if (rsaKey == null) {
@@ -50,47 +50,47 @@ public class RsaUtils {
     }
 
     /**
-     * 设置 RSA 密钥对缓存。
+     * Set the RSA key pair cache.
      *
-     * @param rsaKey RSA 密钥对
-     * @throws NoSuchAlgorithmException 如果找不到指定的算法
+     * @param rsaKey RSA key pair
+     * @throws NoSuchAlgorithmException If the specified algorithm is not found
      */
     public static void setRsaKey(RsaKey rsaKey) throws NoSuchAlgorithmException {
         RsaUtils.rsaKey = rsaKey;
     }
 
     /**
-     * 创建一个新的 RSA 密钥对，默认密钥长度为 1024 位。
+     * Create a new RSA key pair with a default key length of 1024 bits.
      *
-     * @return 生成的 RSA 密钥对
-     * @throws NoSuchAlgorithmException 如果找不到指定的算法
+     * @return Generated RSA key pair
+     * @throws NoSuchAlgorithmException If the specified algorithm is not found
      */
     public static RsaKey createKeys() throws NoSuchAlgorithmException {
         return createKeys(1024);
     }
 
     /**
-     * 创建 RSA 密钥对，指定密钥长度。
+     * Create an RSA key pair with the specified key length.
      *
-     * @param keySize 密钥长度，推荐 1024 或 2048 位
-     * @return 生成的 RSA 密钥对
-     * @throws NoSuchAlgorithmException 如果找不到指定的算法
+     * @param keySize Key length, recommended 1024 or 2048 bits
+     * @return Generated RSA key pair
+     * @throws NoSuchAlgorithmException If the specified algorithm is not found
      */
     public static RsaKey createKeys(int keySize) throws NoSuchAlgorithmException {
-        // 为 RSA 算法创建 KeyPairGenerator 对象
+        // Create KeyPairGenerator object for RSA algorithm
         KeyPairGenerator kpg = KeyPairGenerator.getInstance(RSA_ALGORITHM);
-        kpg.initialize(keySize); // 初始化 KeyPairGenerator 对象，设置密钥长度
-        KeyPair keyPair = kpg.generateKeyPair(); // 生成密钥对
+        kpg.initialize(keySize); // Initialize KeyPairGenerator object, set key length
+        KeyPair keyPair = kpg.generateKeyPair(); // Generate key pair
 
-        // 获取公钥并编码为 Base64 字符串
+        // Get public key and encode as Base64 string
         Key publicKey = keyPair.getPublic();
         String publicKeyStr = new String(Base64.encodeBase64(publicKey.getEncoded()));
 
-        // 获取私钥并编码为 Base64 字符串
+        // Get private key and encode as Base64 string
         Key privateKey = keyPair.getPrivate();
         String privateKeyStr = new String(Base64.encodeBase64(privateKey.getEncoded()));
 
-        // 创建 RsaKey 对象并设置公私钥
+        // Create RsaKey object and set public and private keys
         RsaKey rsaKey = new RsaKey();
         rsaKey.setPublicKey(publicKeyStr);
         rsaKey.setPrivateKey(privateKeyStr);
@@ -99,12 +99,12 @@ public class RsaUtils {
     }
 
     /**
-     * 使用公钥加密数据。
+     * Encrypt data using the public key.
      *
-     * @param originalText 原文
-     * @param publicKey    公钥
-     * @return 加密后的密文
-     * @throws NoSuchAlgorithmException 如果找不到指定的算法
+     * @param originalText Plain text
+     * @param publicKey    Public key
+     * @return Encrypted cipher text
+     * @throws NoSuchAlgorithmException If the specified algorithm is not found
      */
     public static String publicEncrypt(String originalText, String publicKey) throws NoSuchAlgorithmException {
         RSAPublicKey rsaPublicKey = getPublicKey(publicKey);
@@ -112,12 +112,12 @@ public class RsaUtils {
     }
 
     /**
-     * 使用公钥解密数据。
+     * Decrypt data using the public key.
      *
-     * @param cipherText 密文
-     * @param publicKey  公钥
-     * @return 解密后的原文
-     * @throws NoSuchAlgorithmException 如果找不到指定的算法
+     * @param cipherText Cipher text
+     * @param publicKey  Public key
+     * @return Decrypted plain text
+     * @throws NoSuchAlgorithmException If the specified algorithm is not found
      */
     public static String publicDecrypt(String cipherText, String publicKey) throws NoSuchAlgorithmException {
         RSAPublicKey rsaPublicKey = getPublicKey(publicKey);
@@ -134,17 +134,17 @@ public class RsaUtils {
             }
             return v;
         } catch (Exception e) {
-            throw new RuntimeException("解密字符串[" + cipherText + "]时遇到异常", e);
+            throw new RuntimeException("Exception occurred while decrypting string [" + cipherText + "]", e);
         }
     }
 
     /**
-     * 使用私钥加密数据。
+     * Encrypt data using the private key.
      *
-     * @param originalText 原文
-     * @param privateKey   私钥
-     * @return 加密后的密文
-     * @throws NoSuchAlgorithmException 如果找不到指定的算法
+     * @param originalText Plain text
+     * @param privateKey   Private key
+     * @return Encrypted cipher text
+     * @throws NoSuchAlgorithmException If the specified algorithm is not found
      */
     public static String privateEncrypt(String originalText, String privateKey) throws NoSuchAlgorithmException {
         RSAPrivateKey rsaPrivateKey = getPrivateKey(privateKey);
@@ -152,12 +152,12 @@ public class RsaUtils {
     }
 
     /**
-     * 使用私钥解密数据。
+     * Decrypt data using the private key.
      *
-     * @param cipherText 密文
-     * @param privateKey 私钥
-     * @return 解密后的原文
-     * @throws NoSuchAlgorithmException 如果找不到指定的算法
+     * @param cipherText Cipher text
+     * @param privateKey Private key
+     * @return Decrypted plain text
+     * @throws NoSuchAlgorithmException If the specified algorithm is not found
      */
     public static String privateDecrypt(String cipherText, String privateKey) throws NoSuchAlgorithmException {
         RSAPrivateKey rsaPrivateKey = getPrivateKey(privateKey);
@@ -165,11 +165,11 @@ public class RsaUtils {
     }
 
     /**
-     * 根据公钥字符串获取公钥对象。
+     * Get the public key object from the public key string.
      *
-     * @param publicKey 公钥字符串（Base64 编码）
-     * @return 公钥对象
-     * @throws NoSuchAlgorithmException 如果找不到指定的算法
+     * @param publicKey Public key string (Base64 encoded)
+     * @return Public key object
+     * @throws NoSuchAlgorithmException If the specified algorithm is not found
      */
     private static RSAPublicKey getPublicKey(String publicKey) throws NoSuchAlgorithmException {
         KeyFactory keyFactory = KeyFactory.getInstance(RSA_ALGORITHM);
@@ -177,16 +177,16 @@ public class RsaUtils {
         try {
             return (RSAPublicKey) keyFactory.generatePublic(x509KeySpec);
         } catch (InvalidKeySpecException e) {
-            throw new RuntimeException("公钥解析失败", e);
+            throw new RuntimeException("Failed to parse public key", e);
         }
     }
 
     /**
-     * 使用公钥加密数据。
+     * Encrypt data using the public key.
      *
-     * @param originalText 原文
-     * @param publicKey    公钥对象
-     * @return 加密后的密文
+     * @param originalText Plain text
+     * @param publicKey    Public key object
+     * @return Encrypted cipher text
      */
     private static String publicEncrypt(String originalText, RSAPublicKey publicKey) {
         try {
@@ -194,16 +194,16 @@ public class RsaUtils {
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
             return Base64.encodeBase64URLSafeString(rsaSplitCodec(cipher, Cipher.ENCRYPT_MODE, originalText.getBytes(CHARSET), publicKey.getModulus().bitLength()));
         } catch (Exception e) {
-            throw new RuntimeException("加密时遇到异常", e);
+            throw new RuntimeException("Exception occurred while encrypting", e);
         }
     }
 
     /**
-     * 根据私钥字符串获取私钥对象。
+     * Get the private key object from the private key string.
      *
-     * @param privateKey 私钥字符串（Base64 编码）
-     * @return 私钥对象
-     * @throws NoSuchAlgorithmException 如果找不到指定的算法
+     * @param privateKey Private key string (Base64 encoded)
+     * @return Private key object
+     * @throws NoSuchAlgorithmException If the specified algorithm is not found
      */
     private static RSAPrivateKey getPrivateKey(String privateKey) throws NoSuchAlgorithmException {
         KeyFactory keyFactory = KeyFactory.getInstance(RSA_ALGORITHM);
@@ -211,16 +211,16 @@ public class RsaUtils {
         try {
             return (RSAPrivateKey) keyFactory.generatePrivate(pkcs8KeySpec);
         } catch (InvalidKeySpecException e) {
-            throw new RuntimeException("私钥解析失败", e);
+            throw new RuntimeException("Failed to parse private key", e);
         }
     }
 
     /**
-     * 使用私钥解密数据。
+     * Decrypt data using the private key.
      *
-     * @param cipherText 密文
-     * @param privateKey 私钥对象
-     * @return 解密后的原文
+     * @param cipherText Cipher text
+     * @param privateKey Private key object
+     * @return Decrypted plain text
      */
     private static String privateDecrypt(String cipherText, RSAPrivateKey privateKey) {
         try {
@@ -229,16 +229,16 @@ public class RsaUtils {
             String result = new String(rsaSplitCodec(cipher, Cipher.DECRYPT_MODE, Base64.decodeBase64(cipherText), privateKey.getModulus().bitLength()), CHARSET);
             return StringUtils.isBlank(result) ? cipherText : result;
         } catch (Exception e) {
-            throw new RuntimeException("解密时遇到异常", e);
+            throw new RuntimeException("Exception occurred while decrypting", e);
         }
     }
 
     /**
-     * 私钥加密操作。
+     * Private key encryption operation.
      *
-     * @param originalText 原文
-     * @param privateKey   私钥对象
-     * @return 加密后的密文
+     * @param originalText Plain text
+     * @param privateKey   Private key object
+     * @return Encrypted cipher text
      */
     private static String privateEncrypt(String originalText, RSAPrivateKey privateKey) {
         try {
@@ -246,18 +246,18 @@ public class RsaUtils {
             cipher.init(Cipher.ENCRYPT_MODE, privateKey);
             return Base64.encodeBase64URLSafeString(rsaSplitCodec(cipher, Cipher.ENCRYPT_MODE, originalText.getBytes(CHARSET), privateKey.getModulus().bitLength()));
         } catch (Exception e) {
-            throw new RuntimeException("加密时遇到异常", e);
+            throw new RuntimeException("Exception occurred while encrypting", e);
         }
     }
 
     /**
-     * 使用公钥或私钥进行加解密操作，分块处理数据。
+     * Perform encryption or decryption operations using the public or private key, processing data in blocks.
      *
-     * @param cipher  加解密的 Cipher 对象
-     * @param opmode  操作模式（加密或解密）
-     * @param data    要加解密的数据
-     * @param keySize 密钥长度
-     * @return 加解密后的字节数组
+     * @param cipher  Cipher object for encryption/decryption
+     * @param opmode  Operation mode (encryption or decryption)
+     * @param data    Data to be encrypted/decrypted
+     * @param keySize Key length
+     * @return Encrypted/decrypted byte array
      */
     private static byte[] rsaSplitCodec(Cipher cipher, int opmode, byte[] data, int keySize) {
         int maxBlock = (opmode == Cipher.DECRYPT_MODE) ? keySize / 8 : keySize / 8 - 11;
@@ -272,7 +272,7 @@ public class RsaUtils {
             }
             return out.toByteArray();
         } catch (Exception e) {
-            throw new RuntimeException("加解密时发生异常", e);
+            throw new RuntimeException("Exception occurred during encryption/decryption", e);
         }
     }
 }

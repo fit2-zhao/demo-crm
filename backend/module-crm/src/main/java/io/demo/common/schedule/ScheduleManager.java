@@ -7,14 +7,14 @@ import jakarta.annotation.Resource;
 import org.quartz.*;
 
 /**
- * 定时任务管理器，用于管理调度任务的添加、修改、删除等操作。
- * 提供了对简单任务和 Cron 表达式任务的支持。
+ * Schedule Manager, used to manage the addition, modification, and deletion of scheduled tasks.
+ * Provides support for simple tasks and Cron expression tasks.
  * <p>
- * 主要功能包括：
+ * Main functions include:
  * <ul>
- *   <li>添加和删除定时任务</li>
- *   <li>修改 Cron 表达式</li>
- *   <li>启动和关闭调度器</li>
+ *   <li>Adding and deleting scheduled tasks</li>
+ *   <li>Modifying Cron expressions</li>
+ *   <li>Starting and stopping the scheduler</li>
  * </ul>
  * </p>
  *
@@ -26,14 +26,14 @@ public class ScheduleManager {
     private Scheduler scheduler;
 
     /**
-     * 添加一个简单的定时任务。
+     * Adds a simple scheduled task.
      *
-     * @param jobKey       任务标识
-     * @param triggerKey   触发器标识
-     * @param cls          任务类
-     * @param repeatIntervalTime 任务重复间隔时间（单位：小时）
-     * @param jobDataMap   任务数据
-     * @throws SchedulerException 如果调度失败
+     * @param jobKey       Job identifier
+     * @param triggerKey   Trigger identifier
+     * @param cls          Job class
+     * @param repeatIntervalTime Task repeat interval time (in hours)
+     * @param jobDataMap   Job data
+     * @throws SchedulerException If scheduling fails
      */
     public void addSimpleJob(JobKey jobKey, TriggerKey triggerKey, Class<? extends Job> cls, int repeatIntervalTime, JobDataMap jobDataMap)
             throws SchedulerException {
@@ -51,13 +51,13 @@ public class ScheduleManager {
     }
 
     /**
-     * 添加一个 Cron 表达式定时任务。
+     * Adds a Cron expression scheduled task.
      *
-     * @param jobKey       任务标识
-     * @param triggerKey   触发器标识
-     * @param jobClass     任务类
-     * @param cron         Cron 表达式
-     * @param jobDataMap   任务数据
+     * @param jobKey       Job identifier
+     * @param triggerKey   Trigger identifier
+     * @param jobClass     Job class
+     * @param cron         Cron expression
+     * @param jobDataMap   Job data
      */
     public void addCronJob(JobKey jobKey, TriggerKey triggerKey, Class<? extends Job> jobClass, String cron, JobDataMap jobDataMap) {
         try {
@@ -76,28 +76,28 @@ public class ScheduleManager {
 
         } catch (Exception e) {
             LogUtils.error(e);
-            throw new GenericException("定时任务配置异常: " + e.getMessage(), e);
+            throw new GenericException("Scheduled task configuration exception: " + e.getMessage(), e);
         }
     }
 
     /**
-     * 添加一个 Cron 表达式定时任务（不带 JobDataMap）。
+     * Adds a Cron expression scheduled task (without JobDataMap).
      *
-     * @param jobKey     任务标识
-     * @param triggerKey 触发器标识
-     * @param jobClass   任务类
-     * @param cron       Cron 表达式
+     * @param jobKey     Job identifier
+     * @param triggerKey Trigger identifier
+     * @param jobClass   Job class
+     * @param cron       Cron expression
      */
     public void addCronJob(JobKey jobKey, TriggerKey triggerKey, Class<? extends Job> jobClass, String cron) {
         addCronJob(jobKey, triggerKey, jobClass, cron, null);
     }
 
     /**
-     * 修改现有的 Cron 触发器的 Cron 表达式。
+     * Modifies the Cron expression of an existing Cron trigger.
      *
-     * @param triggerKey 触发器标识
-     * @param cron       新的 Cron 表达式
-     * @throws SchedulerException 如果修改失败
+     * @param triggerKey Trigger identifier
+     * @param cron       New Cron expression
+     * @throws SchedulerException If modification fails
      */
     public void modifyCronJobTime(TriggerKey triggerKey, String cron) throws SchedulerException {
 
@@ -110,7 +110,7 @@ public class ScheduleManager {
 
             String oldTime = trigger.getCronExpression();
             if (!oldTime.equalsIgnoreCase(cron)) {
-                // 修改触发器的 Cron 表达式
+                // Modify the Cron expression of the trigger
                 TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger();
                 triggerBuilder.withIdentity(triggerKey);
                 triggerBuilder.startNow();
@@ -119,15 +119,15 @@ public class ScheduleManager {
                 scheduler.rescheduleJob(triggerKey, trigger);
             }
         } catch (Exception e) {
-            throw new RuntimeException("修改 Cron 表达式失败", e);
+            throw new RuntimeException("Failed to modify Cron expression", e);
         }
     }
 
     /**
-     * 删除指定的任务和触发器。
+     * Deletes the specified job and trigger.
      *
-     * @param jobKey     任务标识
-     * @param triggerKey 触发器标识
+     * @param jobKey     Job identifier
+     * @param triggerKey Trigger identifier
      */
     public void removeJob(JobKey jobKey, TriggerKey triggerKey) {
         try {
@@ -136,29 +136,29 @@ public class ScheduleManager {
             scheduler.unscheduleJob(triggerKey);
             scheduler.deleteJob(jobKey);
         } catch (Exception e) {
-            LogUtils.error("删除任务失败", e);
-            throw new RuntimeException("删除任务失败", e);
+            LogUtils.error("Failed to delete job", e);
+            throw new RuntimeException("Failed to delete job", e);
         }
     }
 
     /**
-     * 启动调度器。
+     * Starts the scheduler.
      *
-     * @param schedule 调度器
+     * @param schedule Scheduler
      */
     public static void startJobs(Scheduler schedule) {
         try {
             schedule.start();
         } catch (Exception e) {
-            LogUtils.error("启动调度器失败", e);
-            throw new RuntimeException("启动调度器失败", e);
+            LogUtils.error("Failed to start scheduler", e);
+            throw new RuntimeException("Failed to start scheduler", e);
         }
     }
 
     /**
-     * 关闭调度器。
+     * Shuts down the scheduler.
      *
-     * @param schedule 调度器
+     * @param schedule Scheduler
      */
     public void shutdownJobs(Scheduler schedule) {
         try {
@@ -166,21 +166,21 @@ public class ScheduleManager {
                 schedule.shutdown();
             }
         } catch (Exception e) {
-            LogUtils.error("关闭调度器失败", e);
-            throw new RuntimeException("关闭调度器失败", e);
+            LogUtils.error("Failed to shut down scheduler", e);
+            throw new RuntimeException("Failed to shut down scheduler", e);
         }
     }
 
     /**
-     * 添加或更新 Cron 定时任务。
-     * 如果触发器已存在，则修改其 Cron 表达式；否则，添加新的 Cron 定时任务。
+     * Adds or updates a Cron scheduled task.
+     * If the trigger already exists, its Cron expression is modified; otherwise, a new Cron scheduled task is added.
      *
-     * @param jobKey     任务标识
-     * @param triggerKey 触发器标识
-     * @param jobClass   任务类
-     * @param cron       Cron 表达式
-     * @param jobDataMap 任务数据
-     * @throws SchedulerException 如果添加或更新任务失败
+     * @param jobKey     Job identifier
+     * @param triggerKey Trigger identifier
+     * @param jobClass   Job class
+     * @param cron       Cron expression
+     * @param jobDataMap Job data
+     * @throws SchedulerException If adding or updating the task fails
      */
     public void addOrUpdateCronJob(JobKey jobKey, TriggerKey triggerKey, Class jobClass, String cron, JobDataMap jobDataMap)
             throws SchedulerException {
@@ -194,25 +194,25 @@ public class ScheduleManager {
     }
 
     /**
-     * 添加或更新 Cron 定时任务（不带 JobDataMap）。
+     * Adds or updates a Cron scheduled task (without JobDataMap).
      *
-     * @param jobKey     任务标识
-     * @param triggerKey 触发器标识
-     * @param jobClass   任务类
-     * @param cron       Cron 表达式
-     * @throws SchedulerException 如果添加或更新任务失败
+     * @param jobKey     Job identifier
+     * @param triggerKey Trigger identifier
+     * @param jobClass   Job class
+     * @param cron       Cron expression
+     * @throws SchedulerException If adding or updating the task fails
      */
     public void addOrUpdateCronJob(JobKey jobKey, TriggerKey triggerKey, Class jobClass, String cron) throws SchedulerException {
         addOrUpdateCronJob(jobKey, triggerKey, jobClass, cron, null);
     }
 
     /**
-     * 获取默认的 JobDataMap，包含定时任务所需的基本信息。
+     * Gets the default JobDataMap, containing the basic information required for scheduled tasks.
      *
-     * @param schedule 定时任务调度对象
-     * @param expression Cron 或时间表达式
-     * @param userId    执行任务的用户 ID
-     * @return JobDataMap 对象
+     * @param schedule Scheduled task object
+     * @param expression Cron or time expression
+     * @param userId    User ID executing the task
+     * @return JobDataMap object
      */
     public JobDataMap getDefaultJobDataMap(Schedule schedule, String expression, String userId) {
         JobDataMap jobDataMap = new JobDataMap();

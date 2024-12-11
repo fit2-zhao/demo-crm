@@ -6,108 +6,108 @@ import java.io.InputStream;
 import java.util.List;
 
 /**
- * 文件仓库接口，定义了文件操作（如保存、删除、下载、获取）的通用方法。
+ * File repository interface, defining common methods for file operations such as save, delete, download, and retrieve.
  * <p>
- * 实现该接口的类负责提供具体的文件存储和管理操作。
+ * Classes implementing this interface are responsible for providing specific file storage and management operations.
  * </p>
  */
 public interface FileRepository {
 
     /**
-     * 保存文件到文件仓库。
+     * Saves a file to the file repository.
      *
-     * @param file    要保存的文件，类型为 {@link MultipartFile}。
-     * @param request 文件请求信息，包含文件的元数据。
-     * @return 返回保存后的文件标识符（通常为文件路径或唯一ID）。
-     * @throws Exception 如果保存文件过程中发生错误，抛出异常。
+     * @param file    The file to be saved, of type {@link MultipartFile}.
+     * @param request File request information containing metadata of the file.
+     * @return The identifier of the saved file (usually the file path or a unique ID).
+     * @throws Exception If an error occurs during file saving.
      */
     String saveFile(MultipartFile file, FileRequest request) throws Exception;
 
     /**
-     * 保存字节数组表示的文件到文件仓库。
+     * Saves a file represented by a byte array to the file repository.
      *
-     * @param bytes   文件内容的字节数组。
-     * @param request 文件请求信息，包含文件的元数据。
-     * @throws Exception 如果保存文件过程中发生错误，抛出异常。
+     * @param bytes   The byte array representing the file content.
+     * @param request File request information containing metadata of the file.
+     * @throws Exception If an error occurs during file saving.
      */
     void saveFile(byte[] bytes, FileRequest request) throws Exception;
 
     /**
-     * 保存文件流表示的文件到文件仓库。
+     * Saves a file represented by an input stream to the file repository.
      *
-     * @param inputStream 文件内容的输入流。
-     * @param request     文件请求信息，包含文件的元数据。
-     * @return 返回保存后的文件标识符（通常为文件路径或唯一ID）。
-     * @throws Exception 如果保存文件过程中发生错误，抛出异常。
+     * @param inputStream The input stream of the file content.
+     * @param request     File request information containing metadata of the file.
+     * @return The identifier of the saved file (usually the file path or a unique ID).
+     * @throws Exception If an error occurs during file saving.
      */
     String saveFile(InputStream inputStream, FileRequest request) throws Exception;
 
     /**
-     * 删除指定文件。
+     * Deletes a specified file.
      *
-     * @param request 文件请求信息，包含待删除文件的标识符或路径。
-     * @throws Exception 如果删除文件过程中发生错误，抛出异常。
+     * @param request File request information containing the identifier or path of the file to be deleted.
+     * @throws Exception If an error occurs during file deletion.
      */
     void delete(FileRequest request) throws Exception;
 
     /**
-     * 删除指定文件夹及其所有内容。
+     * Deletes a specified folder and all its contents.
      *
-     * @param request 文件请求信息，包含待删除文件夹的标识符或路径。
-     * @throws Exception 如果删除文件夹过程中发生错误，抛出异常。
+     * @param request File request information containing the identifier or path of the folder to be deleted.
+     * @throws Exception If an error occurs during folder deletion.
      */
     void deleteFolder(FileRequest request) throws Exception;
 
     /**
-     * 获取指定文件的字节内容。对于大文件，不建议使用此方法。
+     * Retrieves the byte content of a specified file. Not recommended for large files.
      *
-     * @param request 文件请求信息，包含待获取内容的文件标识符或路径。
-     * @return 返回文件的字节数组。
-     * @throws Exception 如果获取文件内容过程中发生错误，抛出异常。
+     * @param request File request information containing the identifier or path of the file to be retrieved.
+     * @return The byte array of the file content.
+     * @throws Exception If an error occurs during file retrieval.
      */
     byte[] getFile(FileRequest request) throws Exception;
 
     /**
-     * 获取指定文件的输入流。用于流式处理文件内容。
+     * Retrieves the input stream of a specified file for streaming file content.
      *
-     * @param request 文件请求信息，包含待获取内容的文件标识符或路径。
-     * @return 返回文件内容的输入流。
-     * @throws Exception 如果获取文件输入流过程中发生错误，抛出异常。
+     * @param request File request information containing the identifier or path of the file to be retrieved.
+     * @return The input stream of the file content.
+     * @throws Exception If an error occurs during file retrieval.
      */
     InputStream getFileAsStream(FileRequest request) throws Exception;
 
     /**
-     * 以流式方式下载文件，通过逐块下载的方式节省内存。
+     * Downloads a file in a streaming manner, saving memory by downloading in chunks.
      *
-     * @param request   文件请求信息，包含待下载的文件标识符或路径。
-     * @param localPath 下载到本地的文件路径。
-     * @throws Exception 如果下载文件过程中发生错误，抛出异常。
+     * @param request   File request information containing the identifier or path of the file to be downloaded.
+     * @param localPath The local path to which the file will be downloaded.
+     * @throws Exception If an error occurs during file download.
      */
     void downloadFile(FileRequest request, String localPath) throws Exception;
 
     /**
-     * 获取指定文件夹下所有文件的文件名列表。
+     * Retrieves a list of file names in a specified folder.
      *
-     * @param request 文件请求信息，包含目标文件夹的标识符或路径。
-     * @return 返回文件夹中所有文件的文件名列表。
-     * @throws Exception 如果获取文件夹文件列表过程中发生错误，抛出异常。
+     * @param request File request information containing the identifier or path of the target folder.
+     * @return The list of file names in the folder.
+     * @throws Exception If an error occurs during folder file list retrieval.
      */
     List<String> getFolderFileNames(FileRequest request) throws Exception;
 
     /**
-     * 复制文件到指定目录。
+     * Copies a file to a specified directory.
      *
-     * @param request 文件复制请求信息，包含源文件和目标目录信息。
-     * @throws Exception 如果复制文件过程中发生错误，抛出异常。
+     * @param request File copy request information containing source file and target directory information.
+     * @throws Exception If an error occurs during file copy.
      */
     void copyFile(FileCopyRequest request) throws Exception;
 
     /**
-     * 获取指定文件的大小（字节数）。
+     * Retrieves the size of a specified file (in bytes).
      *
-     * @param request 文件请求信息，包含待获取大小的文件标识符或路径。
-     * @return 返回文件的大小，以字节为单位。
-     * @throws Exception 如果获取文件大小过程中发生错误，抛出异常。
+     * @param request File request information containing the identifier or path of the file whose size is to be retrieved.
+     * @return The size of the file in bytes.
+     * @throws Exception If an error occurs during file size retrieval.
      */
     long getFileSize(FileRequest request) throws Exception;
 }

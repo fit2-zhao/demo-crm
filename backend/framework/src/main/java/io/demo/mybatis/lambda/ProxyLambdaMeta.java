@@ -1,6 +1,5 @@
 package io.demo.mybatis.lambda;
 
-
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandleProxies;
 import java.lang.invoke.MethodHandles;
@@ -8,7 +7,7 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.Proxy;
 
 /**
- * 在 IDEA 的 Evaluate 中执行的 Lambda 表达式元数据需要使用该类处理元数据
+ * This class handles metadata for Lambda expressions executed in IDEA's Evaluate.
  */
 public class ProxyLambdaMeta extends LambdaMeta {
     private final Class<?> clazz;
@@ -35,5 +34,4 @@ public class ProxyLambdaMeta extends LambdaMeta {
     public String toString() {
         return clazz.getSimpleName() + "::" + name;
     }
-
 }

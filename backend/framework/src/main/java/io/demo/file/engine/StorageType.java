@@ -1,31 +1,31 @@
 package io.demo.file.engine;
 
 /**
- * 存储类型枚举类，用于标识不同的文件存储方式。
+ * Storage type enumeration class, used to identify different file storage methods.
  * <p>
- * 此枚举类定义了三种存储方式：MINIO、GIT 和 LOCAL。
+ * This enumeration class defines three storage methods: MINIO, GIT, and LOCAL.
  * </p>
  */
 public enum StorageType {
 
     /**
-     * MINIO 存储，通常用于对象存储。
+     * MINIO storage, typically used for object storage.
      */
     MINIO,
 
     /**
-     * LOCAL 存储，通常用于本地文件存储。
+     * LOCAL storage, typically used for local file storage.
      */
     LOCAL;
 
     /**
-     * 根据字符串获取对应的枚举值。
+     * Gets the corresponding enum value based on the string.
      * <p>
-     * 如果提供的字符串不匹配任何枚举值，返回 {@code null}。
+     * If the provided string does not match any enum value, returns {@code null}.
      * </p>
      *
-     * @param storageType 字符串表示的存储类型
-     * @return 对应的枚举值，或 {@code null} 如果没有匹配的枚举
+     * @param storageType The storage type represented as a string
+     * @return The corresponding enum value, or {@code null} if no matching enum is found
      */
     public static StorageType fromString(String storageType) {
         if (storageType != null) {

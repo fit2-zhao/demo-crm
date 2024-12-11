@@ -4,9 +4,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 文件请求类，封装了文件相关的请求信息。
+ * File request class, encapsulating file-related request information.
  * <p>
- * 该类用于存储与文件操作相关的基本信息，如文件所在文件夹、存储类型和文件名等。
+ * This class is used to store basic information related to file operations, such as the folder where the file is located, storage type, and file name.
  * </p>
  */
 @Data
@@ -14,35 +14,35 @@ import lombok.NoArgsConstructor;
 public class FileRequest {
 
     /**
-     * 文件所在的文件夹路径。
+     * The folder path where the file is located.
      * <p>
-     * 此字段指示文件存储的目录，通常用于定位文件。
+     * This field indicates the directory where the file is stored, usually used to locate the file.
      * </p>
      */
     private String folder;
 
     /**
-     * 存储类型，指示文件存储的方式或位置。
+     * Storage type, indicating the method or location of file storage.
      * <p>
-     * 例如，可以是 "MINIO"、"LOCAL" 等存储类型的标识符。
+     * For example, it can be an identifier for storage types such as "MINIO", "LOCAL", etc.
      * </p>
      */
     private String storage;
 
     /**
-     * 文件名称。
+     * File name.
      * <p>
-     * 此字段指示文件的名称，通常与文件的后缀（如 .txt、.jpg 等）一起确定文件的完整标识。
+     * This field indicates the name of the file, usually combined with the file extension (e.g., .txt, .jpg) to determine the complete identifier of the file.
      * </p>
      */
     private String fileName;
 
     /**
-     * 构造函数，创建一个包含文件夹路径、存储类型和文件名的文件请求对象。
+     * Constructor, creating a file request object containing the folder path, storage type, and file name.
      *
-     * @param folder   文件所在的文件夹路径。
-     * @param storage  存储类型，指示文件存储的位置或方式。
-     * @param fileName 文件的名称。
+     * @param folder   The folder path where the file is located.
+     * @param storage  Storage type, indicating the method or location of file storage.
+     * @param fileName The name of the file.
      */
     public FileRequest(String folder, String storage, String fileName) {
         this.folder = folder;

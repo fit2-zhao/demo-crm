@@ -24,40 +24,40 @@ class AppListener implements ApplicationRunner {
     private ExtScheduleService extScheduleService;
 
     /**
-     * 应用启动后执行的初始化方法。
+     * Initialization method executed after the application starts.
      * <p>
-     * 此方法会依次初始化唯一 ID 生成器、MinIO 配置和 RSA 配置。
+     * This method initializes the unique ID generator, MinIO configuration, and RSA configuration in sequence.
      * </p>
      *
-     * @param args 启动参数
+     * @param args Startup arguments
      */
     @Override
     public void run(ApplicationArguments args) {
-        LogUtils.info("===== 开始初始化配置 =====");
+        LogUtils.info("===== Starting configuration initialization =====");
 
-        // 初始化唯一ID生成器
+        // Initialize unique ID generator
         uidGenerator.init();
 
-        // 初始化MinIO配置
-        LogUtils.info("初始化MinIO配置");
+        // Initialize MinIO configuration
+        LogUtils.info("Initializing MinIO configuration");
         initializeMinIO();
 
-        // 初始化RSA配置
-        LogUtils.info("初始化RSA配置");
+        // Initialize RSA configuration
+        LogUtils.info("Initializing RSA configuration");
         initializeRsaConfiguration();
 
-        LogUtils.info("初始化定时任务");
+        LogUtils.info("Initializing scheduled tasks");
         extScheduleService.startEnableSchedules();
 
         HikariCPUtils.printHikariCPStatus();
 
-        LogUtils.info("===== 完成初始化配置 =====");
+        LogUtils.info("===== Configuration initialization completed =====");
     }
 
     /**
-     * 初始化 MinIO 存储配置。
+     * Initialize MinIO storage configuration.
      * <p>
-     * 此方法检查 MinIO 存储桶是否存在。如果不存在，则创建一个新的存储桶。
+     * This method checks if the MinIO bucket exists. If it does not exist, a new bucket is created.
      * </p>
      */
     private void initializeMinIO() {
@@ -68,14 +68,14 @@ class AppListener implements ApplicationRunner {
                 minioRepository.init(minioClient);
             }
         } catch (Exception e) {
-            LogUtils.error("初始化MinIO存储桶时发生错误: " + e.getMessage(), e);
+            LogUtils.error("Error occurred while initializing MinIO bucket: " + e.getMessage(), e);
         }
     }
 
     /**
-     * 初始化 RSA 配置。
+     * Initialize RSA configuration.
      * <p>
-     * 此方法首先尝试加载现有的 RSA 密钥。如果不存在，则生成新的 RSA 密钥并保存到文件系统。
+     * This method first attempts to load the existing RSA key. If it does not exist, a new RSA key is generated and saved to the file system.
      * </p>
      */
     private void initializeRsaConfiguration() {
@@ -87,23 +87,23 @@ class AppListener implements ApplicationRunner {
         try {
             byte[] rsaFile = fileRepository.getFile(fileRequest);
             if (rsaFile != null) {
-                // 如果RSA密钥文件存在，反序列化并设置密钥
+                // If the RSA key file exists, deserialize and set the key
                 RsaKey rsaKey = SerializationUtils.deserialize(rsaFile);
                 RsaUtils.setRsaKey(rsaKey);
                 return;
             }
         } catch (Exception e) {
-            LogUtils.error("获取RSA配置失败", e);
+            LogUtils.error("Failed to get RSA configuration", e);
         }
 
         try {
-            // 如果RSA密钥文件不存在，生成新的RSA密钥并保存
+            // If the RSA key file does not exist, generate a new RSA key and save it
             RsaKey rsaKey = RsaUtils.getRsaKey();
             byte[] rsaKeyBytes = SerializationUtils.serialize(rsaKey);
             fileRepository.saveFile(rsaKeyBytes, fileRequest);
             RsaUtils.setRsaKey(rsaKey);
         } catch (Exception e) {
-            LogUtils.error("初始化RSA配置失败", e);
+            LogUtils.error("Failed to initialize RSA configuration", e);
         }
     }
 }

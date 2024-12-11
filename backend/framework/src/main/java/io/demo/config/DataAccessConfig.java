@@ -14,43 +14,43 @@ import org.springframework.core.ResolvableType;
 import java.util.Objects;
 
 /**
- * 数据访问配置类。
- * 提供 MyBatis 的 {@link BaseMapper} 的动态注入支持。
+ * Data access configuration class.
+ * Provides dynamic injection support for MyBatis {@link BaseMapper}.
  */
 @Configuration
 public class DataAccessConfig {
 
     /**
-     * 注入的 MyBatis {@link SqlSession}，用于操作数据库。
+     * Injected MyBatis {@link SqlSession} for database operations.
      */
     @Resource
     private SqlSession sqlSession;
 
     /**
-     * 提供泛型 {@link BaseMapper} 的动态实例。
-     * 使用 Spring 的原型作用域，每次注入时动态解析泛型类型并实例化。
+     * Provides dynamic instances of generic {@link BaseMapper}.
+     * Uses Spring's prototype scope to dynamically resolve the generic type and instantiate each injection.
      *
-     * @param injectionPoint 当前注入点的信息，用于解析目标泛型类型
-     * @param <E>            泛型参数，表示实体类类型
-     * @return 对应实体类的 {@link BaseMapper} 实例
-     * @throws IllegalArgumentException 如果注入点的字段类型无法解析
+     * @param injectionPoint Information about the current injection point, used to resolve the target generic type
+     * @param <E>            Generic parameter representing the entity class type
+     * @return {@link BaseMapper} instance for the corresponding entity class
+     * @throws IllegalArgumentException If the field type of the injection point cannot be resolved
      */
     @Bean
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public <E> BaseMapper<E> simpleBaseMapper(InjectionPoint injectionPoint) {
-        // 解析注入点字段的泛型类型
+        // Resolve the generic type of the injection point field
         ResolvableType resolved = ResolvableType.forField(
-                Objects.requireNonNull(injectionPoint.getField(), "InjectionPoint 的字段信息不能为空")
+                Objects.requireNonNull(injectionPoint.getField(), "Field information of InjectionPoint cannot be null")
         );
 
-        // 获取泛型参数类型并验证
+        // Get and validate the generic parameter type
         @SuppressWarnings("unchecked")
         Class<E> parameterClass = (Class<E>) Objects.requireNonNull(
                 resolved.getGeneric(0).resolve(),
-                "无法解析泛型参数类型，请确认使用了明确的泛型声明"
+                "Cannot resolve generic parameter type, please ensure a clear generic declaration is used"
         );
 
-        // 返回对应的 BaseMapper 实例
+        // Return the corresponding BaseMapper instance
         return DataAccessLayer.with(parameterClass, sqlSession);
     }
 }

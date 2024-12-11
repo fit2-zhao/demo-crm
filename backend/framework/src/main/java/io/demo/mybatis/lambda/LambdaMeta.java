@@ -1,31 +1,37 @@
 package io.demo.mybatis.lambda;
 
 /**
- * Lambda 信息
+ * Lambda information
  */
 public abstract class LambdaMeta {
 
     /**
-     * 获取 lambda 表达式实现方法的名称
+     * Gets the name of the method implemented by the lambda expression.
      *
-     * @return lambda 表达式对应的实现方法名称
+     * @return The name of the method implemented by the lambda expression.
      */
     String getImplMethodName() {
         return "";
     }
 
     /**
-     * 实例化该方法的类
+     * Instantiates the class of this method.
      *
-     * @return 返回对应的类名称
+     * @return The name of the corresponding class.
      */
     Class<?> getInstantiatedClass() {
         return null;
     }
 
+    /**
+     * Converts a method name to snake case.
+     *
+     * @param methodName The method name to convert.
+     * @return The method name in snake case.
+     */
     String toSnakeCase(String methodName) {
         String fieldName = methodName.replaceAll("get|set", "");
-        // 使用正则将大写字母转换为小写并加上下划线
+        // Use regex to convert uppercase letters to lowercase and add underscores
         String result = fieldName.replaceAll("([a-z])([A-Z])", "$1_$2");
         return result.toLowerCase();
     }

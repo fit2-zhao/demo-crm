@@ -19,10 +19,10 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * MyBatis 拦截器，用于对数据库操作的参数进行加密或解密处理。
+ * MyBatis interceptor for encrypting or decrypting database operation parameters.
  * <p>
- * 本拦截器支持对更新和查询操作的参数进行加密处理，
- * 并在返回结果时根据配置进行解密操作。
+ * This interceptor supports encrypting parameters for update and query operations,
+ * and decrypting results based on the configuration.
  * </p>
  */
 @Intercepts({
@@ -40,27 +40,27 @@ public class MybatisInterceptor implements Interceptor {
     private final ConcurrentHashMap<String, Map<String, Map<String, MybatisInterceptorConfig>>> interceptorConfigMap = new ConcurrentHashMap<>();
 
     /**
-     * 拦截目标方法并进行加密或解密处理。
+     * Intercepts the target method and performs encryption or decryption processing.
      *
-     * @param invocation 当前调用的信息
-     * @return 处理后的结果对象
-     * @throws Throwable 如果处理过程中出现异常
+     * @param invocation The current invocation information
+     * @return The processed result object
+     * @throws Throwable If an exception occurs during processing
      */
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
         String methodName = invocation.getMethod().getName();
         Object parameter = invocation.getArgs()[1];
 
-        // 对更新操作的参数进行处理
+        // Process parameters for update operations
         if (parameter != null && methodName.equals("update")) {
             invocation.getArgs()[1] = process(parameter);
         }
 
-        // 执行目标方法
+        // Execute the target method
         Object returnValue = invocation.proceed();
         Object result = returnValue;
 
-        // 对查询结果进行解密处理
+        // Decrypt the query result
         if (returnValue instanceof ArrayList<?>) {
             List<Object> list = new ArrayList<>();
             boolean isDecrypted = false;
@@ -83,10 +83,10 @@ public class MybatisInterceptor implements Interceptor {
     }
 
     /**
-     * 获取与指定对象相关的配置。
+     * Gets the configuration related to the specified object.
      *
-     * @param p 目标对象
-     * @return 对象的配置信息
+     * @param p The target object
+     * @return The configuration information of the object
      */
     private Map<String, Map<String, MybatisInterceptorConfig>> getConfig(Object p) {
         Map<String, Map<String, MybatisInterceptorConfig>> result = new HashMap<>();
@@ -131,11 +131,11 @@ public class MybatisInterceptor implements Interceptor {
     }
 
     /**
-     * 处理加密操作。
+     * Processes encryption.
      *
-     * @param obj 目标对象
-     * @return 加密后的对象
-     * @throws Throwable 如果加密过程中出现异常
+     * @param obj The target object
+     * @return The encrypted object
+     * @throws Throwable If an exception occurs during encryption
      */
     private Object process(Object obj) throws Throwable {
         if (obj instanceof Map paramMap) {
@@ -179,11 +179,11 @@ public class MybatisInterceptor implements Interceptor {
     }
 
     /**
-     * 处理解密操作。
+     * Processes decryption.
      *
-     * @param obj 目标对象
-     * @return 解密后的对象
-     * @throws Throwable 如果解密过程中出现异常
+     * @param obj The target object
+     * @return The decrypted object
+     * @throws Throwable If an exception occurs during decryption
      */
     private Object undo(Object obj) throws Throwable {
         Map<String, Map<String, MybatisInterceptorConfig>> localDecryptConfigMap = getConfig(obj);
@@ -224,10 +224,10 @@ public class MybatisInterceptor implements Interceptor {
     }
 
     /**
-     * 创建插件对象。
+     * Creates a plugin object.
      *
-     * @param target 目标对象
-     * @return 包装后的对象
+     * @param target The target object
+     * @return The wrapped object
      */
     @Override
     public Object plugin(Object target) {
@@ -235,13 +235,13 @@ public class MybatisInterceptor implements Interceptor {
     }
 
     /**
-     * 设置属性。
+     * Sets properties.
      *
-     * @param properties 配置属性
+     * @param properties Configuration properties
      */
     @Override
     public void setProperties(Properties properties) {
-        // TODO: 如果有配置需求，可以在这里处理
+        // TODO: Handle configuration if needed
     }
 
     private enum Methods {

@@ -10,23 +10,23 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 /**
- * 配置类，用于设置国际化和校验相关的Bean。
+ * Configuration class for setting up internationalization and validation related beans.
  * <p>
- * 该配置类包括：
- * 1. 国际化翻译器 (Translator) 的 Bean 配置。
- * 2. 使用 JSR-303 规范的校验器 (Validator)，并设置国际化消息源。
+ * This configuration class includes:
+ * 1. Bean configuration for the internationalization translator (Translator).
+ * 2. Validator using JSR-303 specification, with an internationalized message source.
  * </p>
  */
 @Configuration
 public class I18nConfig {
 
     /**
-     * 创建 Translator Bean，提供国际化的翻译功能。
+     * Creates a Translator bean to provide internationalization translation functionality.
      * <p>
-     * 该 Bean 仅在没有其他 Translator Bean 的情况下创建。
+     * This bean is created only if no other Translator bean is present.
      * </p>
      *
-     * @return Translator 对象
+     * @return Translator object
      */
     @Bean
     @ConditionalOnMissingBean
@@ -35,13 +35,13 @@ public class I18nConfig {
     }
 
     /**
-     * 配置 JSR-303 校验的国际化消息源。
+     * Configures the internationalized message source for JSR-303 validation.
      * <p>
-     * 使用 Hibernate Validator 作为校验提供者，并将指定的 MessageSource 作为消息源。
+     * Uses Hibernate Validator as the validation provider and sets the specified MessageSource as the message source.
      * </p>
      *
-     * @param messageSource 消息源，用于提供国际化的错误信息
-     * @return 配置好的 LocalValidatorFactoryBean
+     * @param messageSource The message source for providing internationalized error messages
+     * @return Configured LocalValidatorFactoryBean
      */
     @Bean
     public LocalValidatorFactoryBean localValidatorFactoryBean(MessageSource messageSource) {
@@ -52,13 +52,13 @@ public class I18nConfig {
     }
 
     /**
-     * 创建 Validator Bean，用于执行 JSR-303 校验。
+     * Creates a Validator bean for performing JSR-303 validation.
      * <p>
-     * 该 Bean 使用 LocalValidatorFactoryBean 作为校验工厂，提供一个验证器实例。
+     * This bean uses LocalValidatorFactoryBean as the validation factory to provide a validator instance.
      * </p>
      *
-     * @param localValidatorFactoryBean 校验工厂
-     * @return 校验器实例
+     * @param localValidatorFactoryBean The validation factory
+     * @return Validator instance
      */
     @Bean
     public Validator validator(LocalValidatorFactoryBean localValidatorFactoryBean) {

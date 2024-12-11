@@ -4,24 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * LambdaQueryWrapper 用于构建 SQL 查询条件，支持链式调用。
- * 它通过 Lambda 表达式动态指定查询字段，避免硬编码字段名，增强代码的可维护性和类型安全。
+ * LambdaQueryWrapper is used to construct SQL query conditions, supporting chained calls.
+ * It dynamically specifies query fields through Lambda expressions, avoiding hard-coded field names, enhancing code maintainability and type safety.
  *
- * @param <T> 实体类型
+ * @param <T> The entity type
  */
 public class LambdaQueryWrapper<T> {
-    // 存储查询条件
+    // Stores query conditions
     private final List<String> conditions = new ArrayList<>();
 
-    // 存储排序条件
+    // Stores order by clauses
     private final List<String> orderByClauses = new ArrayList<>();
 
     /**
-     * 添加等值条件（=）。
+     * Adds an equality condition (=).
      *
-     * @param column 列名的 Lambda 表达式
-     * @param value  值
-     * @return 当前 LambdaQueryWrapper 实例
+     * @param column The Lambda expression of the column name
+     * @param value  The value
+     * @return The current LambdaQueryWrapper instance
      */
     public LambdaQueryWrapper<T> eq(XFunction<T, ?> column, Object value) {
         addCondition(columnToString(column) + " = " + formatValue(value));
@@ -29,11 +29,11 @@ public class LambdaQueryWrapper<T> {
     }
 
     /**
-     * 添加模糊匹配条件（LIKE）。
+     * Adds a like condition (LIKE).
      *
-     * @param column 列名的 Lambda 表达式
-     * @param value  值
-     * @return 当前 LambdaQueryWrapper 实例
+     * @param column The Lambda expression of the column name
+     * @param value  The value
+     * @return The current LambdaQueryWrapper instance
      */
     public LambdaQueryWrapper<T> like(XFunction<T, ?> column, Object value) {
         addCondition(columnToString(column) + " LIKE " + formatValue("%" + value + "%"));
@@ -41,11 +41,11 @@ public class LambdaQueryWrapper<T> {
     }
 
     /**
-     * 添加大于条件（>）。
+     * Adds a greater than condition (>).
      *
-     * @param column 列名的 Lambda 表达式
-     * @param value  值
-     * @return 当前 LambdaQueryWrapper 实例
+     * @param column The Lambda expression of the column name
+     * @param value  The value
+     * @return The current LambdaQueryWrapper instance
      */
     public LambdaQueryWrapper<T> gt(XFunction<T, ?> column, Object value) {
         addCondition(columnToString(column) + " > " + formatValue(value));
@@ -53,11 +53,11 @@ public class LambdaQueryWrapper<T> {
     }
 
     /**
-     * 添加小于条件（<）。
+     * Adds a less than condition (<).
      *
-     * @param column 列名的 Lambda 表达式
-     * @param value  值
-     * @return 当前 LambdaQueryWrapper 实例
+     * @param column The Lambda expression of the column name
+     * @param value  The value
+     * @return The current LambdaQueryWrapper instance
      */
     public LambdaQueryWrapper<T> lt(XFunction<T, ?> column, Object value) {
         addCondition(columnToString(column) + " < " + formatValue(value));
@@ -65,12 +65,12 @@ public class LambdaQueryWrapper<T> {
     }
 
     /**
-     * 添加范围条件（BETWEEN）。
+     * Adds a between condition (BETWEEN).
      *
-     * @param column 列名的 Lambda 表达式
-     * @param value1 起始值
-     * @param value2 结束值
-     * @return 当前 LambdaQueryWrapper 实例
+     * @param column The Lambda expression of the column name
+     * @param value1 The start value
+     * @param value2 The end value
+     * @return The current LambdaQueryWrapper instance
      */
     public LambdaQueryWrapper<T> between(XFunction<T, ?> column, Object value1, Object value2) {
         addCondition(columnToString(column) + " BETWEEN " + formatValue(value1) + " AND " + formatValue(value2));
@@ -78,11 +78,11 @@ public class LambdaQueryWrapper<T> {
     }
 
     /**
-     * 添加 IN 条件。
+     * Adds an IN condition.
      *
-     * @param column 列名的 Lambda 表达式
-     * @param values 值的集合
-     * @return 当前 LambdaQueryWrapper 实例
+     * @param column The Lambda expression of the column name
+     * @param values The collection of values
+     * @return The current LambdaQueryWrapper instance
      */
     public LambdaQueryWrapper<T> in(XFunction<T, ?> column, List<?> values) {
         String inValues = String.join(", ", values.stream().map(this::formatValue).toArray(String[]::new));
@@ -91,10 +91,10 @@ public class LambdaQueryWrapper<T> {
     }
 
     /**
-     * 添加升序排序。
+     * Adds an ascending order condition.
      *
-     * @param column 列名的 Lambda 表达式
-     * @return 当前 LambdaQueryWrapper 实例
+     * @param column The Lambda expression of the column name
+     * @return The current LambdaQueryWrapper instance
      */
     public LambdaQueryWrapper<T> orderByAsc(XFunction<T, ?> column) {
         orderByClauses.add(columnToString(column) + " ASC");
@@ -102,10 +102,10 @@ public class LambdaQueryWrapper<T> {
     }
 
     /**
-     * 添加降序排序。
+     * Adds a descending order condition.
      *
-     * @param column 列名的 Lambda 表达式
-     * @return 当前 LambdaQueryWrapper 实例
+     * @param column The Lambda expression of the column name
+     * @return The current LambdaQueryWrapper instance
      */
     public LambdaQueryWrapper<T> orderByDesc(XFunction<T, ?> column) {
         orderByClauses.add(columnToString(column) + " DESC");
@@ -113,27 +113,27 @@ public class LambdaQueryWrapper<T> {
     }
 
     /**
-     * 获取 WHERE 子句的字符串。
+     * Gets the string of the WHERE clause.
      *
-     * @return WHERE 子句的字符串
+     * @return The string of the WHERE clause
      */
     public String getWhereClause() {
         return String.join(" AND ", conditions);
     }
 
     /**
-     * 获取 ORDER BY 子句的字符串。
+     * Gets the string of the ORDER BY clause.
      *
-     * @return ORDER BY 子句的字符串
+     * @return The string of the ORDER BY clause
      */
     public String getOrderByClause() {
         return orderByClauses.isEmpty() ? "" : String.join(", ", orderByClauses);
     }
 
     /**
-     * 获取最终的 SQL 查询字符串，包括 WHERE 和 ORDER BY 子句。
+     * Gets the final SQL query string, including WHERE and ORDER BY clauses.
      *
-     * @return 完整的 SQL 查询字符串
+     * @return The complete SQL query string
      */
     public String getSql() {
         String where = getWhereClause();
@@ -143,9 +143,9 @@ public class LambdaQueryWrapper<T> {
     }
 
     /**
-     * 内部方法：添加条件到查询条件列表。
+     * Internal method: Adds a condition to the list of query conditions.
      *
-     * @param condition 条件字符串
+     * @param condition The condition string
      */
     private void addCondition(String condition) {
         if (condition != null && !condition.trim().isEmpty()) {
@@ -154,20 +154,20 @@ public class LambdaQueryWrapper<T> {
     }
 
     /**
-     * 内部方法：将 Lambda 表达式转换为字段名。
+     * Internal method: Converts a Lambda expression to a field name.
      *
-     * @param column 列名的 Lambda 表达式
-     * @return 转换后的字段名
+     * @param column The Lambda expression of the column name
+     * @return The converted field name
      */
     private String columnToString(XFunction<T, ?> column) {
         return LambdaUtils.extract(column);
     }
 
     /**
-     * 内部方法：格式化值，以便在 SQL 查询中正确使用。
+     * Internal method: Formats a value for correct use in SQL queries.
      *
-     * @param value 要格式化的值
-     * @return 格式化后的值
+     * @param value The value to format
+     * @return The formatted value
      */
     private String formatValue(Object value) {
         if (value == null) {

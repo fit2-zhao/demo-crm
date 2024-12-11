@@ -6,12 +6,12 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
- * 客户端工具类
+ * Client utility class
  */
 public class ServletUtils {
     /**
-     * @param request 请求
-     * @return ua
+     * @param request The request
+     * @return The user agent
      */
     public static String getUserAgent(HttpServletRequest request) {
         String ua = request.getHeader("User-Agent");
@@ -19,7 +19,7 @@ public class ServletUtils {
     }
 
     /**
-     * 获得请求
+     * Get the request
      *
      * @return HttpServletRequest
      */

@@ -8,25 +8,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 系统拦截器配置类
+ * System Interceptor Configuration Class
  * <p>
- * 该类用于配置 MyBatis 的拦截器，特别是字段压缩等功能的配置。
+ * This class is used to configure MyBatis interceptors, especially for field compression and other functionalities.
  * </p>
  */
 @Configuration
 public class SystemInterceptor {
 
     /**
-     * 配置系统拦截器列表
+     * Configures the list of system interceptors.
      *
-     * @return 返回 MyBatis 拦截器配置列表，目前支持字段压缩等功能。
+     * @return Returns the list of MyBatis interceptor configurations, currently supporting field compression and other functionalities.
      */
     @Bean
     public List<MybatisInterceptorConfig> systemCompressConfigs() {
         List<MybatisInterceptorConfig> configList = new ArrayList<>();
 
-        // TODO：实现 blob 字段压缩功能
-        // 添加自定义拦截器配置，例如压缩和解压缩功能
+        // TODO: Implement blob field compression functionality
+        // Add custom interceptor configurations, such as compression and decompression functionalities
         // configList.add(new MybatisInterceptorConfig(TestResourcePoolBlob.class, "configuration", CompressUtils.class, "zip", "unzip"));
         return configList;
     }

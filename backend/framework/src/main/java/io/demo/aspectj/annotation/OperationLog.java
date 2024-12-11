@@ -9,37 +9,37 @@ import java.lang.annotation.*;
 @Documented
 public @interface OperationLog {
     /**
-     * @return 方法执行成功后的日志模版
+     * @return Log template after the method executes successfully
      */
     String success();
 
     /**
-     * @return 方法执行失败后的日志模版
+     * @return Log template after the method execution fails
      */
     String fail() default "";
 
     /**
-     * @return 日志的操作人
+     * @return Operator of the log
      */
     String operator() default "";
 
     /**
-     * @return 操作日志的类型，如：新增、修改、删除
+     * @return Type of operation log, such as: add, modify, delete
      */
     String type();
 
     /**
-     * @return 业务模块名
+     * @return Name of the business module
      */
     String module() default "";
 
     /**
-     * @return 日志绑定的业务标识
+     * @return Business identifier bound to the log
      */
     String resourceId();
 
     /**
-     * @return 日志的额外信息
+     * @return Additional information of the log
      */
     String extra() default "";
 }

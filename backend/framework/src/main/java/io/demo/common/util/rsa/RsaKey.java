@@ -6,9 +6,9 @@ import lombok.Setter;
 import java.io.Serializable;
 
 /**
- * RSA 密钥对类，封装公钥和私钥。
+ * RSA key pair class, encapsulating the public and private keys.
  * <p>
- * 该类用于存储 RSA 加密算法中的公钥和私钥，供加密解密操作使用。
+ * This class is used to store the public and private keys in the RSA encryption algorithm for encryption and decryption operations.
  * </p>
  */
 @Setter
@@ -16,12 +16,12 @@ import java.io.Serializable;
 public class RsaKey implements Serializable {
 
     /**
-     * 公钥，使用 RSA 加密时的公钥部分。
+     * Public key, used in RSA encryption.
      */
     private String publicKey;
 
     /**
-     * 私钥，使用 RSA 解密时的私钥部分。
+     * Private key, used in RSA decryption.
      */
     private String privateKey;
 }

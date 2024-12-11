@@ -13,157 +13,157 @@ import java.util.stream.Stream;
 
 
 /**
- * 通用 Mapper接口，提供基本的增删改查方法。
+ * General Mapper interface, providing basic CRUD methods.
  *
- * @param <E> 实体类型
+ * @param <E> Entity type
  */
 public interface BaseMapper<E> {
 
     /**
-     * 插入一条记录。
+     * Inserts a record.
      *
-     * @param entity 要插入的实体
-     * @return 插入的行数
+     * @param entity The entity to insert
+     * @return The number of rows inserted
      */
     @InsertProvider(type = InsertSqlProvider.class, method = "invoke")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     Integer insert(E entity);
 
     /**
-     * 批量插入记录。
+     * Inserts multiple records.
      *
-     * @param entities 要插入的实体列表
-     * @return 插入的行数
+     * @param entities The list of entities to insert
+     * @return The number of rows inserted
      */
     @InsertProvider(type = BatchInsertSqlProvider.class, method = "invoke")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     Integer batchInsert(List<E> entities);
 
     /**
-     * 根据主键更新记录。
+     * Updates a record by primary key.
      *
-     * @param entity 要更新的实体
-     * @return 更新的行数
+     * @param entity The entity to update
+     * @return The number of rows updated
      */
     @UpdateProvider(type = UpdateSqlProvider.class, method = "invoke")
     Integer updateById(E entity);
 
     /**
-     * 选择性更新记录（仅更新非空字段）。
+     * Selectively updates a record (only non-null fields).
      *
-     * @param entity 要更新的实体
-     * @return 更新的行数
+     * @param entity The entity to update
+     * @return The number of rows updated
      */
     @UpdateProvider(type = UpdateSelectiveSqlProvider.class, method = "invoke")
     Integer update(E entity);
 
     /**
-     * 根据主键删除记录。
+     * Deletes a record by primary key.
      *
-     * @param id 主键值
-     * @return 删除的行数
+     * @param id The primary key value
+     * @return The number of rows deleted
      */
     @DeleteProvider(type = DeleteSqlProvider.class, method = "invoke")
     Integer deleteByPrimaryKey(Serializable id);
 
     /**
-     * 根据条件删除记录。
+     * Deletes records based on criteria.
      *
-     * @param criteria 删除的条件
-     * @return 删除的行数
+     * @param criteria The criteria for deletion
+     * @return The number of rows deleted
      */
     @DeleteProvider(type = DeleteByCriteriaSqlProvider.class, method = "invoke")
     Integer delete(E criteria);
 
     /**
-     * 根据主键查询记录。
+     * Selects a record by primary key.
      *
-     * @param id 主键值
-     * @return 查询到的实体
+     * @param id The primary key value
+     * @return The selected entity
      */
     @SelectProvider(type = SelectByIdSqlProvider.class, method = "invoke")
     E selectByPrimaryKey(Serializable id);
 
     /**
-     * 查询所有记录。
+     * Selects all records.
      *
-     * @param orderBy 排序条件
-     * @return 查询到的实体列表
+     * @param orderBy The order by clause
+     * @return The list of selected entities
      */
     @SelectProvider(type = SelectAllSqlProvider.class, method = "invoke")
     List<E> selectAll(String orderBy);
 
     /**
-     * 根据条件查询记录。
+     * Selects records based on criteria.
      *
-     * @param criteria 查询条件
-     * @return 查询到的实体列表
+     * @param criteria The criteria for selection
+     * @return The list of selected entities
      */
     @SelectProvider(type = SelectByCriteriaSqlProvider.class, method = "invoke")
     List<E> select(E criteria);
 
     /**
-     * 使用 LambdaQueryWrapper 查询记录列表。
+     * Selects records using a LambdaQueryWrapper.
      *
-     * @param wrapper LambdaQueryWrapper 查询条件
-     * @return 查询结果列表
+     * @param wrapper The LambdaQueryWrapper with query conditions
+     * @return The list of selected entities
      */
     @SelectProvider(type = SelectByLambdaSqlProvider.class, method = "invoke")
     List<E> selectListByLambda(@Param("wrapper") LambdaQueryWrapper<E> wrapper);
 
     /**
-     * 根据条件查询单条记录。
+     * Selects a single record based on criteria.
      *
-     * @param criteria 查询条件
-     * @return 查询到的实体
+     * @param criteria The criteria for selection
+     * @return The selected entity
      */
     @SelectProvider(type = SelectByCriteriaSqlProvider.class, method = "invoke")
     E selectOne(E criteria);
 
     /**
-     * 根据列和值查询记录。
+     * Selects records based on column and values.
      *
-     * @param column 列名
-     * @param ids    查询的值数组
-     * @return 查询到的实体列表
+     * @param column The column name
+     * @param ids    The array of values to query
+     * @return The list of selected entities
      */
     @SelectProvider(type = SelectInSqlProvider.class, method = "invoke")
     List<E> selectByColumn(@Param("column") String column, @Param("array") Serializable[] ids);
 
     /**
-     * 根据条件统计记录数。
+     * Counts records based on criteria.
      *
-     * @param criteria 查询条件
-     * @return 记录数
+     * @param criteria The criteria for counting
+     * @return The number of records
      */
     @SelectProvider(type = CountByCriteriaSqlProvider.class, method = "invoke")
     Long countByExample(E criteria);
 
     /**
-     * 自定义SQL查询。
+     * Custom SQL query.
      *
-     * @param sqlBuild SQL构建函数
-     * @param criteria 查询条件
-     * @return 查询到的实体列表
+     * @param sqlBuild The SQL build function
+     * @param criteria The criteria for selection
+     * @return The list of selected entities
      */
     @SelectProvider(type = SelectBySqlProvider.class, method = "invoke")
     List<E> query(@Param("sqlBuild") Function<SQL, SQL> sqlBuild, @Param("entity") Object criteria);
 
     /**
-     * 根据主键数组查询记录。
+     * Selects records by primary key array.
      *
-     * @param ids 主键值数组
-     * @return 查询到的实体列表
+     * @param ids The array of primary key values
+     * @return The list of selected entities
      */
     default List<E> selectByIds(@Param("array") Serializable[] ids) {
         return selectByColumn("id", ids);
     }
 
     /**
-     * 判断记录是否存在。
+     * Checks if a record exists.
      *
-     * @param criteria 查询条件
-     * @return 如果存在返回true，否则返回false
+     * @param criteria The criteria for checking
+     * @return True if the record exists, otherwise false
      */
     default boolean exist(E criteria) {
         Long count = countByExample(criteria);
@@ -171,10 +171,10 @@ public interface BaseMapper<E> {
     }
 
     /**
-     * 插入或更新记录。
+     * Inserts or updates a record.
      *
-     * @param criteria 查询条件
-     * @return 执行的行数
+     * @param criteria The criteria for upsert
+     * @return The number of rows affected
      */
     default Integer upsert(E criteria) {
         return exist(criteria) ? updateById(criteria) : insert(criteria);
@@ -318,13 +318,13 @@ public interface BaseMapper<E> {
                     .SELECT(table.getSelectColumns())
                     .FROM(table.getTableName());
 
-            // 将 LambdaQueryWrapper 的条件解析为 WHERE 子句
+            // Parse the conditions of LambdaQueryWrapper into WHERE clause
             String whereClause = wrapper.getWhereClause();
             if (StringUtils.isNotBlank(whereClause)) {
                 sql.WHERE(whereClause);
             }
 
-            // 解析排序条件
+            // Parse the order by clause
             String orderByClause = wrapper.getOrderByClause();
             if (StringUtils.isNotBlank(orderByClause)) {
                 sql.ORDER_BY(orderByClause);
@@ -347,7 +347,7 @@ public interface BaseMapper<E> {
 
     interface Interceptor {
         /**
-         * 类似 @PrePersist
+         * Similar to @PrePersist
          **/
         default void prePersist() {
         }

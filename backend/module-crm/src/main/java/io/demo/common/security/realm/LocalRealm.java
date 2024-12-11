@@ -1,6 +1,5 @@
 package io.demo.common.security.realm;
 
-
 import io.demo.common.constants.UserSource;
 import io.demo.common.util.LogUtils;
 import io.demo.common.util.Translator;
@@ -18,14 +17,12 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 
-
 /**
- * 自定义Realm 注入service 可能会导致在 service的aop 失效，例如@Transactional,
- * 解决方法：
+ * Custom Realm that injects service. Injecting service may cause AOP in the service to fail, such as @Transactional.
+ * Solutions:
  * <p>
- * 1. 这里改成注入mapper，这样mapper 中的事务失效<br/>
- * 2. 这里仍然注入service，在配置ShiroConfig 的时候不去set realm, 等到spring 初始化完成之后
- * set realm
+ * 1. Inject mapper here, which will cause transactions in the mapper to fail.<br/>
+ * 2. Still inject service here, and do not set realm when configuring ShiroConfig. Set realm after Spring initialization is complete.
  * </p>
  */
 public class LocalRealm extends AuthorizingRealm {
@@ -38,7 +35,7 @@ public class LocalRealm extends AuthorizingRealm {
     }
 
     /**
-     * 角色认证
+     * Role authorization
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
@@ -46,7 +43,7 @@ public class LocalRealm extends AuthorizingRealm {
     }
 
     /**
-     * 登录认证
+     * Login authentication
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
@@ -66,14 +63,11 @@ public class LocalRealm extends AuthorizingRealm {
         SessionUser sessionUser = SessionUser.fromUser(user, (String) session.getId());
         session.setAttribute(SessionConstants.ATTR_USER, sessionUser);
         return new SimpleAuthenticationInfo(userId, password, getName());
-
     }
 
     @Override
     public boolean isPermitted(PrincipalCollection principals, String permission) {
-
-        // TODO：增加自己的权限验证
-
+        // TODO: Add your own permission verification
         return super.isPermitted(principals, permission);
     }
 
@@ -103,7 +97,7 @@ public class LocalRealm extends AuthorizingRealm {
             }
             userId = user.getId();
         }
-        // 密码验证
+        // Password verification
         if (!userLoginService.checkUserPassword(userId, password)) {
             throw new IncorrectCredentialsException(Translator.get("password_is_incorrect"));
         }
@@ -111,5 +105,4 @@ public class LocalRealm extends AuthorizingRealm {
         SessionUtils.putUser(sessionUser);
         return new SimpleAuthenticationInfo(userId, password, getName());
     }
-
 }

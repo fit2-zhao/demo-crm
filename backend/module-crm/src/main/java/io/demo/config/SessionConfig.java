@@ -20,9 +20,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 配置类，用于管理与会话相关的配置和清理操作。
+ * Configuration class for managing session-related settings and cleanup operations.
  * <p>
- * 本类主要用于配置会话的 ID 解析器，并通过定时任务清理没有绑定用户的会话。
+ * This class is mainly used to configure the session ID resolver and clean up sessions that are not bound to users through scheduled tasks.
  * </p>
  *
  * @version 1.0
@@ -37,12 +37,12 @@ public class SessionConfig {
     private RedisIndexedSessionRepository redisIndexedSessionRepository;
 
     /**
-     * 创建 {@link HeaderHttpSessionIdResolver} Bean。
+     * Creates a {@link HeaderHttpSessionIdResolver} Bean.
      * <p>
-     * 该方法配置了会话 ID 的解析方式，使用请求头中的 {@link SessionConstants#HEADER_TOKEN} 字段作为会话 ID。
+     * This method configures the session ID resolution method, using the {@link SessionConstants#HEADER_TOKEN} field in the request header as the session ID.
      * </p>
      *
-     * @return 配置好的 {@link HeaderHttpSessionIdResolver} 实例
+     * @return Configured {@link HeaderHttpSessionIdResolver} instance
      */
     @Bean
     public HeaderHttpSessionIdResolver sessionIdResolver() {
@@ -50,14 +50,14 @@ public class SessionConfig {
     }
 
     /**
-     * 定时清理没有绑定用户的会话。
+     * Periodically cleans up sessions that are not bound to users.
      * <p>
-     * 该方法每晚 0 点 2 分执行，扫描 Redis 中的会话数据，删除没有绑定用户信息的会话。
-     * 此外，还会处理一些特殊情况，如 Redisson 设置了过期时间为 -1 时，手动设置过期时间。
+     * This method is executed at 2 minutes past midnight every day, scanning session data in Redis and deleting sessions that are not bound to user information.
+     * Additionally, it handles special cases such as manually setting the expiration time when Redisson sets it to -1.
      * </p>
      *
      * <p>
-     * 该方法使用 {@link QuartzScheduled} 注解定时执行，并使用 {@link ScanOptions} 扫描 Redis 中的会话。
+     * This method uses the {@link QuartzScheduled} annotation to execute periodically and uses {@link ScanOptions} to scan sessions in Redis.
      * </p>
      */
     @QuartzScheduled(cron = "0 2 0 * * ?")
@@ -75,11 +75,11 @@ public class SessionConfig {
                 String sessionId = key.substring(key.lastIndexOf(":") + 1);
                 Boolean exists = stringRedisTemplate.opsForHash().hasKey(key, "sessionAttr:user");
 
-                // 删除没有绑定用户的会话
+                // Delete sessions that are not bound to users
                 if (!exists) {
                     redisIndexedSessionRepository.deleteById(sessionId);
                 } else {
-                    // 获取用户信息并检查会话过期时间
+                    // Get user information and check session expiration time
                     Object user = redisIndexedSessionRepository.getSessionRedisOperations().opsForHash().get(key, "sessionAttr:user");
                     Long expire = redisIndexedSessionRepository.getSessionRedisOperations().getExpire(key);
 
@@ -87,16 +87,16 @@ public class SessionConfig {
                     String userId = (String) MethodUtils.invokeMethod(user, "getId");
                     userCount.merge(userId, 1L, Long::sum);
 
-                    // 记录日志并检查会话的过期时间
-                    LogUtils.info("{} : {} 过期时间: {}", key, userId, expire);
+                    // Log and check session expiration time
+                    LogUtils.info("{} : {} expiration time: {}", key, userId, expire);
 
-                    // 如果过期时间为 -1，则手动设置过期时间为 30 秒
+                    // If the expiration time is -1, manually set the expiration time to 30 seconds
                     if (expire != null && expire == -1) {
                         redisIndexedSessionRepository.getSessionRedisOperations().expire(key, Duration.of(30, ChronoUnit.SECONDS));
                     }
                 }
             }
-            LogUtils.info("用户会话统计: {}", JSON.toJSONString(userCount));
+            LogUtils.info("User session statistics: {}", JSON.toJSONString(userCount));
         } catch (Exception e) {
             LogUtils.error(e);
         }

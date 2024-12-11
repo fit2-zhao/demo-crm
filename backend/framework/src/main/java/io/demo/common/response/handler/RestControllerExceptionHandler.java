@@ -26,16 +26,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 全局异常处理器，处理各类异常并返回统一格式的错误响应。
+ * Global exception handler that handles various exceptions and returns a unified error response format.
  */
 @RestControllerAdvice
 public class RestControllerExceptionHandler {
 
     /**
-     * 处理数据校验异常，返回具体字段的校验信息。
+     * Handles data validation exceptions and returns specific field validation information.
      *
-     * @param ex MethodArgumentNotValidException 异常
-     * @return ResultHolder 返回封装的错误信息，HTTP 状态码 400
+     * @param ex MethodArgumentNotValidException exception
+     * @return ResultHolder containing the encapsulated error information, HTTP status code 400
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -51,11 +51,11 @@ public class RestControllerExceptionHandler {
     }
 
     /**
-     * 处理请求方法不支持的异常，返回 HTTP 状态码 405。
+     * Handles exceptions where the request method is not supported, returning HTTP status code 405.
      *
-     * @param response  HttpServletResponse 响应
-     * @param exception 异常信息
-     * @return ResultHolder 返回错误信息
+     * @param response  HttpServletResponse response
+     * @param exception exception information
+     * @return ResultHolder containing the error information
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResultHolder handleHttpRequestMethodNotSupportedException(HttpServletResponse response, Exception exception) {
@@ -64,16 +64,16 @@ public class RestControllerExceptionHandler {
     }
 
     /**
-     * 处理 MSException 异常，根据 errorCode 设置 HTTP 状态码和业务状态码。
+     * Handles MSException exceptions, setting the HTTP status code and business status code based on errorCode.
      *
-     * @param e MSException 异常
-     * @return ResponseEntity 返回响应实体，包含错误信息
+     * @param e MSException exception
+     * @return ResponseEntity containing the response entity with error information
      */
     @ExceptionHandler(GenericException.class)
     public ResponseEntity<ResultHolder> handlerMSException(GenericException e) {
         IResultCode errorCode = e.getErrorCode();
         if (errorCode == null) {
-            // 未设置 errorCode，返回内部服务器错误
+            // If errorCode is not set, return internal server error
             return ResponseEntity.internalServerError()
                     .body(ResultHolder.error(MsHttpResultCode.FAILED.getCode(), e.getMessage()));
         }
@@ -83,24 +83,24 @@ public class RestControllerExceptionHandler {
         message = Translator.get(message, message);
 
         if (errorCode instanceof MsHttpResultCode) {
-            // 如果是 MsHttpResultCode 类型，使用其状态码的后三位作为 HTTP 状态码
+            // If it is of type MsHttpResultCode, use the last three digits of its status code as the HTTP status code
             if (errorCode.equals(MsHttpResultCode.NOT_FOUND)) {
                 message = getNotFoundMessage(message);
             }
             return ResponseEntity.status(code % 1000)
                     .body(ResultHolder.error(code, message, e.getMessage()));
         } else {
-            // 其他类型的错误，返回 500 状态码
+            // Other types of errors, return status code 500
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(ResultHolder.error(code, Translator.get(message, message), e.getMessage()));
         }
     }
 
     /**
-     * 处理 NOT_FOUND 异常，拼接资源名称以提供更详细的错误信息。
+     * Handles NOT_FOUND exceptions, concatenating the resource name to provide more detailed error information.
      *
-     * @param message 错误信息模板
-     * @return String 拼接后的错误信息
+     * @param message error message template
+     * @return String concatenated error message
      */
     private static String getNotFoundMessage(String message) {
         String resourceName = ServiceUtils.getResourceName();
@@ -114,10 +114,10 @@ public class RestControllerExceptionHandler {
     }
 
     /**
-     * 处理所有类型的异常，返回 HTTP 状态码 500 并格式化异常栈信息。
+     * Handles all types of exceptions, returning HTTP status code 500 and formatting the exception stack trace.
      *
-     * @param e Exception 异常
-     * @return ResponseEntity 返回响应实体，包含错误信息
+     * @param e Exception exception
+     * @return ResponseEntity containing the response entity with error information
      */
     @ExceptionHandler({Exception.class})
     public ResponseEntity<ResultHolder> handleException(Exception e) {
@@ -127,11 +127,11 @@ public class RestControllerExceptionHandler {
     }
 
     /**
-     * 处理 EOF 异常，判断请求路径并返回适当的响应。
+     * Handles EOF exceptions, determining the request path and returning an appropriate response.
      *
-     * @param request HttpServletRequest 请求
-     * @param e       异常信息
-     * @return ResponseEntity 返回响应实体，包含错误信息
+     * @param request HttpServletRequest request
+     * @param e       exception information
+     * @return ResponseEntity containing the response entity with error information
      */
     @ExceptionHandler({EofException.class})
     public ResponseEntity<Object> handleEofException(HttpServletRequest request, Exception e) {
@@ -148,12 +148,12 @@ public class RestControllerExceptionHandler {
     }
 
     /**
-     * 处理 Shiro 异常，返回 HTTP 状态码 401。
+     * Handles Shiro exceptions, returning HTTP status code 401.
      *
-     * @param request   HttpServletRequest 请求
-     * @param response  HttpServletResponse 响应
-     * @param exception 异常信息
-     * @return ResultHolder 返回错误信息
+     * @param request   HttpServletRequest request
+     * @param response  HttpServletResponse response
+     * @param exception exception information
+     * @return ResultHolder containing the error information
      */
     @ExceptionHandler(ShiroException.class)
     public ResultHolder exceptionHandler(HttpServletRequest request, HttpServletResponse response, Exception exception) {
@@ -162,12 +162,12 @@ public class RestControllerExceptionHandler {
     }
 
     /**
-     * 处理 Shiro 未授权异常，返回 HTTP 状态码 403。
+     * Handles Shiro unauthorized exceptions, returning HTTP status code 403.
      *
-     * @param request   HttpServletRequest 请求
-     * @param response  HttpServletResponse 响应
-     * @param exception 异常信息
-     * @return ResultHolder 返回错误信息
+     * @param request   HttpServletRequest request
+     * @param response  HttpServletResponse response
+     * @param exception exception information
+     * @return ResultHolder containing the error information
      */
     @ExceptionHandler(UnauthorizedException.class)
     public ResultHolder unauthorizedExceptionHandler(HttpServletRequest request, HttpServletResponse response, Exception exception) {
@@ -176,10 +176,10 @@ public class RestControllerExceptionHandler {
     }
 
     /**
-     * 格式化异常栈信息。
+     * Formats the exception stack trace.
      *
-     * @param e Exception 异常
-     * @return String 异常栈的字符串表示
+     * @param e Exception exception
+     * @return String string representation of the exception stack trace
      */
     public static String getStackTraceAsString(Exception e) {
         StringWriter sw = new StringWriter();

@@ -3,28 +3,28 @@ package io.demo.mybatis.lambda;
 import jodd.util.StringPool;
 
 /**
- * 基于 {@link SerializedLambda} 创建的元信息类。
+ * Meta-information class created based on {@link SerializedLambda}.
  * <p>
- * 该类提供了获取 Lambda 实现方法名称和实例化类的功能。
- * 它扩展了 {@link LambdaMeta} 类，提供了对 Lambda 表达式的元数据的访问。
+ * This class provides functionality to get the name of the Lambda implementation method and the instantiated class.
+ * It extends the {@link LambdaMeta} class, providing access to the metadata of Lambda expressions.
  * </p>
  */
 public class ShadowLambdaMeta extends LambdaMeta {
     private final SerializedLambda lambda;
 
     /**
-     * 构造方法，接收一个 {@link SerializedLambda} 对象。
+     * Constructor that accepts a {@link SerializedLambda} object.
      *
-     * @param lambda {@link SerializedLambda} 对象，包含 Lambda 表达式的序列化信息。
+     * @param lambda {@link SerializedLambda} object containing serialized information of the Lambda expression.
      */
     public ShadowLambdaMeta(SerializedLambda lambda) {
         this.lambda = lambda;
     }
 
     /**
-     * 获取 Lambda 实现的方法名称，并将其转换为蛇形命名法（snake_case）。
+     * Gets the name of the Lambda implementation method and converts it to snake\_case format.
      *
-     * @return 转换后的方法名称。
+     * @return The converted method name.
      */
     @Override
     public String getImplMethodName() {
@@ -32,19 +32,19 @@ public class ShadowLambdaMeta extends LambdaMeta {
     }
 
     /**
-     * 获取实例化类的 {@link Class} 对象。
-     * 通过从 {@link SerializedLambda} 获取实例化类型的字符串，并将其转换为 {@link Class} 对象。
+     * Gets the {@link Class} object of the instantiated class.
+     * Converts the string of the instantiated type from {@link SerializedLambda} to a {@link Class} object.
      *
-     * @return 实例化类的 {@link Class} 对象。
+     * @return The {@link Class} object of the instantiated class.
      */
     @Override
     public Class<?> getInstantiatedClass() {
         String instantiatedMethodType = lambda.getInstantiatedMethodType();
-        // 截取并转换类型名称
+        // Extract and convert the type name
         String instantiatedType = instantiatedMethodType
                 .substring(2, instantiatedMethodType.indexOf(StringPool.SEMICOLON))
                 .replace(StringPool.SLASH, StringPool.DOT);
-        // 使用类加载器加载实例化类
+        // Load the instantiated class using the class loader
         return ClassUtils.toClassConfident(instantiatedType, lambda.getClass().getClassLoader());
     }
 }

@@ -4,27 +4,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 用于管理应用程序中过滤器链的工具类。
- * 包含加载基础过滤器链和忽略 CSRF 过滤器链的方法。
+ * Utility class for managing filter chains in the application.
+ * Contains methods for loading the base filter chain and ignoring the CSRF filter chain.
  */
 public class ShiroFilter {
 
     /**
-     * 加载应用程序的基础过滤器链。
-     * 该过滤器链是一个映射，关联 URL 模式和过滤规则。
+     * Loads the base filter chain for the application.
+     * This filter chain is a map that associates URL patterns with filter rules.
      *
-     * @return 返回一个 Map，包含过滤器链定义，键是 URL 模式，值是关联的过滤规则。
+     * @return A map containing the filter chain definitions, where the key is the URL pattern and the value is the associated filter rule.
      */
     public static Map<String, String> loadBaseFilterChain() {
         Map<String, String> filterChainDefinitionMap = new HashMap<>();
 
-        // 公共可访问的 URL
+        // Publicly accessible URLs
         filterChainDefinitionMap.put("/login", "anon");
         filterChainDefinitionMap.put("/signout", "anon");
         filterChainDefinitionMap.put("/is-login", "anon");
         filterChainDefinitionMap.put("/get-key", "anon");
 
-        // 静态资源路径
+        // Static resource paths
         filterChainDefinitionMap.put("/*.html", "anon");
         filterChainDefinitionMap.put("/css/**", "anon");
         filterChainDefinitionMap.put("/js/**", "anon");
@@ -36,34 +36,34 @@ public class ShiroFilter {
         filterChainDefinitionMap.put("/favicon.ico", "anon");
         filterChainDefinitionMap.put("/base-display/**", "anon");
 
-        // Swagger API 文档相关路径
+        // Swagger API documentation related paths
         filterChainDefinitionMap.put("/swagger-ui.html", "anon");
         filterChainDefinitionMap.put("/swagger-ui/**", "anon");
         filterChainDefinitionMap.put("/api-docs/**", "anon");
         filterChainDefinitionMap.put("/v3/api-docs/**", "anon");
 
-        // 403 错误页面路径
+        // 403 error page path
         filterChainDefinitionMap.put("/403", "anon");
         filterChainDefinitionMap.put("/demo/**", "anon");
 
-        // 匿名路径
+        // Anonymous paths
         filterChainDefinitionMap.put("/anonymous/**", "anon");
 
         return filterChainDefinitionMap;
     }
 
     /**
-     * 返回忽略 CSRF 保护的过滤器链定义。
+     * Returns the filter chain definitions that ignore CSRF protection.
      *
-     * @return 返回一个 Map，包含应绕过 CSRF 检查的 URL 路径的过滤器链定义。
+     * @return A map containing the filter chain definitions for URL paths that should bypass CSRF checks.
      */
     public static Map<String, String> ignoreCsrfFilter() {
         Map<String, String> filterChainDefinitionMap = new HashMap<>();
 
-        // 跳过 CSRF 验证的路径
-        filterChainDefinitionMap.put("/", "apikey, authc"); // 根路径跳过 CSRF 检查
-        filterChainDefinitionMap.put("/language", "apikey, authc"); // /language 路径跳过 CSRF 检查
-        filterChainDefinitionMap.put("/mock", "apikey, authc"); // /mock 路径跳过 CSRF 检查
+        // Paths that skip CSRF verification
+        filterChainDefinitionMap.put("/", "apikey, authc"); // Root path skips CSRF check
+        filterChainDefinitionMap.put("/language", "apikey, authc"); // /language path skips CSRF check
+        filterChainDefinitionMap.put("/mock", "apikey, authc"); // /mock path skips CSRF check
 
         return filterChainDefinitionMap;
     }

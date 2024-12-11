@@ -5,142 +5,142 @@ import lombok.Getter;
 import java.lang.reflect.Field;
 
 /**
- * 实体类与数据库表信息的映射类。
+ * Mapping class for entity classes and database table information.
  * <p>
- * 此类用于描述数据库表与实体类的映射关系，包括表名、字段、主键等元信息。
- * 主要用于持久化层的数据映射与操作。
+ * This class is used to describe the mapping relationship between database tables and entity classes, including table names, fields, primary keys, and other metadata.
+ * Mainly used for data mapping and operations in the persistence layer.
  * </p>
  */
 public class EntityTable {
 
     /**
-     * 表对应的实体类型。
+     * The entity type corresponding to the table.
      */
     @Getter
     private Class<?> entityClass;
 
     /**
-     * 实体类型中不包含 {@code @NoColumn} 注解的字段。
+     * Fields in the entity type that do not contain the {@code @NoColumn} annotation.
      */
     private Field[] fields;
 
     /**
-     * 数据库表名。
+     * The name of the database table.
      */
     private String tableName;
 
     /**
-     * 主键列名。
+     * The name of the primary key column.
      */
     private String primaryKeyColumn;
 
     /**
-     * 数据库表的所有列名。
+     * All column names of the database table.
      */
     private String[] columns;
 
     /**
-     * 用于生成 SELECT SQL 的列名集合。
+     * Collection of column names used to generate SELECT SQL.
      * <p>
-     * 如果字段名称中含有下划线，会转换为形如 "aa_bb AS aaBb" 的形式。
+     * If the field name contains an underscore, it will be converted to the form "aa\_bb AS aaBb".
      * </p>
      */
     private String[] selectColumns;
 
     /**
-     * 设置实体类型。
+     * Sets the entity type.
      *
-     * @param entityClass 实体类的 Class 对象
+     * @param entityClass The Class object of the entity class
      */
     void setEntityClass(Class<?> entityClass) {
         this.entityClass = entityClass;
     }
 
     /**
-     * 获取不含 {@code @NoColumn} 注解的字段。
+     * Gets the fields that do not contain the {@code @NoColumn} annotation.
      *
-     * @return 字段数组
+     * @return Array of fields
      */
     Field[] getFields() {
         return fields;
     }
 
     /**
-     * 设置字段数组。
+     * Sets the array of fields.
      *
-     * @param fields 字段数组
+     * @param fields Array of fields
      */
     void setFields(Field[] fields) {
         this.fields = fields;
     }
 
     /**
-     * 获取数据库表名。
+     * Gets the name of the database table.
      *
-     * @return 表名
+     * @return Table name
      */
     String getTableName() {
         return tableName;
     }
 
     /**
-     * 设置数据库表名。
+     * Sets the name of the database table.
      *
-     * @param tableName 表名
+     * @param tableName Table name
      */
     void setTableName(String tableName) {
         this.tableName = tableName;
     }
 
     /**
-     * 获取主键列名。
+     * Gets the name of the primary key column.
      *
-     * @return 主键列名
+     * @return Primary key column name
      */
     String getPrimaryKeyColumn() {
         return primaryKeyColumn;
     }
 
     /**
-     * 设置主键列名。
+     * Sets the name of the primary key column.
      *
-     * @param primaryKeyColumn 主键列名
+     * @param primaryKeyColumn Primary key column name
      */
     void setPrimaryKeyColumn(String primaryKeyColumn) {
         this.primaryKeyColumn = primaryKeyColumn;
     }
 
     /**
-     * 获取数据库表的所有列名。
+     * Gets all column names of the database table.
      *
-     * @return 列名数组
+     * @return Array of column names
      */
     String[] getColumns() {
         return columns;
     }
 
     /**
-     * 设置数据库表的所有列名。
+     * Sets all column names of the database table.
      *
-     * @param columns 列名数组
+     * @param columns Array of column names
      */
     void setColumns(String[] columns) {
         this.columns = columns;
     }
 
     /**
-     * 获取用于生成 SELECT SQL 的列名集合。
+     * Gets the collection of column names used to generate SELECT SQL.
      *
-     * @return 列名数组
+     * @return Array of column names
      */
     String[] getSelectColumns() {
         return selectColumns;
     }
 
     /**
-     * 设置用于生成 SELECT SQL 的列名集合。
+     * Sets the collection of column names used to generate SELECT SQL.
      *
-     * @param selectColumns 列名数组
+     * @param selectColumns Array of column names
      */
     void setSelectColumns(String[] selectColumns) {
         this.selectColumns = selectColumns;

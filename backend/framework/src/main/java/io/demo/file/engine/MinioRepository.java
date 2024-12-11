@@ -17,15 +17,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * MinIO 文件存储库实现类。
- * 提供文件的上传、下载、删除、复制等操作。
+ * MinIO file repository implementation class.
+ * Provides operations for uploading, downloading, deleting, and copying files.
  */
 @Component
 public class MinioRepository implements FileRepository {
 
     private MinioClient client;
 
-    // 常量定义
+    // Constant definitions
     private static final int BUFFER_SIZE = 8192;
     public static final String BUCKET = "demo";
     public static final String ENDPOINT = "endpoint";
@@ -33,9 +33,9 @@ public class MinioRepository implements FileRepository {
     public static final String SECRET_KEY = "secretKey";
 
     /**
-     * 初始化 MinIO 客户端。
+     * Initializes the MinIO client.
      *
-     * @param client MinIO 客户端实例
+     * @param client MinIO client instance
      */
     public void init(MinioClient client) {
         if (this.client == null) {
@@ -44,20 +44,20 @@ public class MinioRepository implements FileRepository {
     }
 
     /**
-     * 根据配置动态初始化 MinIO 客户端。
+     * Dynamically initializes the MinIO client based on the configuration.
      *
-     * @param minioConfig MinIO 配置信息
+     * @param minioConfig MinIO configuration information
      */
     public void init(Map<String, Object> minioConfig) {
         if (minioConfig == null || minioConfig.isEmpty()) {
-            LogUtils.info("MinIO初始化失败，参数[minioConfig]为空");
+            LogUtils.info("MinIO initialization failed, parameter [minioConfig] is empty");
             return;
         }
 
         try {
             String serverUrl = (String) minioConfig.get(ENDPOINT);
             if (StringUtils.isNotEmpty(serverUrl)) {
-                // 创建 MinioClient 客户端
+                // Create MinioClient client
                 client = MinioClient.builder()
                         .endpoint(serverUrl)
                         .credentials((String) minioConfig.get(ACCESS_KEY), (String) minioConfig.get(SECRET_KEY))
@@ -68,16 +68,16 @@ public class MinioRepository implements FileRepository {
                 }
             }
         } catch (Exception e) {
-            LogUtils.error("MinIOClient初始化失败！", e);
+            LogUtils.error("MinIOClient initialization failed!", e);
         }
     }
 
     /**
-     * 获取文件存储路径。
+     * Gets the file storage path.
      *
-     * @param request 文件请求对象
-     * @return 文件路径
-     * @throws GenericException 如果文件夹名无效抛出异常
+     * @param request File request object
+     * @return File path
+     * @throws GenericException if the folder name is invalid
      */
     private String getPath(FileRequest request) {
         String folder = request.getFolder();
@@ -88,12 +88,12 @@ public class MinioRepository implements FileRepository {
     }
 
     /**
-     * 保存文件到 MinIO。
+     * Saves a file to MinIO.
      *
-     * @param file    上传的文件
-     * @param request 文件请求对象，包含存储路径和文件名
-     * @return 文件存储路径
-     * @throws Exception 如果上传失败抛出异常
+     * @param file    Uploaded file
+     * @param request File request object containing storage path and file name
+     * @return File storage path
+     * @throws Exception if the upload fails
      */
     @Override
     public String saveFile(MultipartFile file, FileRequest request) throws Exception {
@@ -107,11 +107,11 @@ public class MinioRepository implements FileRepository {
     }
 
     /**
-     * 保存字节数组文件到 MinIO。
+     * Saves a byte array file to MinIO.
      *
-     * @param bytes   文件字节数组
-     * @param request 文件请求对象，包含存储路径和文件名
-     * @throws Exception 如果上传失败抛出异常
+     * @param bytes   File byte array
+     * @param request File request object containing storage path and file name
+     * @throws Exception if the upload fails
      */
     @Override
     public void saveFile(byte[] bytes, FileRequest request) throws Exception {
@@ -126,12 +126,12 @@ public class MinioRepository implements FileRepository {
     }
 
     /**
-     * 保存输入流文件到 MinIO。
+     * Saves an input stream file to MinIO.
      *
-     * @param inputStream 输入流
-     * @param request     文件请求对象，包含存储路径和文件名
-     * @return 文件路径
-     * @throws Exception 如果上传失败抛出异常
+     * @param inputStream Input stream
+     * @param request     File request object containing storage path and file name
+     * @return File path
+     * @throws Exception if the upload fails
      */
     @Override
     public String saveFile(InputStream inputStream, FileRequest request) throws Exception {
@@ -145,10 +145,10 @@ public class MinioRepository implements FileRepository {
     }
 
     /**
-     * 删除文件。
+     * Deletes a file.
      *
-     * @param request 文件请求对象，包含待删除的文件信息
-     * @throws Exception 如果删除失败抛出异常
+     * @param request File request object containing the file information to be deleted
+     * @throws Exception if the deletion fails
      */
     @Override
     public void delete(FileRequest request) throws Exception {
@@ -157,10 +157,10 @@ public class MinioRepository implements FileRepository {
     }
 
     /**
-     * 删除文件夹及其内容。
+     * Deletes a folder and its contents.
      *
-     * @param request 文件请求对象，包含待删除的文件夹信息
-     * @throws Exception 如果删除失败抛出异常
+     * @param request File request object containing the folder information to be deleted
+     * @throws Exception if the deletion fails
      */
     @Override
     public void deleteFolder(FileRequest request) throws Exception {
@@ -169,11 +169,11 @@ public class MinioRepository implements FileRepository {
     }
 
     /**
-     * 获取指定文件夹下的所有文件名。
+     * Gets all file names in the specified folder.
      *
-     * @param request 文件请求对象，包含文件夹信息
-     * @return 文件名列表
-     * @throws Exception 如果获取失败抛出异常
+     * @param request File request object containing folder information
+     * @return List of file names
+     * @throws Exception if the retrieval fails
      */
     @Override
     public List<String> getFolderFileNames(FileRequest request) throws Exception {
@@ -181,10 +181,10 @@ public class MinioRepository implements FileRepository {
     }
 
     /**
-     * 复制文件。
+     * Copies a file.
      *
-     * @param request 复制文件请求对象，包含源文件和目标文件信息
-     * @throws Exception 如果复制失败抛出异常
+     * @param request Copy file request object containing source and target file information
+     * @throws Exception if the copy fails
      */
     @Override
     public void copyFile(FileCopyRequest request) throws Exception {
@@ -201,11 +201,11 @@ public class MinioRepository implements FileRepository {
     }
 
     /**
-     * 删除指定对象。
+     * Deletes the specified object.
      *
-     * @param bucketName 存储桶名
-     * @param objectName 文件名
-     * @throws Exception 如果删除失败抛出异常
+     * @param bucketName Bucket name
+     * @param objectName File name
+     * @throws Exception if the deletion fails
      */
     private void removeObject(String bucketName, String objectName) throws Exception {
         client.removeObject(RemoveObjectArgs.builder()
@@ -215,11 +215,11 @@ public class MinioRepository implements FileRepository {
     }
 
     /**
-     * 递归删除指定路径下的所有文件。
+     * Recursively deletes all files under the specified path.
      *
-     * @param bucketName 存储桶名
-     * @param objectName 路径名
-     * @throws Exception 如果删除失败抛出异常
+     * @param bucketName Bucket name
+     * @param objectName Path name
+     * @throws Exception if the deletion fails
      */
     public void removeObjects(String bucketName, String objectName) throws Exception {
         List<String> objects = listObjects(bucketName, objectName);
@@ -229,12 +229,12 @@ public class MinioRepository implements FileRepository {
     }
 
     /**
-     * 获取指定路径下的所有文件。
+     * Gets all files under the specified path.
      *
-     * @param bucketName 存储桶名
-     * @param objectName 路径名
-     * @return 文件列表
-     * @throws Exception 如果获取失败抛出异常
+     * @param bucketName Bucket name
+     * @param objectName Path name
+     * @return List of files
+     * @throws Exception if the retrieval fails
      */
     public List<String> listObjects(String bucketName, String objectName) throws Exception {
         List<String> list = new ArrayList<>(12);
@@ -255,11 +255,11 @@ public class MinioRepository implements FileRepository {
     }
 
     /**
-     * 获取文件内容为字节数组。
+     * Gets the file content as a byte array.
      *
-     * @param request 文件请求对象
-     * @return 文件字节数组
-     * @throws Exception 如果获取失败抛出异常
+     * @param request File request object
+     * @return File byte array
+     * @throws Exception if the retrieval fails
      */
     @Override
     public byte[] getFile(FileRequest request) throws Exception {
@@ -267,11 +267,11 @@ public class MinioRepository implements FileRepository {
     }
 
     /**
-     * 下载文件到指定路径。
+     * Downloads a file to the specified path.
      *
-     * @param request  文件请求对象
-     * @param fullPath 下载文件的完整路径
-     * @throws Exception 如果下载失败抛出异常
+     * @param request  File request object
+     * @param fullPath Full path to download the file
+     * @throws Exception if the download fails
      */
     @Override
     public void downloadFile(FileRequest request, String fullPath) throws Exception {
@@ -291,11 +291,11 @@ public class MinioRepository implements FileRepository {
     }
 
     /**
-     * 获取文件的输入流。
+     * Gets the input stream of the file.
      *
-     * @param request 文件请求对象
-     * @return 文件输入流
-     * @throws Exception 如果获取失败抛出异常
+     * @param request File request object
+     * @return File input stream
+     * @throws Exception if the retrieval fails
      */
     @Override
     public InputStream getFileAsStream(FileRequest request) throws Exception {
@@ -307,11 +307,11 @@ public class MinioRepository implements FileRepository {
     }
 
     /**
-     * 获取文件大小。
+     * Gets the file size.
      *
-     * @param request 文件请求对象
-     * @return 文件大小
-     * @throws Exception 如果获取失败抛出异常
+     * @param request File request object
+     * @return File size
+     * @throws Exception if the retrieval fails
      */
     @Override
     public long getFileSize(FileRequest request) throws Exception {

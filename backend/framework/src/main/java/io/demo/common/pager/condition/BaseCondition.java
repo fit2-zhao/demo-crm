@@ -9,35 +9,35 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 表示 CRM 系统中的基础条件类，用于支持过滤和搜索操作。
+ * Represents the base condition class in the CRM system, used to support filtering and search operations.
  */
 @Data
 public class BaseCondition {
 
-    @Schema(description = "关键字，用于搜索匹配")
+    @Schema(description = "Keyword used for search matching")
     private String keyword;
 
-    @Schema(description = "过滤字段，包含字段及其对应的过滤值")
+    @Schema(description = "Filter fields, including fields and their corresponding filter values")
     private Map<String, List<String>> filter;
 
-    @Schema(description = "视图 ID，指定使用的视图")
+    @Schema(description = "View ID, specifies the view to be used")
     private String viewId;
 
-    @Schema(description = "高级搜索条件，支持组合搜索")
+    @Schema(description = "Advanced search conditions, supports combined search")
     @Valid
     private CombineSearch combineSearch;
 
     /**
-     * 转义关键字中的特殊字符。
+     * Escape special characters in the keyword.
      *
-     * @param keyword 输入的关键字
-     * @return 转义后的关键字
+     * @param keyword Input keyword
+     * @return Escaped keyword
      */
     public static String transferKeyword(String keyword) {
         if (StringUtils.contains(keyword, "\\") && !StringUtils.contains(keyword, "\\\\")) {
             keyword = StringUtils.replace(keyword, "\\", "\\\\");
         }
-        // 判断是否已经转义过，未转义才进行转义。
+        // Check if it has already been escaped, and escape if not.
         if (StringUtils.contains(keyword, "%") && !StringUtils.contains(keyword, "\\%")) {
             keyword = StringUtils.replace(keyword, "%", "\\%");
         }
@@ -48,9 +48,9 @@ public class BaseCondition {
     }
 
     /**
-     * 初始化关键字，直接设置字段值。
+     * Initialize the keyword by directly setting the field value.
      *
-     * @param keyword 初始化的关键字
+     * @param keyword Initialized keyword
      */
     public void initKeyword(String keyword) {
         this.keyword = keyword;

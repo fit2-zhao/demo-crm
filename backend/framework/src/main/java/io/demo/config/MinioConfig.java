@@ -15,45 +15,45 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * 配置类，用于设置 MinIO 客户端和桶的生命周期管理。
+ * Configuration class for setting up MinIO client and bucket lifecycle management.
  * <p>
- * 该配置类包含以下功能：
- * 1. 创建 MinIO 客户端，并配置其访问凭证和端点信息。
- * 2. 检查指定的桶是否存在，如果不存在，则创建该桶。
- * 3. 设置 MinIO 桶的生命周期规则，确保临时目录下的文件在 7 天后自动过期。
+ * This configuration class includes the following functionalities:
+ * 1. Create a MinIO client and configure its access credentials and endpoint information.
+ * 2. Check if the specified bucket exists, and create it if it does not.
+ * 3. Set lifecycle rules for the MinIO bucket to ensure files in the temporary directory expire after 7 days.
  * </p>
  */
 @Configuration
 public class MinioConfig {
     /**
-     * 创建 MinIO 客户端，并配置相关属性。
+     * Creates a MinIO client and configures related properties.
      * <p>
-     * 该方法将根据配置的 MinIO 端点和访问密钥生成 MinIO 客户端，并检查指定的桶是否存在，
-     * 如果不存在，则创建该桶。同时，设置桶的生命周期规则，确保临时目录下的文件会在 7 天后过期。
+     * This method generates a MinIO client based on the configured MinIO endpoint and access keys, checks if the specified bucket exists,
+     * and creates the bucket if it does not. It also sets lifecycle rules for the bucket to ensure files in the temporary directory expire after 7 days.
      * </p>
      *
-     * @param minioProperties MinIO 配置属性，包括端点、访问密钥、密钥和桶名称
-     * @return 配置好的 MinioClient 对象
-     * @throws Exception 如果 MinIO 客户端初始化或桶操作失败，则抛出异常
+     * @param minioProperties MinIO configuration properties, including endpoint, access key, secret key, and bucket name
+     * @return Configured MinioClient object
+     * @throws Exception If MinIO client initialization or bucket operations fail
      */
     @Bean
     public MinioClient minioClient(MinioProperties minioProperties) throws Exception {
-        // 如果 MinIO 未启用，则直接返回 null
+        // If MinIO is not enabled, return null
         if (!minioProperties.isEnabled()) {
             LogUtils.info("MinIO is not enabled, skip MinIO client initialization.");
             return null;
         }
 
-        // 创建 MinioClient 客户端
+        // Create MinioClient client
         MinioClient minioClient = MinioClient.builder()
                 .endpoint(minioProperties.getEndpoint())
                 .credentials(minioProperties.getAccessKey(), minioProperties.getSecretKey())
                 .build();
 
-        // 设置临时目录下文件的过期时间
+        // Set expiration time for files in the temporary directory
         setBucketLifecycle(minioClient, minioProperties.getBucket());
 
-        // 检查桶是否存在，如果不存在，则创建该桶
+        // Check if the bucket exists, and create it if it does not
         boolean exist = minioClient.bucketExists(BucketExistsArgs.builder().bucket(minioProperties.getBucket()).build());
         if (!exist) {
             minioClient.makeBucket(MakeBucketArgs.builder().bucket(minioProperties.getBucket()).build());
@@ -62,16 +62,16 @@ public class MinioConfig {
     }
 
     /**
-     * 设置桶的生命周期规则，自动过期临时目录下的文件。
+     * Sets lifecycle rules for the bucket to automatically expire files in the temporary directory.
      * <p>
-     * 该方法将桶内名为 "system/temp/" 的文件设置为 7 天后自动过期，帮助管理临时文件的生命周期。
+     * This method sets files named "system/temp/" in the bucket to expire after 7 days, helping manage the lifecycle of temporary files.
      * </p>
      *
-     * @param minioClient MinIO 客户端，用于设置生命周期规则
-     * @param bucket      目标桶的名称
+     * @param minioClient MinIO client used to set lifecycle rules
+     * @param bucket      Name of the target bucket
      */
     private static void setBucketLifecycle(MinioClient minioClient, String bucket) {
-        // 设置生命周期规则
+        // Set lifecycle rules
         List<LifecycleRule> rules = new LinkedList<>();
         rules.add(
                 new LifecycleRule(
@@ -84,7 +84,7 @@ public class MinioConfig {
                         null,
                         null));
 
-        // 配置生命周期规则
+        // Configure lifecycle rules
         LifecycleConfiguration config = new LifecycleConfiguration(rules);
         try {
             minioClient.setBucketLifecycle(
@@ -93,7 +93,7 @@ public class MinioConfig {
                             .config(config)
                             .build());
         } catch (Exception e) {
-            // 日志记录异常
+            // Log the exception
             LogUtils.error(e);
         }
     }

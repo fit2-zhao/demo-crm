@@ -12,9 +12,9 @@ import java.nio.file.Files;
 import java.util.List;
 
 /**
- * 本地文件仓库实现，提供本地文件的存储、删除、获取等操作。
+ * Local file repository implementation, providing operations for storing, deleting, and retrieving local files.
  * <p>
- * 该类实现了 {@link FileRepository} 接口，具体实现了保存、删除、获取文件等方法，适用于本地存储的场景。
+ * This class implements the {@link FileRepository} interface and provides specific implementations for saving, deleting, and retrieving files, suitable for local storage scenarios.
  * </p>
  */
 @Component
@@ -22,12 +22,12 @@ public class LocalRepository implements FileRepository {
     private static final String DEFAULT_FOLDER = "/opt/demo/data/files/";
 
     /**
-     * 保存文件到本地存储。
+     * Saves a file to local storage.
      *
-     * @param multipartFile 要保存的文件，类型为 {@link MultipartFile}。
-     * @param request       文件请求信息，包含文件的存储路径、文件名等信息。
-     * @return 返回保存后的文件路径。
-     * @throws IOException 如果保存文件过程中发生 I/O 错误，抛出异常。
+     * @param multipartFile The file to be saved, of type {@link MultipartFile}.
+     * @param request       File request information containing the storage path, file name, etc.
+     * @return The path of the saved file.
+     * @throws IOException If an I/O error occurs during file saving.
      */
     @Override
     public String saveFile(MultipartFile multipartFile, FileRequest request) throws IOException {
@@ -42,10 +42,10 @@ public class LocalRepository implements FileRepository {
     }
 
     /**
-     * 创建文件夹目录。
+     * Creates the directory for the file.
      *
-     * @param request 文件请求信息，包含文件夹路径信息。
-     * @throws RuntimeException 如果创建目录失败，抛出运行时异常。
+     * @param request File request information containing the directory path.
+     * @throws RuntimeException If the directory creation fails.
      */
     private void createFileDir(FileRequest request) {
         String dir = getFileDir(request);
@@ -56,19 +56,19 @@ public class LocalRepository implements FileRepository {
     }
 
     /**
-     * 保存字节数组表示的文件到本地存储。
+     * Saves a file represented by a byte array to local storage.
      *
-     * @param bytes   文件的字节数组。
-     * @param request 文件请求信息，包含文件存储路径、文件名等。
-     * @throws IOException 如果保存文件过程中发生 I/O 错误，抛出异常。
+     * @param bytes   The byte array representing the file content.
+     * @param request File request information containing the storage path, file name, etc.
+     * @throws IOException If an I/O error occurs during file saving.
      */
     @Override
     public void saveFile(byte[] bytes, FileRequest request) throws IOException {
         File file = new File(getFilePath(request));
-        // 检查父目录是否存在，如果不存在则创建它
+        // Check if the parent directory exists, create it if it does not
         File parentDir = file.getParentFile();
         if (parentDir != null && !parentDir.exists()) {
-            boolean dirsCreated = parentDir.mkdirs(); // 创建父目录
+            boolean dirsCreated = parentDir.mkdirs(); // Create parent directory
             if (!dirsCreated) {
                 throw new IOException("Failed to create directories: " + parentDir.getAbsolutePath());
             }
@@ -79,12 +79,12 @@ public class LocalRepository implements FileRepository {
     }
 
     /**
-     * 保存输入流表示的文件到本地存储。
+     * Saves a file represented by an input stream to local storage.
      *
-     * @param inputStream 文件内容的输入流。
-     * @param request     文件请求信息，包含文件存储路径、文件名等。
-     * @return 返回保存后的文件路径。
-     * @throws Exception 如果保存文件过程中发生错误，抛出异常。
+     * @param inputStream The input stream of the file content.
+     * @param request     File request information containing the storage path, file name, etc.
+     * @return The path of the saved file.
+     * @throws Exception If an error occurs during file saving.
      */
     @Override
     public String saveFile(InputStream inputStream, FileRequest request) throws Exception {
@@ -94,10 +94,10 @@ public class LocalRepository implements FileRepository {
     }
 
     /**
-     * 删除文件。
+     * Deletes a file.
      *
-     * @param request 文件请求信息，包含待删除文件的路径、文件名等。
-     * @throws Exception 如果删除文件过程中发生错误，抛出异常。
+     * @param request File request information containing the path and name of the file to be deleted.
+     * @throws Exception If an error occurs during file deletion.
      */
     @Override
     public void delete(FileRequest request) throws Exception {
@@ -110,10 +110,10 @@ public class LocalRepository implements FileRepository {
     }
 
     /**
-     * 删除指定文件夹及其所有内容。
+     * Deletes a specified folder and all its contents.
      *
-     * @param request 文件请求信息，包含待删除文件夹路径的文件请求。
-     * @throws Exception 如果删除文件夹过程中发生错误，抛出异常。
+     * @param request File request information containing the path of the folder to be deleted.
+     * @throws Exception If an error occurs during folder deletion.
      */
     @Override
     public void deleteFolder(FileRequest request) throws Exception {
@@ -122,11 +122,11 @@ public class LocalRepository implements FileRepository {
     }
 
     /**
-     * 获取文件的字节内容。
+     * Retrieves the byte content of a file.
      *
-     * @param request 文件请求信息，包含文件路径和文件名。
-     * @return 返回文件的字节数组。
-     * @throws Exception 如果获取文件内容过程中发生错误，抛出异常。
+     * @param request File request information containing the path and name of the file.
+     * @return The byte array of the file content.
+     * @throws Exception If an error occurs during file retrieval.
      */
     @Override
     public byte[] getFile(FileRequest request) throws Exception {
@@ -135,11 +135,11 @@ public class LocalRepository implements FileRepository {
     }
 
     /**
-     * 获取文件的输入流。
+     * Retrieves the input stream of a file.
      *
-     * @param request 文件请求信息，包含文件路径和文件名。
-     * @return 返回文件内容的输入流。
-     * @throws Exception 如果获取文件输入流过程中发生错误，抛出异常。
+     * @param request File request information containing the path and name of the file.
+     * @return The input stream of the file content.
+     * @throws Exception If an error occurs during file retrieval.
      */
     @Override
     public InputStream getFileAsStream(FileRequest request) throws Exception {
@@ -147,11 +147,11 @@ public class LocalRepository implements FileRepository {
     }
 
     /**
-     * 下载文件到指定的本地路径（未实现）。
+     * Downloads a file to the specified local path (not implemented).
      *
-     * @param request   文件请求信息，包含待下载文件的路径。
-     * @param localPath 下载到本地的路径。
-     * @throws UnsupportedOperationException 本方法未实现，调用时会抛出异常。
+     * @param request   File request information containing the path of the file to be downloaded.
+     * @param localPath The local path to which the file will be downloaded.
+     * @throws UnsupportedOperationException This method is not implemented and will throw an exception when called.
      */
     @Override
     public void downloadFile(FileRequest request, String localPath) {
@@ -159,22 +159,22 @@ public class LocalRepository implements FileRepository {
     }
 
     /**
-     * 获取指定文件夹下的文件名列表（未实现）。
+     * Retrieves a list of file names in a specified folder (not implemented).
      *
-     * @param request 文件请求信息，包含文件夹路径。
-     * @return 返回文件夹中文件的文件名列表。
+     * @param request File request information containing the folder path.
+     * @return The list of file names in the folder.
      */
     @Override
     public List<String> getFolderFileNames(FileRequest request) {
         return null;
-        // 返回 null 或者未实现逻辑
+        // Return null or unimplemented logic
     }
 
     /**
-     * 复制文件到指定目录（未实现）。
+     * Copies a file to a specified directory (not implemented).
      *
-     * @param request 文件复制请求信息。
-     * @throws GenericException 如果复制文件时发生不支持的操作，抛出系统异常。
+     * @param request File copy request information.
+     * @throws GenericException If an unsupported operation occurs during file copy.
      */
     @Override
     public void copyFile(FileCopyRequest request) throws Exception {
@@ -182,11 +182,11 @@ public class LocalRepository implements FileRepository {
     }
 
     /**
-     * 获取指定文件的大小。
+     * Retrieves the size of a specified file.
      *
-     * @param request 文件请求信息，包含待获取大小的文件路径和文件名。
-     * @return 返回文件的大小（字节数）。
-     * @throws Exception 如果获取文件大小过程中发生错误，抛出异常。
+     * @param request File request information containing the path and name of the file.
+     * @return The size of the file in bytes.
+     * @throws Exception If an error occurs during file size retrieval.
      */
     @Override
     public long getFileSize(FileRequest request) throws Exception {
@@ -195,10 +195,10 @@ public class LocalRepository implements FileRepository {
     }
 
     /**
-     * 获取文件的完整路径。
+     * Retrieves the full path of the file.
      *
-     * @param request 文件请求信息，包含文件夹路径和文件名。
-     * @return 返回文件的完整路径。
+     * @param request File request information containing the folder path and file name.
+     * @return The full path of the file.
      */
     private String getFilePath(FileRequest request) {
         FileValidate.validateFileName(request.getFolder(), request.getFileName());
@@ -206,10 +206,10 @@ public class LocalRepository implements FileRepository {
     }
 
     /**
-     * 获取文件所在的文件夹路径。
+     * Retrieves the directory path where the file is located.
      *
-     * @param request 文件请求信息，包含文件夹路径。
-     * @return 返回文件夹路径。
+     * @param request File request information containing the folder path.
+     * @return The directory path.
      */
     private String getFileDir(FileRequest request) {
         FileValidate.validateFileName(request.getFolder(), request.getFileName());

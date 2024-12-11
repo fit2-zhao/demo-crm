@@ -13,10 +13,10 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 枚举值校验注解，确保值为指定枚举类中的有效值。
- * 可选排除某些枚举值。
- *
- * @author jianxing
+ * Enum value validation annotation to ensure the value is a valid value in the specified enum class.
+ * Optional exclusion of certain enum values.
+ * <p>
+ * Author: jianxing
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
@@ -25,42 +25,42 @@ import java.util.List;
 public @interface EnumValue {
 
     /**
-     * 错误提示信息，当校验失败时使用。
+     * Error message to be used when validation fails.
      *
-     * @return 错误提示消息
+     * @return Error message
      */
     String message() default "{enum_value_valid_message}";
 
     /**
-     * 必须的属性，用于分组校验。
+     * Required attribute for group validation.
      *
-     * @return 分组校验的类
+     * @return Group validation classes
      */
     Class<?>[] groups() default {};
 
     /**
-     * 校验负载。
+     * Validation payload.
      *
-     * @return 校验负载的类
+     * @return Validation payload classes
      */
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * 校验时使用的枚举类。
+     * Enum class to be used for validation.
      *
-     * @return 枚举类
+     * @return Enum class
      */
     Class<? extends Enum<?>> enumClass();
 
     /**
-     * 校验时排除的枚举值，仅支持字符串类型。
+     * Enum values to be excluded during validation, only supports string type.
      *
-     * @return 排除的枚举值
+     * @return Excluded enum values
      */
     String[] excludeValues() default {};
 
     /**
-     * 枚举值校验的实现类。
+     * Implementation class for enum value validation.
      *
      * @see EnumValue
      */
@@ -76,25 +76,25 @@ public @interface EnumValue {
         }
 
         /**
-         * 校验参数是否在枚举值中。
-         * 如果设置了排除值，校验值不应在排除列表中。
+         * Validate if the parameter is among the enum values.
+         * If exclusion values are set, the validation value should not be in the exclusion list.
          *
-         * @param value   待校验的值
-         * @param context 校验上下文
-         * @return 校验结果，若值有效返回 true，否则返回 false
+         * @param value   Value to be validated
+         * @param context Validation context
+         * @return Validation result, returns true if the value is valid, otherwise false
          */
         @Override
         public boolean isValid(Object value, ConstraintValidatorContext context) {
-            // 如果值为空，则认为有效
+            // If the value is null, consider it valid
             if (value == null) {
                 return true;
             }
 
-            // 获取枚举类的所有实例
+            // Get all instances of the enum class
             Enum<?>[] enums = enumClass.getEnumConstants();
             List<Object> values = new ArrayList<>();
 
-            // 获取枚举类的所有有效值
+            // Get all valid values of the enum class
             for (Enum<?> item : enums) {
                 if (item instanceof ValueEnum) {
                     values.add(((ValueEnum<?>) item).getValue());
@@ -103,11 +103,11 @@ public @interface EnumValue {
                 }
             }
 
-            // 判断是否排除指定的枚举值
+            // Determine if the value is excluded
             boolean isExcludeValue = excludeValues != null && Arrays.stream(excludeValues).anyMatch(value::equals);
             boolean valid = values.contains(value) && !isExcludeValue;
 
-            // 如果校验失败，生成自定义错误消息
+            // If validation fails, generate a custom error message
             if (!valid) {
                 context.disableDefaultConstraintViolation();
                 String errorValues = CollectionUtils.subtract(values, Arrays.asList(excludeValues)).toString();

@@ -5,10 +5,10 @@ import com.zaxxer.hikari.HikariPoolMXBean;
 
 public class HikariCPUtils {
     /**
-     * 获取 HikariCP 连接池的使用情况
+     * Get the usage status of the HikariCP connection pool.
      *
-     * @param dataSource HikariDataSource 实例
-     * @return HikariCP 连接池状态信息
+     * @param dataSource HikariDataSource instance
+     * @return HikariCP connection pool status information
      */
     public static String getHikariCPStatus(HikariDataSource dataSource) {
         if (dataSource == null) {
@@ -25,10 +25,10 @@ public class HikariCPUtils {
     }
 
     /**
-     * 获取 HikariCP 连接池的配置情况
+     * Get the configuration of the HikariCP connection pool.
      *
-     * @param dataSource HikariDataSource 实例
-     * @return 连接池配置情况
+     * @param dataSource HikariDataSource instance
+     * @return Connection pool configuration
      */
     public static String getHikariCPConfig(HikariDataSource dataSource) {
         if (dataSource == null) {
@@ -44,7 +44,7 @@ public class HikariCPUtils {
     }
 
     /**
-     * 打印 HikariCP 的状态和配置信息
+     * Print the status and configuration information of HikariCP.
      */
     public static void printHikariCPStatus() {
         HikariDataSource dataSource = CommonBeanFactory.getBean(HikariDataSource.class);

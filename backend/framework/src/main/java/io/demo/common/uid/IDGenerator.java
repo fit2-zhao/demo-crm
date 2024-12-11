@@ -4,32 +4,32 @@ import io.demo.common.util.CommonBeanFactory;
 import io.demo.common.uid.impl.DefaultUidGenerator;
 
 /**
- * IDGenerator 用于生成唯一的 ID。
- * 提供了生成数字 ID 和字符串 ID 的功能。
+ * IDGenerator is used to generate unique IDs.
+ * Provides functionality to generate numeric and string IDs.
  */
 public class IDGenerator {
 
-    // 默认的 UID 生成器实例
+    // Default UID generator instance
     private static final DefaultUidGenerator DEFAULT_UID_GENERATOR;
 
     static {
-        // 从 CommonBeanFactory 获取 DefaultUidGenerator 实例
+        // Get DefaultUidGenerator instance from CommonBeanFactory
         DEFAULT_UID_GENERATOR = CommonBeanFactory.getBean(DefaultUidGenerator.class);
     }
 
     /**
-     * 生成一个唯一的数字 ID。
+     * Generates a unique numeric ID.
      *
-     * @return 唯一的数字 ID
+     * @return Unique numeric ID
      */
     public static Long nextNum() {
         return DEFAULT_UID_GENERATOR.getUID();
     }
 
     /**
-     * 生成一个唯一的字符串 ID。
+     * Generates a unique string ID.
      *
-     * @return 唯一的字符串 ID
+     * @return Unique string ID
      */
     public static String nextStr() {
         return String.valueOf(DEFAULT_UID_GENERATOR.getUID());

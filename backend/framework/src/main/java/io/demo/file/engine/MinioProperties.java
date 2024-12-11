@@ -5,10 +5,10 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * 配置类，用于读取 MinIO 的相关配置。
+ * Configuration class for reading MinIO related settings.
  * <p>
- * 此类绑定到 Spring Boot 配置文件中的 minio 前缀的属性，
- * 通过 {@link ConfigurationProperties} 注解自动注入相关属性。
+ * This class is bound to the properties with the prefix "minio" in the Spring Boot configuration file,
+ * and the relevant properties are automatically injected through the {@link ConfigurationProperties} annotation.
  * </p>
  *
  * @version 1.0
@@ -19,46 +19,46 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class MinioProperties {
 
     /**
-     * 配置项的前缀，用于从配置文件中读取相关 MinIO 配置。
+     * The prefix for the configuration items, used to read the relevant MinIO settings from the configuration file.
      */
     public static final String MINIO_PREFIX = "minio";
 
     /**
-     * MinIO 的 endpoint 地址。
+     * The endpoint address of MinIO.
      * <p>
-     * 该属性用于定义与 MinIO 服务的连接地址。
+     * This property is used to define the connection address to the MinIO service.
      * </p>
      */
     private String endpoint;
 
     /**
-     * MinIO 的 accessKey，用于身份验证。
+     * The access key of MinIO, used for authentication.
      * <p>
-     * 该属性用于提供 MinIO 服务的访问凭证之一。
+     * This property is used to provide one of the access credentials for the MinIO service.
      * </p>
      */
     private String accessKey;
 
     /**
-     * MinIO 的 secretKey，用于身份验证。
+     * The secret key of MinIO, used for authentication.
      * <p>
-     * 该属性用于提供 MinIO 服务的访问凭证之一。
+     * This property is used to provide one of the access credentials for the MinIO service.
      * </p>
      */
     private String secretKey;
 
     /**
-     * MinIO 使用的存储桶名称。
+     * The bucket name used by MinIO.
      * <p>
-     * 该属性指定将数据存储在的桶的名称。
+     * This property specifies the name of the bucket where data will be stored.
      * </p>
      */
     private String bucket;
 
     /**
-     * MinIO 的存储桶是否启用。
+     * Whether the MinIO bucket is enabled.
      * <p>
-     * 该属性用于指示是否启用 MinIO 存储桶。
+     * This property is used to indicate whether the MinIO bucket is enabled.
      * </p>
      */
     private boolean enabled;

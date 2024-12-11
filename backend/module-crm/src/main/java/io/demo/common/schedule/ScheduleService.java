@@ -15,8 +15,8 @@ import org.quartz.TriggerKey;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * 定时任务服务类，负责调度任务的创建、编辑、删除及相关操作。
- * 主要功能包括定时任务的增、删、查及其与调度器的交互。
+ * Schedule service class, responsible for creating, editing, deleting, and related operations of scheduled tasks.
+ * Main functions include adding, deleting, querying scheduled tasks, and interacting with the scheduler.
  *
  * @since 1.0
  */
@@ -30,9 +30,9 @@ public class ScheduleService {
     private ScheduleManager scheduleManager;
 
     /**
-     * 添加新的定时任务。
+     * Adds a new scheduled task.
      *
-     * @param schedule 定时任务对象
+     * @param schedule Scheduled task object
      */
     public void addSchedule(Schedule schedule) {
         schedule.setId(IDGenerator.nextStr());
@@ -43,30 +43,30 @@ public class ScheduleService {
     }
 
     /**
-     * 获取下一个任务编号。
+     * Gets the next task number.
      *
-     * @param projectId 项目 ID
-     * @return 下一个任务编号
+     * @param projectId Project ID
+     * @return The next task number
      */
     public long getNextNum(String projectId) {
         return NumGenerator.nextNum(projectId, ApplicationNumScope.TASK);
     }
 
     /**
-     * 根据任务 ID 获取定时任务。
+     * Gets the scheduled task by task ID.
      *
-     * @param scheduleId 定时任务 ID
-     * @return 定时任务对象
+     * @param scheduleId Scheduled task ID
+     * @return Scheduled task object
      */
     public Schedule getSchedule(String scheduleId) {
         return scheduleMapper.selectByPrimaryKey(scheduleId);
     }
 
     /**
-     * 编辑定时任务信息。
+     * Edits the scheduled task information.
      *
-     * @param schedule 要更新的定时任务对象
-     * @return 更新的记录数
+     * @param schedule The scheduled task object to be updated
+     * @return The number of updated records
      */
     public int editSchedule(Schedule schedule) {
         schedule.setUpdateTime(System.currentTimeMillis());
@@ -74,41 +74,41 @@ public class ScheduleService {
     }
 
     /**
-     * 根据任务标识删除调度器中的任务。
+     * Deletes the task from the scheduler by task identifier.
      *
-     * @param key 任务标识
-     * @param job 任务名
+     * @param key Task identifier
+     * @param job Task name
      */
     private void removeJob(String key, String job) {
         scheduleManager.removeJob(new JobKey(key, job), new TriggerKey(key, job));
     }
 
     /**
-     * 添加或更新 Cron 表达式定时任务。
-     * 如果定时任务启用且 Cron 表达式有效，则添加或更新任务；否则，移除任务。
+     * Adds or updates a Cron expression scheduled task.
+     * If the scheduled task is enabled and the Cron expression is valid, the task is added or updated; otherwise, the task is removed.
      *
-     * @param request    定时任务请求对象
-     * @param jobKey     任务标识
-     * @param triggerKey 触发器标识
-     * @param clazz      任务类
+     * @param request    Scheduled task request object
+     * @param jobKey     Task identifier
+     * @param triggerKey Trigger identifier
+     * @param clazz      Task class
      */
     public void addOrUpdateCronJob(Schedule request, JobKey jobKey, TriggerKey triggerKey, Class clazz) {
         Boolean enable = request.getEnable();
         String cronExpression = request.getValue();
         if (BooleanUtils.isTrue(enable) && StringUtils.isNotBlank(cronExpression)) {
             try {
-                // 添加或更新 Cron 表达式定时任务
+                // Add or update Cron expression scheduled task
                 scheduleManager.addOrUpdateCronJob(jobKey, triggerKey, clazz, cronExpression,
                         scheduleManager.getDefaultJobDataMap(request, cronExpression, request.getCreateUser()));
             } catch (SchedulerException e) {
-                throw new GenericException("定时任务开启异常: " + e.getMessage());
+                throw new GenericException("Exception occurred while enabling the scheduled task: " + e.getMessage());
             }
         } else {
             try {
-                // 移除定时任务
+                // Remove the scheduled task
                 scheduleManager.removeJob(jobKey, triggerKey);
             } catch (Exception e) {
-                throw new GenericException("定时任务关闭异常: " + e.getMessage());
+                throw new GenericException("Exception occurred while disabling the scheduled task: " + e.getMessage());
             }
         }
     }

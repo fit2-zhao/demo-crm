@@ -11,59 +11,59 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * 用于生成数字 ID 的生成器类，支持根据不同的应用场景（Scope）生成唯一的 ID。
+ * Generator class for generating numeric IDs, supporting unique ID generation based on different application scopes.
  *
- * <p>该类使用 Redisson 的分布式 ID 生成器和 Redis 进行管理。</p>
+ * <p>This class uses Redisson's distributed ID generator and Redis for management.</p>
  */
 @Component
 public class NumGenerator {
 
-    // 初始值，代表从100001开始生成 ID
+    // Initial value, representing the starting point for ID generation from 100001
     private static final long INIT = 100001L;
 
-    // 限制每次生成的最大数量
+    // Limit for the maximum number of IDs generated at a time
     private static final long LIMIT = 1;
 
-    // Redisson 实例，用于获取分布式 ID 生成器
+    // Redisson instance for obtaining the distributed ID generator
     private static Redisson redisson;
 
-    // StringRedisTemplate 用于操作 Redis
+    // StringRedisTemplate for operating Redis
     private static StringRedisTemplate stringRedisTemplate;
 
-    // 特定的子范围，用于表示二级的用例
+    // Specific sub-scope, representing secondary use cases
     private static final List<ApplicationNumScope> SUB_NUM = List.of(ApplicationNumScope.SYSTEM);
 
     /**
-     * 根据指定的应用场景生成唯一的数字 ID。
+     * Generates a unique numeric ID based on the specified application scope.
      *
-     * @param scope 应用场景（例如：接口用例）
-     * @return 唯一的数字 ID
+     * @param scope Application scope (e.g., interface use case)
+     * @return Unique numeric ID
      */
     public static long nextNum(ApplicationNumScope scope) {
         return nextNum(scope.name(), scope);
     }
 
     /**
-     * 根据指定的前缀和应用场景生成唯一的数字 ID。
+     * Generates a unique numeric ID based on the specified prefix and application scope.
      *
-     * @param prefix 前缀，例如：PROJECT_ID 或者 PROJECT_ID + "_" + DOMAIN
-     * @param scope  应用场景（例如：接口用例）
-     * @return 唯一的数字 ID
+     * @param prefix Prefix, e.g., PROJECT_ID or PROJECT_ID + "_" + DOMAIN
+     * @param scope  Application scope (e.g., interface use case)
+     * @return Unique numeric ID
      */
     public static long nextNum(String prefix, ApplicationNumScope scope) {
-        // 获取分布式 ID 生成器
+        // Obtain the distributed ID generator
         RIdGenerator idGenerator = redisson.getIdGenerator(prefix + "_" + scope.name());
 
-        // 处理子范围的用例（如 SYSTEM）
+        // Handle sub-scope use cases (e.g., SYSTEM)
         if (SUB_NUM.contains(scope)) {
-            // 确保 ID 生成器存在，如果不存在则初始化
+            // Ensure the ID generator exists, initialize if not
             if (!idGenerator.isExists()) {
                 idGenerator.tryInit(1, LIMIT);
             }
-            // 返回格式化后的 ID，保留 3 位
+            // Return formatted ID, keeping 3 digits
             return Long.parseLong(prefix.split("_")[1] + StringUtils.leftPad(String.valueOf(idGenerator.nextId()), 3, "0"));
         } else {
-            // 其他范围的用例，初始化 ID 生成器
+            // Other scope use cases, initialize the ID generator
             if (!idGenerator.isExists()) {
                 idGenerator.tryInit(INIT, LIMIT);
             }
@@ -72,9 +72,9 @@ public class NumGenerator {
     }
 
     /**
-     * 设置 Redisson 实例，用于分布式 ID 生成器。
+     * Sets the Redisson instance for the distributed ID generator.
      *
-     * @param redisson Redisson 实例
+     * @param redisson Redisson instance
      */
     @Resource
     public void setRedisson(Redisson redisson) {
@@ -82,9 +82,9 @@ public class NumGenerator {
     }
 
     /**
-     * 设置 StringRedisTemplate 实例，用于操作 Redis。
+     * Sets the StringRedisTemplate instance for operating Redis.
      *
-     * @param stringRedisTemplate StringRedisTemplate 实例
+     * @param stringRedisTemplate StringRedisTemplate instance
      */
     @Resource
     public void setStringRedisTemplate(StringRedisTemplate stringRedisTemplate) {

@@ -8,18 +8,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
- * 定时任务调度配置类。
- * 配置 Quartz 调度器和定时任务管理服务，启用条件为配置文件中 quartz.enabled 属性为 true。
+ * Configuration class for scheduling tasks.
+ * Configures the Quartz scheduler and scheduling management service, enabled when the quartz.enabled property is set to true in the configuration file.
  */
 @Configuration
 @EnableScheduling
 public class ScheduleConfig {
 
     /**
-     * 配置 ScheduleManager Bean。
-     * 只有在 quartz.enabled 配置为 true 时，ScheduleManager 才会被加载到容器中。
+     * Configures the ScheduleManager Bean.
+     * The ScheduleManager will only be loaded into the container when the quartz.enabled property is set to true.
      *
-     * @return ScheduleManager 实例
+     * @return ScheduleManager instance
      */
     @Bean
     @ConditionalOnProperty(prefix = "quartz", value = "enabled", havingValue = "true")
@@ -28,10 +28,10 @@ public class ScheduleConfig {
     }
 
     /**
-     * 配置 ScheduleService Bean。
-     * 只有在 quartz.enabled 配置为 true 时，ScheduleService 才会被加载到容器中。
+     * Configures the ScheduleService Bean.
+     * The ScheduleService will only be loaded into the container when the quartz.enabled property is set to true.
      *
-     * @return ScheduleService 实例
+     * @return ScheduleService instance
      */
     @Bean
     @ConditionalOnProperty(prefix = "quartz", value = "enabled", havingValue = "true")

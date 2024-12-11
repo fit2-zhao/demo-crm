@@ -13,97 +13,97 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
- * 通用的Spring Bean工厂，用于从Spring容器中获取Bean并调用方法。
- * 实现了ApplicationContextAware接口，以便在需要时获取Spring的应用上下文。
+ * General Spring Bean factory for obtaining Beans from the Spring container and invoking methods.
+ * Implements the ApplicationContextAware interface to obtain the Spring application context when needed.
  */
 @Component
 public class CommonBeanFactory implements ApplicationContextAware {
 
-    // 保存ApplicationContext实例
+    // Holds the ApplicationContext instance
     private static ApplicationContext context;
 
     /**
-     * 设置ApplicationContext，Spring容器会自动注入上下文。
+     * Sets the ApplicationContext, the Spring container will automatically inject the context.
      *
-     * @param ctx 当前的Spring应用上下文
-     * @throws BeansException 如果出现错误
+     * @param ctx the current Spring application context
+     * @throws BeansException if an error occurs
      */
     public void setApplicationContext(@NotNull ApplicationContext ctx) throws BeansException {
         context = ctx;
     }
 
     /**
-     * 根据Bean名称获取Bean实例
+     * Gets a Bean instance by its name.
      *
-     * @param beanName Bean的名称
-     * @return 返回Bean实例，若未找到则返回null
+     * @param beanName the name of the Bean
+     * @return the Bean instance, or null if not found
      */
     public static Object getBean(String beanName) {
         try {
-            // 如果上下文或Bean名称为空，则返回null
+            // Return null if context or beanName is empty
             if (context != null && StringUtils.isNotBlank(beanName)) {
                 return context.getBean(beanName);
             }
         } catch (BeansException e) {
-            // 捕获Spring的异常并返回null
+            // Catch Spring exception and return null
             return null;
         }
         return null;
     }
 
     /**
-     * 根据Bean类型获取Bean实例
+     * Gets a Bean instance by its type.
      *
-     * @param className Bean的类型
-     * @param <T>       返回的Bean类型
-     * @return 返回Bean实例，若未找到则返回null
+     * @param className the type of the Bean
+     * @param <T>       the type of the Bean
+     * @return the Bean instance, or null if not found
      */
     public static <T> T getBean(Class<T> className) {
         try {
-            // 如果上下文或类型为空，则返回null
+            // Return null if context or className is empty
             if (context != null && className != null) {
                 return context.getBean(className);
             }
         } catch (BeansException e) {
-            // 捕获Spring的异常并返回null
+            // Catch Spring exception and return null
             return null;
         }
         return null;
     }
 
     /**
-     * 获取指定类型的所有Bean实例
+     * Gets all Bean instances of the specified type.
      *
-     * @param className Bean的类型
-     * @param <T>       返回的Bean类型
-     * @return 返回所有类型为className的Bean实例的Map
+     * @param className the type of the Beans
+     * @param <T>       the type of the Beans
+     * @return a Map of all Bean instances of the specified type
      */
     public static <T> Map<String, T> getBeansOfType(Class<T> className) {
         return context.getBeansOfType(className);
     }
 
     /**
-     * 调用指定Bean的方法
+     * Invokes a method on the specified Bean.
      *
-     * @param beanName       Bean的名称
-     * @param methodFunction 方法选择器函数，接受Bean的类类型并返回一个Method对象
-     * @param args           方法调用的参数
-     * @return 返回方法的执行结果，若发生异常则返回null
+     * @param beanName       the name of the Bean
+     * @param methodFunction a function that accepts the Bean's class type and returns a Method object
+     * @param args           the arguments for the method invocation
+     * @return the result of the method execution, or null if an exception occurs
      */
     public static Object invoke(String beanName, Function<Class<?>, Method> methodFunction, Object... args) {
         try {
             Object bean = getBean(beanName);
-            // 检查bean是否存在
+            // Check if bean exists
             if (ObjectUtils.isNotEmpty(bean)) {
                 Class<?> clazz = bean.getClass();
-                // 使用提供的methodFunction来获取方法并执行
+                // Use the provided methodFunction to get and execute the method
                 Method method = methodFunction.apply(clazz);
                 if (method != null) {
                     return method.invoke(bean, args);
                 }
             }
         } catch (Exception e) {
-            // 记录错误日志
+            // Log the error
             LogUtils.error(e);
         }
         return null;
