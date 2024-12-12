@@ -87,7 +87,10 @@ public class OperationLogContext {
     public static Object getMethodOrGlobal(String key) {
         // 优先从方法栈中获取
         Object result = Optional.ofNullable(VARIABLE_MAP_STACK.get())
-                .map(stack -> stack.peek().get(key))
+                .map(stack -> {
+                    assert stack.peek() != null;
+                    return stack.peek().get(key);
+                })
                 .orElse(null);
 
         if (result == null) {
@@ -125,7 +128,7 @@ public class OperationLogContext {
      * 清除当前方法栈中的变量。
      */
     public static void clear() {
-        Optional.ofNullable(VARIABLE_MAP_STACK.get()).ifPresent(stack -> stack.pop());
+        Optional.ofNullable(VARIABLE_MAP_STACK.get()).ifPresent(Deque::pop);
     }
 
     /**
