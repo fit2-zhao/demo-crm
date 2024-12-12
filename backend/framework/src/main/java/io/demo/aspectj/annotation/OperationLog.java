@@ -42,4 +42,5 @@ public @interface OperationLog {
      * @return Additional information of the log
      */
     String extra() default "";
+
 }
