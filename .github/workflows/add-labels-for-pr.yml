@@ -21,11 +21,11 @@ jobs:
 
       # 对 PR 创建时添加默认标签
       - name: Add default labels on PR creation
-        if: ${{ github.event_name == 'pull_request' && github.event.action == 'opened' }}
-        uses: actions-ecosystem/action-add-labels@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          labels: ${{ github.base_ref }}
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          configuration-path: .github/actions/labeler.yml
+          sync-labels: true
+
 
       # 对 PR 评论中以 / 开头的命令动态添加标签
       - name: Extract labels from comment
@@ -43,9 +43,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: ${{ steps.extract_labels.outputs.labels }}
 
-      - name: "Label in pull request"
-        uses: actions/labeler@v4
-        with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          configuration-path: .github/actions/labeler.yml
-          sync-labels: true
