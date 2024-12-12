@@ -26,6 +26,7 @@ public class OperationLog {
     @NotBlank(message = "type required")
     @Length(max = 200, message = "type max length is 200")
     private String type;
+
     /**
      * 日志的子类型，比如订单的C端日志，和订单的B端日志，type都是订单类型，但是子类型不一样
      */
@@ -37,6 +38,7 @@ public class OperationLog {
     @NotBlank(message = "resourceId required")
     @Length(max = 100, message = "resourceId max length is 100")
     private String resourceId;
+
     /**
      * 操作人
      */
@@ -50,14 +52,17 @@ public class OperationLog {
     @NotBlank(message = "opAction required")
     @Length(max = 500, message = "operator max length 500")
     private String action;
+
     /**
      * 记录是否是操作失败的日志
      */
     private boolean fail;
+
     /**
      * 日志的创建时间
      */
     private Date createTime;
+
     /**
      * 日志的额外信息
      **/
