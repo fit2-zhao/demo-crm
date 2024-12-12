@@ -1,5 +1,3 @@
-name: Add Labels to PR
-
 on:
   # 监听 PR 创建事件
   pull_request:
@@ -10,6 +8,7 @@ on:
   issue_comment:
     types:
       - created
+name: Add Labels to PR
 
 jobs:
   add_labels:
