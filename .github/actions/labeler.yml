@@ -1,0 +1,21 @@
+backend:
+  - 'framework/**/*'
+  - 'module-crm/**/*'
+
+document:
+  - 'docs/**/*'
+  - '**/*.md'
+
+CI&CD:
+  - any: ['.github/**/*']
+  - any: [ 'Jenkinsfile' ]
+
+docker:
+  - any: ['deploy/docker/**/*']
+  - any: ['Dockerfile']
+
+UI:
+  - any: ['frontend/**/*']
+
+test:
+  - any: ['**/test/**/*']

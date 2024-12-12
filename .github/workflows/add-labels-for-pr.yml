@@ -43,3 +43,10 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: ${{ steps.extract_labels.outputs.labels }}
+
+      - name: "Label in pull request"
+        uses: actions/labeler@v4
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          configuration-path: .github/actions/labeler.yml
+          sync-labels: true
