@@ -48,7 +48,7 @@ public class OperationLog {
      * 日志内容
      */
     @NotBlank(message = "opAction required")
-    @Length(max = 512, message = "operator max length 512")
+    @Length(max = 500, message = "operator max length 500")
     private String action;
     /**
      * 记录是否是操作失败的日志
