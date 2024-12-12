@@ -21,12 +21,11 @@ jobs:
 
       # 对 PR 创建时添加默认标签
       - name: Add default labels on PR creation
-        uses: actions/labeler@v4
+        uses: actions/labeler@v5
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          configuration-path: .github/actions/labeler.yml
+          configuration-path: .github/labeler.yml
           sync-labels: true
-
 
       # 对 PR 评论中以 / 开头的命令动态添加标签
       - name: Extract labels from comment
