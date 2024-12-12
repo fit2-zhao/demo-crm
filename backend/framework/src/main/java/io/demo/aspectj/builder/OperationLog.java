@@ -60,9 +60,7 @@ public class OperationLog {
     private Date createTime;
     /**
      * 日志的额外信息
-     *
-     * @since 2.0.0 从detail 修改为extra
-     */
+     **/
     private String extra;
 
     /**
