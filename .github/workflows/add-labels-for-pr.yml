@@ -1,13 +1,11 @@
 on:
-  # 监听 PR 创建事件
   pull_request:
     types:
       - opened
-
-  # 监听 PR 评论事件
   issue_comment:
     types:
       - created
+
 name: Add Labels to PR
 
 jobs:
@@ -15,19 +13,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 检查代码仓库
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 对 PR 创建时添加默认标签
+      - name: Debug event context
+        run: echo "${{ toJson(github.event) }}"
+
+      - name: Print PR number
+        if: ${{ github.event.pull_request }}
+        run: echo "PR number: ${{ github.event.pull_request.number }}"
+
       - name: Add default labels on PR creation
+        if: ${{ github.event_name == 'pull_request' }}
         uses: actions/labeler@v5
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           configuration-path: .github/labeler.yml
           sync-labels: true
 
-      # 对 PR 评论中以 / 开头的命令动态添加标签
       - name: Extract labels from comment
         if: ${{ github.event_name == 'issue_comment' && github.event.issue.pull_request && startsWith(github.event.comment.body, '/') }}
         id: extract_labels
@@ -42,4 +45,3 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: ${{ steps.extract_labels.outputs.labels }}
-
