@@ -19,6 +19,7 @@ jobs:
 
       # 对 PR 创建时添加默认标签
       - name: Add default labels on PR creation
+        if: ${{ github.event_name == 'pull_request' && github.event.action == 'opened' }}
         uses: actions/labeler@v5
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
