@@ -22,16 +22,12 @@ public class OperationLog {
     private Serializable id;
     /**
      * 保存的操作日志的类型，比如：订单类型、商品类型
-     *
-     * @since 2.0.0 从 prefix 修改为了type
-     */
+     **/
     @NotBlank(message = "type required")
     @Length(max = 200, message = "type max length is 200")
     private String type;
     /**
      * 日志的子类型，比如订单的C端日志，和订单的B端日志，type都是订单类型，但是子类型不一样
-     *
-     * @since 2.0.0 从 category 修改为 subtype
      */
     private String subType;
 
@@ -45,14 +41,14 @@ public class OperationLog {
      * 操作人
      */
     @NotBlank(message = "operator required")
-    @Length(max = 63, message = "operator max length 63")
+    @Length(max = 50, message = "operator max length 50")
     private String operator;
 
     /**
      * 日志内容
      */
     @NotBlank(message = "opAction required")
-    @Length(max = 511, message = "operator max length 511")
+    @Length(max = 512, message = "operator max length 512")
     private String action;
     /**
      * 记录是否是操作失败的日志
