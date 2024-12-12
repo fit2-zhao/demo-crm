@@ -6,37 +6,37 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 /**
- * Lambda parsing utility class.
+ * Lambda 解析工具类。
  * <p>
- * This utility class provides functionality to extract method names from Lambda expressions, supporting various methods including proxy, reflection, and serialization.
+ * 该工具类提供了从 Lambda 表达式中提取方法名称的功能，支持多种方式，包括代理、反射和序列化。
  * </p>
  */
 public final class LambdaUtils {
 
     /**
-     * Extracts the implementation method name of a Lambda expression.
+     * 提取 Lambda 表达式的实现方法名称。
      * <p>
-     * Depending on the environment, this method will attempt to parse the Lambda expression using proxy, reflection, or serialization.
+     * 根据不同的环境，方法会尝试通过代理、反射或序列化的方式来解析 Lambda 表达式。
      * </p>
      *
-     * @param func The Lambda object to be parsed.
-     * @return The implementation method name of the Lambda expression.
+     * @param func 需要解析的 Lambda 对象。
+     * @return 返回 Lambda 表达式的实现方法名称。
      */
     public static String extract(XFunction<?, ?> func) {
-        // 1. In IDEA debug mode, the Lambda expression is a proxy object
+        // 1. IDEA 调试模式下，Lambda 表达式是一个代理对象
         if (func instanceof Proxy) {
             ProxyLambdaMeta lambdaMeta = new ProxyLambdaMeta((Proxy) func);
             return lambdaMeta.getImplMethodName();
         }
 
-        // 2. Read the metadata in the Lambda expression through reflection
+        // 2. 通过反射读取 Lambda 表达式中的元信息
         try {
             Method method = func.getClass().getDeclaredMethod("writeReplace");
             method.setAccessible(true);
             ReflectLambdaMeta lambdaMeta = new ReflectLambdaMeta((java.lang.invoke.SerializedLambda) method.invoke(func), func.getClass().getClassLoader());
             return lambdaMeta.getImplMethodName();
         } catch (Throwable e) {
-            // 3. When reflection fails, use serialization to read Lambda metadata
+            // 3. 反射失败时，使用序列化方式读取 Lambda 元信息
             LogUtils.error("Extract lambda meta error", e);
             return new ShadowLambdaMeta(io.demo.mybatis.lambda.SerializedLambda.extract(func)).getImplMethodName();
         }

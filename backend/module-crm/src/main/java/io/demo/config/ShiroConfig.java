@@ -27,10 +27,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Shiro configuration class for configuring Shiro's security manager, session manager, filters, etc.
+ * Shiro 配置类，用于配置 Shiro 的安全管理器、会话管理器、过滤器等。
  * <p>
- * This class is responsible for configuring Shiro-related Beans, including session management, cache management, security filter chain, etc.
- * It also defines the logic for authorization and authentication, as well as annotation support.
+ * 本类负责配置 Shiro 相关的 Bean，包括会话管理、缓存管理、安全过滤器链等。
+ * 它还定义了授权和认证的处理逻辑，以及注解支持。
  * </p>
  *
  * @version 1.0
@@ -39,13 +39,13 @@ import java.util.Map;
 public class ShiroConfig {
 
     /**
-     * Configures the Shiro filter factory.
+     * 配置 Shiro 的过滤器工厂。
      * <p>
-     * Sets the login page, unauthorized page, filter chain, etc. Also configures API Key and CSRF protection filters.
+     * 设置登录页、未授权页面、过滤器链等配置。还配置了 API Key 和 CSRF 防护的过滤器。
      * </p>
      *
-     * @param sessionManager Default web security manager
-     * @return Configured {@link ShiroFilterFactoryBean} instance
+     * @param sessionManager 默认的 Web 安全管理器
+     * @return 配置好的 {@link ShiroFilterFactoryBean} 实例
      */
     @Bean
     public ShiroFilterFactoryBean shiroFilterFactoryBean(DefaultWebSecurityManager sessionManager) {
@@ -55,11 +55,11 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setUnauthorizedUrl("/403");
         shiroFilterFactoryBean.setSuccessUrl("/");
 
-        // Add custom filters
+        // 添加自定义过滤器
         shiroFilterFactoryBean.getFilters().put("apikey", new ApiKeyFilter());
         shiroFilterFactoryBean.getFilters().put("csrf", new CsrfFilter());
 
-        // Configure filter chain
+        // 配置过滤器链
         Map<String, String> filterChainDefinitionMap = shiroFilterFactoryBean.getFilterChainDefinitionMap();
         filterChainDefinitionMap.putAll(ShiroFilter.loadBaseFilterChain());
         filterChainDefinitionMap.putAll(ShiroFilter.ignoreCsrfFilter());
@@ -69,9 +69,9 @@ public class ShiroConfig {
     }
 
     /**
-     * Configures Shiro's cache manager using in-memory cache management.
+     * 配置 Shiro 的缓存管理器，使用内存缓存管理。
      *
-     * @return Configured {@link MemoryConstrainedCacheManager} instance
+     * @return 配置好的 {@link MemoryConstrainedCacheManager} 实例
      */
     @Bean
     public MemoryConstrainedCacheManager memoryConstrainedCacheManager() {
@@ -79,12 +79,12 @@ public class ShiroConfig {
     }
 
     /**
-     * Configures Shiro's session manager.
+     * 配置 Shiro 的会话管理器。
      * <p>
-     * Uses {@link ServletContainerSessionManager} to manage web sessions.
+     * 使用 {@link ServletContainerSessionManager} 来管理 Web 会话。
      * </p>
      *
-     * @return Configured {@link SessionManager} instance
+     * @return 配置好的 {@link SessionManager} 实例
      */
     @Bean
     public SessionManager sessionManager() {
@@ -92,15 +92,15 @@ public class ShiroConfig {
     }
 
     /**
-     * Configures Shiro's security manager.
+     * 配置 Shiro 的安全管理器。
      * <p>
-     * Sets the session manager, cache manager, and custom Realm in the security manager.
+     * 在安全管理器中设置会话管理器、缓存管理器和自定义的 Realm。
      * </p>
      *
-     * @param sessionManager Session manager
-     * @param cacheManager   Cache manager
-     * @param localRealm     Custom Realm instance
-     * @return Configured {@link DefaultWebSecurityManager} instance
+     * @param sessionManager 会话管理器
+     * @param cacheManager   缓存管理器
+     * @param localRealm     自定义 Realm 实例
+     * @return 配置好的 {@link DefaultWebSecurityManager} 实例
      */
     @Bean(name = "securityManager")
     public DefaultWebSecurityManager securityManager(SessionManager sessionManager, CacheManager cacheManager, Realm localRealm) {
@@ -112,12 +112,12 @@ public class ShiroConfig {
     }
 
     /**
-     * Configures Shiro's custom Realm for authentication and authorization logic.
+     * 配置 Shiro 的自定义 Realm，用于认证和授权逻辑。
      * <p>
-     * The custom {@link LocalRealm} implements Shiro's Realm interface to handle user authentication and authorization.
+     * 自定义的 {@link LocalRealm} 实现了 Shiro 的 Realm 接口，用于处理用户的认证和授权。
      * </p>
      *
-     * @return Configured {@link LocalRealm} instance
+     * @return 配置好的 {@link LocalRealm} 实例
      */
     @Bean
     @DependsOn("lifecycleBeanPostProcessor")
@@ -126,9 +126,9 @@ public class ShiroConfig {
     }
 
     /**
-     * Configures Shiro's lifecycle Bean post-processor to manage Shiro's lifecycle.
+     * 配置 Shiro 的生命周期 Bean 后处理器，用于管理 Shiro 的生命周期。
      *
-     * @return Configured {@link LifecycleBeanPostProcessor} instance
+     * @return 配置好的 {@link LifecycleBeanPostProcessor} 实例
      */
     @Bean(name = "lifecycleBeanPostProcessor")
     public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
@@ -136,9 +136,9 @@ public class ShiroConfig {
     }
 
     /**
-     * Configures Shiro's default advisor auto proxy creator to support method-level annotation authorization.
+     * 配置 Shiro 的默认代理自动创建器，用于支持方法级的注解授权。
      *
-     * @return Configured {@link DefaultAdvisorAutoProxyCreator} instance
+     * @return 配置好的 {@link DefaultAdvisorAutoProxyCreator} 实例
      */
     @Bean
     @DependsOn({"lifecycleBeanPostProcessor"})
@@ -149,21 +149,21 @@ public class ShiroConfig {
     }
 
     /**
-     * Configures Shiro's authorization annotation support.
+     * 配置 Shiro 的授权注解支持。
      * <p>
-     * Uses {@link AuthorizationAttributeSourceAdvisor} and {@link AopAllianceAnnotationsAuthorizingMethodInterceptor}
-     * to configure Shiro's role and authentication annotations.
+     * 使用 {@link AuthorizationAttributeSourceAdvisor} 和 {@link AopAllianceAnnotationsAuthorizingMethodInterceptor}
+     * 配置 Shiro 的角色和认证注解。
      * </p>
      *
-     * @param sessionManager Default web security manager
-     * @return Configured {@link AuthorizationAttributeSourceAdvisor} instance
+     * @param sessionManager 默认的 Web 安全管理器
+     * @return 配置好的 {@link AuthorizationAttributeSourceAdvisor} 实例
      */
     @Bean
     public AuthorizationAttributeSourceAdvisor getAuthorizationAttributeSourceAdvisor(DefaultWebSecurityManager sessionManager) {
         AuthorizationAttributeSourceAdvisor aasa = new AuthorizationAttributeSourceAdvisor();
         aasa.setSecurityManager(sessionManager);
 
-        // Configure annotation interceptors
+        // 配置注解拦截器
         AopAllianceAnnotationsAuthorizingMethodInterceptor advice = new AopAllianceAnnotationsAuthorizingMethodInterceptor();
         List<AuthorizingAnnotationMethodInterceptor> interceptors = new ArrayList<>(5);
 

@@ -10,45 +10,45 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
- * Abstract SQL provider support class, providing basic functionality for dynamic SQL generation.
+ * 抽象 SQL 提供者支持类，提供动态 SQL 生成的基础功能。
  */
 public abstract class AbstractSqlProviderSupport {
 
     /**
-     * Cache for table information structure, supporting efficient queries.
+     * 用于缓存表信息结构，支持高效查询。
      */
     private static final Map<Class<?>, EntityTable> tableCache = new ConcurrentHashMap<>(256);
 
     /**
-     * Abstract method to generate SQL, implemented by subclasses.
+     * 生成 SQL 的抽象方法，由子类实现。
      *
-     * @param criteria Query criteria
-     * @return SQL instance
+     * @param criteria 查询条件
+     * @return SQL 实例
      */
     abstract BaseMapper.SQL sql(Object criteria);
 
     /**
-     * Metadata of the current table.
+     * 当前表的元信息。
      */
     protected EntityTable table;
 
     /**
-     * Builds SQL based on query criteria and context.
+     * 根据查询条件和上下文构建 SQL。
      *
-     * @param criteria Query criteria
-     * @param context  Context provided by MyBatis
-     * @return Constructed SQL script
+     * @param criteria 查询条件
+     * @param context  MyBatis 提供的上下文
+     * @return 构建的 SQL 脚本
      */
     String invoke(Object criteria, ProviderContext context) {
         return buildSql(criteria, tableInfo(context));
     }
 
     /**
-     * Constructs SQL script.
+     * 构建 SQL 脚本。
      *
-     * @param criteria Query criteria
-     * @param table    Table metadata
-     * @return SQL script string
+     * @param criteria 查询条件
+     * @param table    表的元信息
+     * @return SQL 脚本字符串
      */
     String buildSql(Object criteria, EntityTable table) {
         this.table = table;
@@ -58,10 +58,10 @@ public abstract class AbstractSqlProviderSupport {
     }
 
     /**
-     * Interceptor before SQL execution, used for handling specific operations.
+     * SQL 执行前的拦截器，用于处理特定操作。
      *
-     * @param obj Query criteria object
-     * @param sql Constructed SQL instance
+     * @param obj 查询条件对象
+     * @param sql 构建的 SQL 实例
      */
     void beforeInterceptor(Object obj, BaseMapper.SQL sql) {
         if (obj instanceof BaseMapper.Interceptor && this instanceof BaseMapper.WriteType) {
@@ -70,18 +70,18 @@ public abstract class AbstractSqlProviderSupport {
     }
 
     /**
-     * Filters null values based on query criteria and performs operations on fields.
+     * 根据查询条件过滤空值并对字段进行操作。
      *
-     * @param criteria Query criteria
-     * @param func     Function to operate on fields
-     * @param ignorePk Whether to ignore primary key fields
-     * @return Array of operated fields
+     * @param criteria 查询条件
+     * @param func     对字段进行操作的函数
+     * @param ignorePk 是否忽略主键字段
+     * @return 操作后的字段数组
      */
     String[] ignoreNullAndCombined(Object criteria, Function<Field, String> func, boolean ignorePk) {
         return Stream.of(table.getFields())
                 .filter(field -> {
                     Object value = value(criteria, field);
-                    // Filter empty strings
+                    // 过滤空字符串
                     boolean noNull = value != null;
                     return ignorePk ? (noNull && !table.getPrimaryKeyColumn().equals(columnName(field))) : noNull;
                 })
@@ -90,32 +90,32 @@ public abstract class AbstractSqlProviderSupport {
     }
 
     /**
-     * Filters null values based on query criteria and performs operations on fields (without filtering primary key).
+     * 根据查询条件过滤空值并对字段进行操作（不过滤主键）。
      *
-     * @param criteria Query criteria
-     * @param func     Function to operate on fields
-     * @return Array of operated fields
+     * @param criteria 查询条件
+     * @param func     对字段进行操作的函数
+     * @return 操作后的字段数组
      */
     String[] ignoreNullAndCombined(Object criteria, Function<Field, String> func) {
         return ignoreNullAndCombined(criteria, func, false);
     }
 
     /**
-     * Retrieves and caches table information structure.
+     * 获取并缓存表信息结构。
      *
-     * @param context Context provided by MyBatis
-     * @return Table metadata
+     * @param context MyBatis 提供的上下文
+     * @return 表的元信息
      */
     EntityTable tableInfo(ProviderContext context) {
         return tableCache.computeIfAbsent(context.getMapperType(), t -> EntityTableMapper.extractTableInfo(entityType(context)));
     }
 
     /**
-     * Retrieves the generic type in the BaseMapper interface.
+     * 获取 BaseMapper 接口中的泛型类型。
      *
      * @param context ProviderContext
-     * @return Class object of the generic type
-     * @throws IllegalStateException If the generic type of BaseMapper is not found
+     * @return 泛型类型对应的 Class 对象
+     * @throws IllegalStateException 如果未找到 BaseMapper 的泛型类
      */
     Class<?> entityType(ProviderContext context) {
         return Stream.of(context.getMapperType().getGenericInterfaces())
@@ -126,35 +126,35 @@ public abstract class AbstractSqlProviderSupport {
                 .map(type -> type.getActualTypeArguments()[0])
                 .filter(Class.class::isInstance)
                 .map(Class.class::cast)
-                .orElseThrow(() -> new IllegalStateException("Generic type of BaseMapper not found for " + context.getMapperType().getName() + "."));
+                .orElseThrow(() -> new IllegalStateException("未找到 BaseMapper 的泛型类 " + context.getMapperType().getName() + "."));
     }
 
     /**
-     * Binds field to parameter.
+     * 绑定字段到参数。
      *
-     * @param field Target field
-     * @return Parameter binding expression
+     * @param field 目标字段
+     * @return 参数绑定表达式
      */
     String bindParameter(Field field) {
         return String.format("#{%s}", field.getName());
     }
 
     /**
-     * Retrieves the column name corresponding to the field.
+     * 获取字段对应的列名。
      *
-     * @param field Target field
-     * @return Column name corresponding to the field
+     * @param field 目标字段
+     * @return 字段对应的列名
      */
     String columnName(Field field) {
         return EntityTableMapper.getColumnName(field);
     }
 
     /**
-     * Retrieves the value of the specified field in the object.
+     * 获取指定对象中字段的值。
      *
-     * @param bean  Target object
-     * @param field Target field
-     * @return Value of the field
+     * @param bean  目标对象
+     * @param field 目标字段
+     * @return 字段的值
      */
     Object value(Object bean, Field field) {
         return EntityTableMapper.getFieldValue(bean, field);

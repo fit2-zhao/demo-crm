@@ -22,168 +22,168 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * JSON utility class that encapsulates common JSON serialization and deserialization methods.
- * Supports conversion between objects and JSON strings, byte arrays, collections, maps, etc.
+ * JSON 工具类，封装了常用的 JSON 序列化和反序列化方法。
+ * 支持对象与 JSON 字符串、字节数组、集合、映射等类型的相互转换。
  */
 public class JSON {
 
-    // ObjectMapper instance for JSON operations
+    // ObjectMapper 实例，用于 JSON 操作
     private static final ObjectMapper objectMapper = JsonMapper.builder()
-            .enable(JsonReadFeature.ALLOW_UNESCAPED_CONTROL_CHARS)  // Allow unescaped control characters in JSON
+            .enable(JsonReadFeature.ALLOW_UNESCAPED_CONTROL_CHARS)  // 允许 JSON 中未转义的控制字符
             .build();
 
     private static final TypeFactory typeFactory = objectMapper.getTypeFactory();
 
-    // Default maximum string length
+    // 默认最大字符串长度
     public static final int DEFAULT_MAX_STRING_LEN = Integer.MAX_VALUE;
 
-    // Static initialization block to configure ObjectMapper
+    // 静态初始化块，配置 ObjectMapper
     static {
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);  // Ignore unknown properties
-        objectMapper.configure(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS, true);  // Use BigDecimal for floats
-        objectMapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);  // Allow comments in JSON
-        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);  // Auto-detect all fields
-        objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);  // Allow serialization of empty objects
-        objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);  // Accept single value as array
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);  // 忽略未知属性
+        objectMapper.configure(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS, true);  // 使用 BigDecimal 处理浮点数
+        objectMapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);  // 允许 JSON 中的注释
+        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);  // 自动检测所有类的字段属性
+        objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);  // 允许序列化空对象
+        objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);  // 接受单个值作为数组处理
         objectMapper.getFactory()
-                .setStreamReadConstraints(StreamReadConstraints.builder().maxStringLength(DEFAULT_MAX_STRING_LEN).build());  // Set length limit for reading character streams
-        objectMapper.registerModule(new JavaTimeModule());  // Register Java 8 time module
+                .setStreamReadConstraints(StreamReadConstraints.builder().maxStringLength(DEFAULT_MAX_STRING_LEN).build());  // 设置读取字符流时的长度限制
+        objectMapper.registerModule(new JavaTimeModule());  // 注册 Java 8 时间模块
     }
 
     /**
-     * Serialize an object to a JSON string.
+     * 将对象序列化为 JSON 字符串。
      *
-     * @param value Object to be serialized
-     * @return JSON string
+     * @param value 需要序列化的对象
+     * @return JSON 字符串
      */
     public static String toJSONString(Object value) {
         try {
             return objectMapper.writeValueAsString(value);
         } catch (IOException e) {
-            throw new RuntimeException("JSON serialization failed", e);
+            throw new RuntimeException("JSON 序列化失败", e);
         }
     }
 
     /**
-     * Serialize an object to a formatted JSON string (with indentation).
+     * 将对象序列化为格式化的 JSON 字符串（带缩进）。
      *
-     * @param value Object to be serialized
-     * @return Formatted JSON string
+     * @param value 需要序列化的对象
+     * @return 格式化的 JSON 字符串
      */
     public static String toFormatJSONString(Object value) {
         try {
             return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(value);
         } catch (IOException e) {
-            throw new RuntimeException("JSON serialization failed", e);
+            throw new RuntimeException("JSON 序列化失败", e);
         }
     }
 
     /**
-     * Serialize an object to a byte array.
+     * 将对象序列化为字节数组。
      *
-     * @param value Object to be serialized
-     * @return JSON byte array
+     * @param value 需要序列化的对象
+     * @return JSON 字节数组
      */
     public static byte[] toJSONBytes(Object value) {
         try {
             return objectMapper.writeValueAsBytes(value);
         } catch (IOException e) {
-            throw new RuntimeException("JSON serialization failed", e);
+            throw new RuntimeException("JSON 序列化失败", e);
         }
     }
 
     /**
-     * Deserialize a JSON string to a Java object.
+     * 将 JSON 字符串反序列化为 Java 对象。
      *
-     * @param content JSON string
-     * @return Deserialized Java object
+     * @param content JSON 字符串
+     * @return 反序列化后的 Java 对象
      */
     public static Object parseObject(String content) {
         return parseObject(content, Object.class);
     }
 
     /**
-     * Deserialize a JSON string to a specified type of Java object.
+     * 将 JSON 字符串反序列化为指定类型的 Java 对象。
      *
-     * @param content JSON string
-     * @param valueType Target Java class
-     * @param <T> Type of the Java class
-     * @return Deserialized Java object
+     * @param content JSON 字符串
+     * @param valueType 目标 Java 类
+     * @param <T> Java 类的类型
+     * @return 反序列化后的 Java 对象
      */
     public static <T> T parseObject(String content, Class<T> valueType) {
         try {
             return objectMapper.readValue(content, valueType);
         } catch (IOException e) {
-            throw new RuntimeException("JSON deserialization failed", e);
+            throw new RuntimeException("JSON 反序列化失败", e);
         }
     }
 
     /**
-     * Deserialize a JSON string to a specified type of Java object.
+     * 将 JSON 字符串反序列化为指定类型的 Java 对象。
      *
-     * @param content JSON string
-     * @param valueType Target Java type reference
-     * @param <T> Type of the Java class
-     * @return Deserialized Java object
+     * @param content JSON 字符串
+     * @param valueType 目标 Java 类型引用
+     * @param <T> Java 类的类型
+     * @return 反序列化后的 Java 对象
      */
     public static <T> T parseObject(String content, TypeReference<T> valueType) {
         try {
             return objectMapper.readValue(content, valueType);
         } catch (IOException e) {
-            throw new RuntimeException("JSON deserialization failed", e);
+            throw new RuntimeException("JSON 反序列化失败", e);
         }
     }
 
     /**
-     * Deserialize JSON data from an input stream to a Java object.
+     * 将输入流中的 JSON 数据反序列化为 Java 对象。
      *
-     * @param src Input stream
-     * @param valueType Target Java class
-     * @param <T> Type of the Java class
-     * @return Deserialized Java object
+     * @param src 输入流
+     * @param valueType 目标 Java 类
+     * @param <T> Java 类的类型
+     * @return 反序列化后的 Java 对象
      */
     public static <T> T parseObject(InputStream src, Class<T> valueType) {
         try {
             return objectMapper.readValue(src, valueType);
         } catch (IOException e) {
-            throw new RuntimeException("JSON deserialization failed", e);
+            throw new RuntimeException("JSON 反序列化失败", e);
         }
     }
 
     /**
-     * Deserialize a JSON string to a collection of Java objects.
+     * 将 JSON 字符串反序列化为 Java 对象的集合。
      *
-     * @param content JSON string
-     * @return Deserialized collection object
+     * @param content JSON 字符串
+     * @return 反序列化后的集合对象
      */
     public static List parseArray(String content) {
         return parseArray(content, Object.class);
     }
 
     /**
-     * Deserialize a JSON string to a collection of specified type of Java objects.
+     * 将 JSON 字符串反序列化为指定类型的 Java 对象的集合。
      *
-     * @param content JSON string
-     * @param valueType Collection element type
-     * @param <T> Collection element type
-     * @return Deserialized collection object
+     * @param content JSON 字符串
+     * @param valueType 集合元素类型
+     * @param <T> 集合元素类型
+     * @return 反序列化后的集合对象
      */
     public static <T> List<T> parseArray(String content, Class<T> valueType) {
         CollectionType javaType = typeFactory.constructCollectionType(List.class, valueType);
         try {
             return objectMapper.readValue(content, javaType);
         } catch (IOException e) {
-            throw new RuntimeException("JSON deserialization failed", e);
+            throw new RuntimeException("JSON 反序列化失败", e);
         }
     }
 
     /**
-     * Deserialize a JSON string to a collection of specified type of Java objects.
+     * 将 JSON 字符串反序列化为指定类型的 Java 对象的集合。
      *
-     * @param content JSON string
-     * @param valueType Collection element type reference
-     * @param <T> Collection element type
-     * @return Deserialized collection object
+     * @param content JSON 字符串
+     * @param valueType 集合元素类型引用
+     * @param <T> 集合元素类型
+     * @return 反序列化后的集合对象
      */
     public static <T> List<T> parseArray(String content, TypeReference<T> valueType) {
         try {
@@ -191,21 +191,21 @@ public class JSON {
             CollectionType javaType = typeFactory.constructCollectionType(List.class, subType);
             return objectMapper.readValue(content, javaType);
         } catch (IOException e) {
-            throw new RuntimeException("JSON deserialization failed", e);
+            throw new RuntimeException("JSON 反序列化失败", e);
         }
     }
 
     /**
-     * Deserialize a JSON string to a Map object.
+     * 将 JSON 字符串反序列化为 Map 对象。
      *
-     * @param jsonObject JSON string
-     * @return Deserialized Map object
+     * @param jsonObject JSON 字符串
+     * @return 反序列化后的 Map 对象
      */
     public static Map parseMap(String jsonObject) {
         try {
             return objectMapper.readValue(jsonObject, new TypeReference<>() {});
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("JSON deserialization failed", e);
+            throw new RuntimeException("JSON 反序列化失败", e);
         }
     }
 }

@@ -3,24 +3,24 @@ package io.demo.common.pager;
 import com.github.pagehelper.Page;
 
 /**
- * Pagination utility class that provides pagination information settings.
+ * 分页工具类，提供分页信息设置功能。
  * <p>
- * This class is used to convert the PageHelper pagination object into a custom pagination object {@link Pager}.
+ * 该类用于将 PageHelper 分页对象转换为自定义的分页对象 {@link Pager}。
  * </p>
  */
 public class PageHelper {
 
     /**
-     * Set pagination information and return a custom pagination object.
+     * 设置分页信息并返回自定义的分页对象。
      * <p>
-     * This method converts the pagination data of PageHelper (such as current page, number of records per page, total number of records) into a custom {@link Pager} object.
+     * 此方法将 PageHelper 的分页数据（如当前页、每页记录数、总记录数）转换为自定义的 {@link Pager} 对象。
      * </p>
      *
-     * @param page PageHelper pagination object containing pagination-related information
-     * @param list List of pagination query result data
-     * @param <T>  Type of the data list
-     * @return Custom pagination object {@link Pager} containing pagination information
-     * @throws RuntimeException If an error occurs while setting pagination information, a runtime exception is thrown
+     * @param page PageHelper 分页对象，包含分页相关的信息
+     * @param list 分页查询结果数据列表
+     * @param <T>  数据列表的类型
+     * @return 包含分页信息的自定义分页对象 {@link Pager}
+     * @throws RuntimeException 如果设置分页信息时发生错误，抛出运行时异常
      */
     public static <T> Pager<T> setPageInfo(Page page, T list) {
         try {
@@ -31,7 +31,7 @@ public class PageHelper {
             pager.setTotal(page.getTotal());
             return pager;
         } catch (Exception e) {
-            throw new RuntimeException("An error occurred while saving the current page data!", e);
+            throw new RuntimeException("保存当前页码数据时发生错误！", e);
         }
     }
 }

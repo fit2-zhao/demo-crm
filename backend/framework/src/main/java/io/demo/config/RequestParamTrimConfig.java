@@ -11,33 +11,35 @@ import org.springframework.context.annotation.Configuration;
 import java.io.IOException;
 
 /**
- * Configuration class for customizing the Jackson deserialization process.
+ * 配置类，用于定制 Jackson 的反序列化过程。
  * <p>
- * This class adds custom logic to trim leading and trailing whitespace from String fields during deserialization.
+ * 本类的作用是为 String 类型字段的反序列化过程添加自定义逻辑，去除请求参数中的前后空格。
  * </p>
- **/
+ *
+ * @version 1.0
+ */
 @Configuration
 public class RequestParamTrimConfig {
 
     /**
-     * Defines a {@link Jackson2ObjectMapperBuilderCustomizer} Bean to customize Jackson's ObjectMapper settings,
-     * specifically for String field deserialization.
+     * 定义一个 {@link Jackson2ObjectMapperBuilderCustomizer} Bean，
+     * 用于定制 Jackson 的 ObjectMapper 设置，特别是针对 String 类型字段的反序列化。
      * <p>
-     * Through this customization, all String fields deserialized from JSON will automatically have leading and trailing whitespace removed.
+     * 通过此定制，所有从 JSON 反序列化的 String 类型字段将在反序列化时自动去除前后空格。
      * </p>
      *
-     * @return Customized {@link Jackson2ObjectMapperBuilderCustomizer} instance
+     * @return 定制后的 {@link Jackson2ObjectMapperBuilderCustomizer} 实例
      */
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
         return jacksonObjectMapperBuilder -> {
-            // Define custom deserialization logic for String fields
+            // 为 String 类型字段定义自定义的反序列化操作
             jacksonObjectMapperBuilder
                     .deserializerByType(String.class, new StdScalarDeserializer<String>(String.class) {
                         @Override
                         public String deserialize(JsonParser jsonParser, DeserializationContext ctx)
                                 throws IOException {
-                            // Trim leading and trailing whitespace during deserialization
+                            // 在反序列化时去除前后空格
                             return StringUtils.trim(jsonParser.getValueAsString());
                         }
                     });

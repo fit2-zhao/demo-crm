@@ -9,7 +9,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 /**
- * LogUtils provides utility methods for logging, supporting different log levels.
+ * LogUtils 提供了日志输出的工具方法，支持不同级别的日志记录。
  */
 public class LogUtils {
     public static final String DEBUG = "DEBUG";
@@ -20,10 +20,10 @@ public class LogUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(LogUtils.class);
 
     /**
-     * Outputs log information based on the log level.
+     * 根据日志级别输出日志信息。
      *
-     * @param msg   The log message to output
-     * @param level The log level, supports DEBUG, INFO, WARN, ERROR
+     * @param msg   要输出的日志信息
+     * @param level 日志级别，支持 DEBUG、INFO、WARN、ERROR
      */
     public static void writeLog(Object msg, String level) {
         String message = getMsg(msg);
@@ -57,9 +57,9 @@ public class LogUtils {
     }
 
     /**
-     * Outputs an INFO level log.
+     * 输出 INFO 级别的日志。
      *
-     * @param msg The log message to output
+     * @param msg 要输出的日志信息
      */
     public static void info(Object msg) {
         if (LOGGER.isInfoEnabled()) {
@@ -68,10 +68,10 @@ public class LogUtils {
     }
 
     /**
-     * Outputs an INFO level log with formatted parameters.
+     * 输出带有格式化参数的 INFO 级别日志。
      *
-     * @param message The formatted log message
-     * @param args    The parameters
+     * @param message 格式化的日志信息
+     * @param args    参数
      */
     public static void info(String message, Object... args) {
         if (LOGGER.isInfoEnabled()) {
@@ -80,10 +80,10 @@ public class LogUtils {
     }
 
     /**
-     * Outputs an INFO level log with one parameter.
+     * 输出带有两个参数的 INFO 级别日志。
      *
-     * @param msg  The log message to output
-     * @param arg1 The first parameter
+     * @param msg  要输出的日志信息
+     * @param arg1 第一个参数
      */
     public static void info(Object msg, Object arg1) {
         if (LOGGER.isInfoEnabled()) {
@@ -92,10 +92,10 @@ public class LogUtils {
     }
 
     /**
-     * Outputs an INFO level log with multiple parameters.
+     * 输出带有多个参数的 INFO 级别日志。
      *
-     * @param msg  The log message to output
-     * @param args The parameter array
+     * @param msg  要输出的日志信息
+     * @param args 参数数组
      */
     public static void info(Object msg, Object[] args) {
         if (LOGGER.isInfoEnabled()) {
@@ -104,9 +104,9 @@ public class LogUtils {
     }
 
     /**
-     * Outputs a DEBUG level log.
+     * 输出 DEBUG 级别的日志。
      *
-     * @param msg The log message to output
+     * @param msg 要输出的日志信息
      */
     public static void debug(Object msg) {
         if (LOGGER.isDebugEnabled()) {
@@ -115,10 +115,10 @@ public class LogUtils {
     }
 
     /**
-     * Outputs a DEBUG level log with one parameter.
+     * 输出带有参数的 DEBUG 级别日志。
      *
-     * @param msg  The log message to output
-     * @param arg1 The first parameter
+     * @param msg  要输出的日志信息
+     * @param arg1 第一个参数
      */
     public static void debug(Object msg, Object arg1) {
         if (LOGGER.isDebugEnabled()) {
@@ -127,10 +127,10 @@ public class LogUtils {
     }
 
     /**
-     * Outputs a DEBUG level log with multiple parameters.
+     * 输出带有多个参数的 DEBUG 级别日志。
      *
-     * @param msg  The log message to output
-     * @param args The parameter array
+     * @param msg  要输出的日志信息
+     * @param args 参数数组
      */
     public static void debug(Object msg, Object[] args) {
         if (LOGGER.isDebugEnabled()) {
@@ -139,9 +139,9 @@ public class LogUtils {
     }
 
     /**
-     * Outputs a WARN level log.
+     * 输出 WARN 级别的日志。
      *
-     * @param msg The log message to output
+     * @param msg 要输出的日志信息
      */
     public static void warn(Object msg) {
         if (LOGGER.isWarnEnabled()) {
@@ -150,10 +150,10 @@ public class LogUtils {
     }
 
     /**
-     * Outputs a WARN level log with one parameter.
+     * 输出带有参数的 WARN 级别日志。
      *
-     * @param msg  The log message to output
-     * @param arg1 The first parameter
+     * @param msg  要输出的日志信息
+     * @param arg1 第一个参数
      */
     public static void warn(Object msg, Object arg1) {
         if (LOGGER.isWarnEnabled()) {
@@ -162,10 +162,10 @@ public class LogUtils {
     }
 
     /**
-     * Outputs a WARN level log with multiple parameters.
+     * 输出带有多个参数的 WARN 级别日志。
      *
-     * @param msg  The log message to output
-     * @param args The parameter array
+     * @param msg  要输出的日志信息
+     * @param args 参数数组
      */
     public static void warn(Object msg, Object[] args) {
         if (LOGGER.isWarnEnabled()) {
@@ -174,9 +174,9 @@ public class LogUtils {
     }
 
     /**
-     * Outputs an ERROR level log.
+     * 输出 ERROR 级别的日志。
      *
-     * @param msg The log message to output
+     * @param msg 要输出的日志信息
      */
     public static void error(Object msg) {
         if (LOGGER.isErrorEnabled()) {
@@ -185,9 +185,9 @@ public class LogUtils {
     }
 
     /**
-     * Outputs an ERROR level log with an exception.
+     * 输出 ERROR 级别的异常日志。
      *
-     * @param e The exception information
+     * @param e 异常信息
      */
     public static void error(Throwable e) {
         if (LOGGER.isErrorEnabled()) {
@@ -196,10 +196,10 @@ public class LogUtils {
     }
 
     /**
-     * Outputs an ERROR level log with one parameter.
+     * 输出带有参数的 ERROR 级别日志。
      *
-     * @param msg  The log message to output
-     * @param arg1 The first parameter
+     * @param msg  要输出的日志信息
+     * @param arg1 第一个参数
      */
     public static void error(Object msg, Object arg1) {
         if (LOGGER.isErrorEnabled()) {
@@ -208,10 +208,10 @@ public class LogUtils {
     }
 
     /**
-     * Outputs an ERROR level log with multiple parameters.
+     * 输出带有多个参数的 ERROR 级别日志。
      *
-     * @param msg  The log message to output
-     * @param args The parameter array
+     * @param msg  要输出的日志信息
+     * @param args 参数数组
      */
     public static void error(Object msg, Object[] args) {
         if (LOGGER.isErrorEnabled()) {
@@ -220,10 +220,10 @@ public class LogUtils {
     }
 
     /**
-     * Outputs an ERROR level log with an exception.
+     * 输出带有异常信息的 ERROR 级别日志。
      *
-     * @param msg The log message to output
-     * @param ex  The exception
+     * @param msg 要输出的日志信息
+     * @param ex  异常
      */
     public static void error(Object msg, Throwable ex) {
         if (LOGGER.isErrorEnabled()) {
@@ -232,11 +232,11 @@ public class LogUtils {
     }
 
     /**
-     * Gets the log message.
+     * 获取日志信息。
      *
-     * @param msg The log message to output
-     * @param ex  The exception information
-     * @return The formatted log message
+     * @param msg 要输出的日志信息
+     * @param ex  异常信息
+     * @return 格式化后的日志信息
      */
     private static String getMsg(Object msg, Throwable ex) {
         String message = (msg != null) ? msg.toString() : "null";
@@ -246,19 +246,19 @@ public class LogUtils {
     }
 
     /**
-     * Gets the log message.
+     * 获取日志信息。
      *
-     * @param msg The log message to output
-     * @return The formatted log message
+     * @param msg 要输出的日志信息
+     * @return 格式化后的日志信息
      */
     private static String getMsg(Object msg) {
         return getMsg(msg, null);
     }
 
     /**
-     * Gets the calling class name.
+     * 获取调用类名。
      *
-     * @return The calling class name
+     * @return 调用类名
      */
     private static String getLogClass() {
         StackTraceElement[] stack = Thread.currentThread().getStackTrace();
@@ -266,9 +266,9 @@ public class LogUtils {
     }
 
     /**
-     * Gets the calling method name.
+     * 获取调用方法名。
      *
-     * @return The calling method name
+     * @return 调用方法名
      */
     private static String getLogMethod() {
         StackTraceElement[] stack = Thread.currentThread().getStackTrace();
@@ -276,10 +276,10 @@ public class LogUtils {
     }
 
     /**
-     * Converts the exception stack trace to a string.
+     * 将异常堆栈信息转换为字符串。
      *
-     * @param e The exception
-     * @return The string representation of the exception stack trace
+     * @param e 异常
+     * @return 异常堆栈的字符串表示
      */
     public static String toString(Throwable e) {
         try (StringWriter sw = new StringWriter(); PrintWriter pw = new PrintWriter(sw)) {

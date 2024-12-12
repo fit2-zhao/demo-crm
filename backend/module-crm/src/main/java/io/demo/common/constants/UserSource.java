@@ -1,40 +1,40 @@
 package io.demo.common.constants;
 
 /**
- * Enum class for user source types, used to identify the source of users.
+ * 用户来源类型枚举类，用于标识用户的来源。
  * <p>
- * This enum class defines different user source types, including local, LDAP, CAS, OIDC, OAuth2, and QR code.
+ * 此枚举类定义了不同的用户来源类型，包括本地、LDAP、CAS、OIDC、OAuth2 和二维码。
  * </p>
  */
 public enum UserSource {
 
     /**
-     * Local user source, indicating that the user registers and logs in through the local system.
+     * 本地用户来源，表示用户通过本地系统注册和登录。
      */
     LOCAL,
 
     /**
-     * LDAP user source, indicating that the user is authenticated through the LDAP (Lightweight Directory Access Protocol) system.
+     * LDAP 用户来源，表示用户通过 LDAP（轻量目录访问协议）系统认证。
      */
     LDAP,
 
     /**
-     * CAS user source, indicating that the user is authenticated through CAS (Central Authentication Service).
+     * CAS 用户来源，表示用户通过 CAS（中央认证服务）认证。
      */
     CAS,
 
     /**
-     * OIDC user source, indicating that the user is authenticated through OIDC (OpenID Connect).
+     * OIDC 用户来源，表示用户通过 OIDC（开放ID连接）认证。
      */
     OIDC,
 
     /**
-     * OAuth2 user source, indicating that the user is authenticated through the OAuth2 authorization framework.
+     * OAUTH2 用户来源，表示用户通过 OAUTH2 授权框架认证。
      */
     OAUTH2,
 
     /**
-     * QR code user source, indicating that the user logs in by scanning a QR code.
+     * 二维码用户来源，表示用户通过扫描二维码登录。
      */
     QR_CODE;
 }

@@ -2,7 +2,7 @@ package io.demo.common.util;
 
 public class ServiceUtils {
     /**
-     * Saves the resource name, used to concatenate the resource name when handling NOT_FOUND exceptions.
+     * 保存资源名称，在处理 NOT_FOUND 异常时，拼接资源名称
      */
     private static final ThreadLocal<String> resourceName = new ThreadLocal<>();
 
@@ -13,4 +13,5 @@ public class ServiceUtils {
     public static void clearResourceName() {
         resourceName.remove();
     }
+
 }

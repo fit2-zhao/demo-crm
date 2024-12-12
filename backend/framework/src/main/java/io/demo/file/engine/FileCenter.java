@@ -7,24 +7,24 @@ import static io.demo.file.engine.StorageType.LOCAL;
 import static io.demo.file.engine.StorageType.MINIO;
 
 /**
- * The FileCenter class provides static methods to obtain the corresponding file repository based on the storage type.
+ * FileCenter 类提供了根据存储类型获取对应文件仓库的静态方法。
  * <p>
- * This class encapsulates the logic for obtaining file repositories of different storage types (e.g., MINIO, LOCAL) and allows returning the corresponding {@link FileRepository} implementation based on the storage type.
+ * 该类封装了不同存储类型（如 MINIO、LOCAL）的文件仓库获取逻辑，并允许根据存储类型返回相应的 {@link FileRepository} 实现。
  * </p>
  */
 public class FileCenter {
-    // Default storage type
+    // 默认存储类型
     private static StorageType defStorageType = null;
 
-    // Private constructor to prevent instantiation
+    // 私有构造函数，防止实例化
     private FileCenter() {
     }
 
     /**
-     * Returns the corresponding {@link FileRepository} implementation based on the given storage type.
+     * 根据给定的存储类型返回对应的 {@link FileRepository} 实现。
      *
-     * @param storageType The storage type enum value indicating the required storage implementation (e.g., MINIO, LOCAL).
-     * @return The corresponding {@link FileRepository} implementation. If the storage type is unknown, returns the default repository.
+     * @param storageType 存储类型枚举值，指示所需的存储实现（如 MINIO、LOCAL）。
+     * @return 返回对应的 {@link FileRepository} 实现，如果存储类型未知，则返回默认的仓库。
      */
     public static FileRepository getRepository(StorageType storageType) {
         return switch (storageType) {
@@ -35,12 +35,12 @@ public class FileCenter {
     }
 
     /**
-     * Returns the default {@link FileRepository} implementation.
+     * 返回默认的 {@link FileRepository} 实现。
      * <p>
-     * The current default implementation is {@link MinioRepository}. This method can be modified to support other default repositories as needed.
+     * 当前默认实现为 {@link MinioRepository}，可以根据实际需求修改此方法以支持其他默认仓库。
      * </p>
      *
-     * @return The default {@link FileRepository} implementation.
+     * @return 默认的 {@link FileRepository} 实现。
      */
     public static FileRepository getDefaultRepository() {
         if (defStorageType == null) {

@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * Interceptor for desensitizing user password fields.
- * This interceptor removes the password field from User objects in query results to prevent sensitive information leakage.
+ * 用户密码字段脱敏的拦截器。
+ * 该拦截器会在查询结果中去除 User 对象的密码字段，以避免敏感信息泄露。
  */
 @Intercepts({
         @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class}),
@@ -24,18 +24,18 @@ import java.util.Properties;
 public class UserDesensitizationInterceptor implements Interceptor {
 
     /**
-     * Intercepts the query method to desensitize the password field in User objects.
+     * 拦截 query 方法，脱敏 User 对象中的密码字段。
      *
-     * @param invocation The method invocation object
-     * @return The desensitized result
-     * @throws Throwable If an error occurs during method execution
+     * @param invocation 方法调用对象
+     * @return 脱敏后的结果
+     * @throws Throwable 如果执行方法时发生错误
      */
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
-        // Execute the original method
+        // 执行原始方法
         Object returnValue = invocation.proceed();
 
-        // If the return value is of type List, process each element
+        // 如果返回值是 List 类型，处理其中的每个元素
         if (returnValue instanceof List<?>) {
             List<Object> list = new ArrayList<>();
             boolean isDecrypted = false;
@@ -43,17 +43,17 @@ public class UserDesensitizationInterceptor implements Interceptor {
             for (Object val : (List<?>) returnValue) {
                 if (val instanceof User) {
                     isDecrypted = true;
-                    // Set the password field to null for desensitization
+                    // 将密码字段置为 null，进行脱敏处理
                     ((User) val).setPassword(null);
                 }
                 list.add(val);
             }
 
-            // Return the modified list if any desensitization was performed, otherwise return the original result
+            // 如果有任何脱敏操作，则返回修改后的列表，否则返回原始结果
             return isDecrypted ? list : returnValue;
         }
 
-        // If the return value is a single User object, desensitize its password field
+        // 如果返回值是单个 User 对象，脱敏其密码字段
         if (returnValue instanceof User) {
             ((User) returnValue).setPassword(null);
         }
@@ -62,10 +62,10 @@ public class UserDesensitizationInterceptor implements Interceptor {
     }
 
     /**
-     * Wraps the target object with the interceptor.
+     * 将目标对象包装成拦截器对象。
      *
-     * @param target The target object to be wrapped
-     * @return The wrapped target object
+     * @param target 需要包装的目标对象
+     * @return 包装后的目标对象
      */
     @Override
     public Object plugin(Object target) {
@@ -73,12 +73,12 @@ public class UserDesensitizationInterceptor implements Interceptor {
     }
 
     /**
-     * Sets the properties for the interceptor.
+     * 设置拦截器的属性。
      *
-     * @param properties The properties for the interceptor
+     * @param properties 拦截器的属性
      */
     @Override
     public void setProperties(Properties properties) {
-        // This interceptor does not require any properties to be set
+        // 本拦截器不需要设置属性
     }
 }

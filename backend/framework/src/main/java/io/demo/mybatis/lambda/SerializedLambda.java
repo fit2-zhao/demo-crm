@@ -5,10 +5,10 @@ import io.demo.common.exception.GenericException;
 import java.io.*;
 
 /**
- * This class is a mirror of {@link java.lang.invoke.SerializedLambda}.
+ * 当前类是 {@link java.lang.invoke.SerializedLambda} 的一个镜像。
  * <p>
- * This class is used to serialize and extract metadata from Lambda expressions, providing the same functionality as the original {@link SerializedLambda} class,
- * but can be used in a custom serialization environment.
+ * 该类用于序列化并提取 Lambda 表达式的元数据，提供了与原 {@link SerializedLambda} 类相同的功能，
+ * 但可以在自定义序列化环境中使用。
  * </p>
  */
 @SuppressWarnings("ALL")
@@ -27,12 +27,12 @@ public class SerializedLambda implements Serializable {
     private Object[] capturedArgs;
 
     /**
-     * Extracts a {@link SerializedLambda} object from a serialized Lambda expression.
-     * This method extracts the metadata of the Lambda expression through the serialization and deserialization process.
+     * 从序列化的 Lambda 表达式中提取 {@link SerializedLambda} 对象。
+     * 该方法通过序列化和反序列化过程提取 Lambda 表达式的元信息。
      *
-     * @param serializable A serializable object, usually a Lambda expression.
-     * @return The extracted {@link SerializedLambda} object.
-     * @throws GenericException If an exception occurs during the serialization or deserialization process.
+     * @param serializable 可序列化对象，通常为 Lambda 表达式。
+     * @return 提取的 {@link SerializedLambda} 对象。
+     * @throws GenericException 如果序列化或反序列化过程中出现异常。
      */
     public static SerializedLambda extract(Serializable serializable) {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -50,32 +50,32 @@ public class SerializedLambda implements Serializable {
                 return (SerializedLambda) objectInputStream.readObject();
             }
         } catch (IOException | ClassNotFoundException e) {
-            throw new GenericException("Exception occurred while extracting Lambda expression", e);
+            throw new GenericException("提取 Lambda 表达式时发生异常", e);
         }
     }
 
     /**
-     * Gets the string of the instantiated method type.
+     * 获取实例化方法类型的字符串。
      *
-     * @return The string of the instantiated method type.
+     * @return 实例化方法类型的字符串。
      */
     public String getInstantiatedMethodType() {
         return instantiatedMethodType;
     }
 
     /**
-     * Gets the {@link Class} object of the capturing class.
+     * 获取捕获类的 {@link Class} 对象。
      *
-     * @return The {@link Class} object of the capturing class.
+     * @return 捕获类的 {@link Class} 对象。
      */
     public Class<?> getCapturingClass() {
         return capturingClass;
     }
 
     /**
-     * Gets the name of the implementation method.
+     * 获取实现方法的名称。
      *
-     * @return The name of the implementation method.
+     * @return 实现方法的名称。
      */
     public String getImplMethodName() {
         return implMethodName;

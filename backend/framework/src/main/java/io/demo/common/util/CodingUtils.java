@@ -12,35 +12,35 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
 /**
- * Encryption and decryption utility class, providing MD5, BASE64, and AES encryption and decryption operations.
- * Supports common encryption and decryption algorithms, simplifying the encryption process.
+ * 加密解密工具类，提供 MD5、BASE64 和 AES 加密解密操作。
+ * 支持常见的加密解密算法，简化了加密过程。
  */
 public class CodingUtils {
 
     private static final String UTF_8 = "UTF-8";
     private static final char[] HEX_DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
     /**
-     * Encryption offset, initialization vector for AES encryption.
+     * 加密偏移量，AES 加密的初始化向量。
      */
     private static final String GCM_IV = "1Av7hf9PgHusUHRm";
-    private static final int GCM_TAG_LENGTH = 128; // GCM tag length (in bits)
+    private static final int GCM_TAG_LENGTH = 128; // GCM 标签长度（以位为单位）
 
     /**
-     * MD5 encryption (default UTF-8 charset)
+     * MD5加密（默认UTF-8字符集）
      *
-     * @param src String to be encrypted
-     * @return Encrypted MD5 string
+     * @param src 要加密的字符串
+     * @return 加密后的MD5字符串
      */
     public static String md5(String src) {
         return md5(src, UTF_8);
     }
 
     /**
-     * MD5 encryption
+     * MD5加密
      *
-     * @param src     String to be encrypted
-     * @param charset Charset to be used
-     * @return Encrypted MD5 string
+     * @param src     要加密的字符串
+     * @param charset 使用的字符集
+     * @return 加密后的MD5字符串
      */
     public static String md5(String src, String charset) {
         if (StringUtils.isBlank(src)) {
@@ -68,10 +68,10 @@ public class CodingUtils {
     }
 
     /**
-     * BASE64 decoding
+     * BASE64解密
      *
-     * @param src String to be decoded
-     * @return Decoded string
+     * @param src 待解密的字符串
+     * @return 解密后的字符串
      */
     public static String base64Decoding(String src) {
         if (StringUtils.isBlank(src)) {
@@ -87,10 +87,10 @@ public class CodingUtils {
     }
 
     /**
-     * BASE64 encoding
+     * BASE64加密
      *
-     * @param src String to be encoded
-     * @return Encoded string
+     * @param src 待加密的字符串
+     * @return 加密后的字符串
      */
     public static String base64Encoding(String src) {
         if (StringUtils.isBlank(src)) {
@@ -105,12 +105,12 @@ public class CodingUtils {
     }
 
     /**
-     * AES-GCM encryption
+     * AES-GCM加密
      *
-     * @param src       String to be encrypted
-     * @param secretKey Encryption key (16 bytes)
-     * @param iv        Initialization vector (12 bytes)
-     * @return Encrypted string
+     * @param src       待加密的字符串
+     * @param secretKey 加密密钥（16字节）
+     * @param iv        初始向量（12字节）
+     * @return 加密后的字符串
      */
     public static String aesEncrypt(String src, String secretKey, byte[] iv) {
         if (StringUtils.isBlank(src) || StringUtils.isBlank(secretKey)) {
@@ -132,12 +132,12 @@ public class CodingUtils {
     }
 
     /**
-     * AES-GCM decryption
+     * AES-GCM解密
      *
-     * @param src       String to be decrypted
-     * @param secretKey Decryption key (16 bytes)
-     * @param iv        Initialization vector (12 bytes)
-     * @return Decrypted string
+     * @param src       待解密的字符串
+     * @param secretKey 解密密钥（16字节）
+     * @param iv        初始向量（12字节）
+     * @return 解密后的字符串
      */
     public static String aesDecrypt(String src, String secretKey, byte[] iv) {
         if (StringUtils.isBlank(src) || StringUtils.isBlank(secretKey)) {
@@ -160,9 +160,9 @@ public class CodingUtils {
     }
 
     /**
-     * Generates a new AES key
+     * 生成一个新的AES密钥
      *
-     * @return Generated AES key (Base64 encoded)
+     * @return 生成的AES密钥（Base64编码）
      */
     public static String generateSecretKey() {
         try {
@@ -176,9 +176,9 @@ public class CodingUtils {
     }
 
     /**
-     * Generates a random IV (for AES-GCM)
+     * 生成随机IV（用于AES-GCM）
      *
-     * @return Randomly generated IV
+     * @return 随机生成的IV
      */
     public static byte[] generateIv() {
         return GCM_IV.getBytes();

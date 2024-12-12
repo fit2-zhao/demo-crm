@@ -22,8 +22,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 /**
- * Data Access Layer (DAL), providing methods for database interaction using MyBatis for SQL query execution.
- * Supports various CRUD operations.
+ * 数据访问层（DAL），提供与数据库交互的方法，使用 MyBatis 进行 SQL 查询的执行。
+ * 支持多种 CRUD 操作。
  */
 @Component
 public class DataAccessLayer implements ApplicationContextAware {
@@ -37,9 +37,9 @@ public class DataAccessLayer implements ApplicationContextAware {
     }
 
     /**
-     * Initializes SqlSession for executing DAL operations.
+     * 初始化 SqlSession，用于执行 DAL 操作。
      *
-     * @param sqlSession SqlSession for database interaction.
+     * @param sqlSession SqlSession，用于数据库交互。
      */
     private void initSession(SqlSession sqlSession) {
         this.sqlSession = sqlSession;
@@ -54,30 +54,30 @@ public class DataAccessLayer implements ApplicationContextAware {
     }
 
     /**
-     * Singleton holder to ensure the uniqueness of the Dal instance.
+     * 单例持有者，确保 Dal 实例的唯一性。
      */
     private static class Holder {
         private static final DataAccessLayer instance = new DataAccessLayer();
     }
 
     /**
-     * Gets the Dal instance and prepares an Executor for the specified entity class.
+     * 获取 Dal 实例并为指定的实体类准备 Executor。
      *
-     * @param clazz Entity class type.
-     * @param <T>   Type of the entity class.
-     * @return Executor prepared for the specified entity class.
+     * @param clazz 实体类类型。
+     * @param <T>   实体类的类型。
+     * @return 为指定实体类准备的 Executor。
      */
     public static <T> Executor<T> with(Class<T> clazz) {
         return with(clazz, applicationContext.getBean(SqlSession.class));
     }
 
     /**
-     * Gets the Dal instance and prepares an Executor for the specified entity class, using the given SqlSession.
+     * 获取 Dal 实例并为指定的实体类准备 Executor，同时使用给定的 SqlSession。
      *
-     * @param clazz      Entity class type.
-     * @param sqlSession SqlSession for database interaction.
-     * @param <T>        Type of the entity class.
-     * @return Executor prepared for the specified entity class.
+     * @param clazz      实体类类型。
+     * @param sqlSession SqlSession，用于数据库交互。
+     * @param <T>        实体类的类型。
+     * @return 为指定实体类准备的 Executor。
      */
     public static <T> Executor<T> with(Class<T> clazz, SqlSession sqlSession) {
         DataAccessLayer instance = Holder.instance;
@@ -90,13 +90,13 @@ public class DataAccessLayer implements ApplicationContextAware {
     }
 
     /**
-     * Executes a native SQL query and returns the results as a list of objects.
+     * 执行原生 SQL 查询，并将结果作为对象列表返回。
      *
-     * @param sql        SQL query to execute.
-     * @param param      Query parameters.
-     * @param resultType Result type.
-     * @param <T>        Generic type of the result.
-     * @return List of query results.
+     * @param sql        要执行的 SQL 查询语句。
+     * @param param      查询参数。
+     * @param resultType 结果类型。
+     * @param <T>        结果类型的泛型。
+     * @return 查询结果的对象列表。
      */
     public static <T> List<T> sql(String sql, Object param, Class<T> resultType) {
         return with(resultType).sqlQuery(sql, param, resultType);
@@ -225,31 +225,31 @@ public class DataAccessLayer implements ApplicationContextAware {
 
         @Override
         public Integer batchInsert(List<E> entities) {
-            // Use BatchInsertSqlProvider to build SQL statement
+            // 使用 BatchInsertSqlProvider 构建 SQL 语句
             String sql = new BaseMapper.BatchInsertSqlProvider().buildSql(entities, this.table);
 
-            // Get MyBatis mapped SQL ID
+            // 获取 MyBatis 映射的 SQL ID
             String msId = execute(sql, table.getEntityClass(), int.class, SqlCommandType.INSERT);
 
-            // Get SqlSessionFactory and open batch session
+            // 获取 SqlSessionFactory 并打开批处理会话
             SqlSessionFactory sqlSessionFactory = applicationContext.getBean(SqlSessionFactory.class);
 
-            // Use try-with-resources to ensure SqlSession is closed
+            // 使用 try-with-resources 确保 SqlSession 关闭
             try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH, false)) {
 
-                // Execute batch insert operation
+                // 执行批量插入操作
                 entities.forEach(entity -> sqlSession.insert(msId, entity));
 
-                // Flush all statements in the batch
+                // 刷新批处理中的所有语句
                 sqlSession.flushStatements();
 
-                // Commit transaction to ensure batch operation takes effect
+                // 提交事务，确保批量操作生效
                 sqlSession.commit();
 
-                // Return the number of successfully inserted records
+                // 返回成功插入的记录数
                 return entities.size();
             } catch (Exception e) {
-                // Log exception information
+                // 记录异常信息
                 LogUtils.error("Error occurred during batch insert: ", e);
                 return 0;
             }
@@ -257,13 +257,13 @@ public class DataAccessLayer implements ApplicationContextAware {
     }
 
     /**
-     * Executes SQL and returns the generated MappedStatement ID.
+     * 执行 SQL，并返回生成的 MappedStatement ID。
      *
-     * @param sql            SQL query.
-     * @param parameterType  Parameter type.
-     * @param resultType     Result type.
-     * @param sqlCommandType SQL command type.
-     * @return MappedStatement ID.
+     * @param sql            SQL 查询语句。
+     * @param parameterType  参数类型。
+     * @param resultType     结果类型。
+     * @param sqlCommandType SQL 命令类型。
+     * @return MappedStatement 的 ID。
      */
     private String execute(String sql, Class<?> parameterType, Class<?> resultType, SqlCommandType sqlCommandType) {
         String msId = sqlCommandType.toString() + "." + parameterType.getName() + "." + sql.hashCode();
@@ -273,18 +273,18 @@ public class DataAccessLayer implements ApplicationContextAware {
         SqlSource sqlSource = configuration
                 .getDefaultScriptingLanguageInstance()
                 .createSqlSource(configuration, sql, parameterType);
-        // Cache MappedStatement
+        // 缓存 MappedStatement
         newMappedStatement(msId, sqlSource, resultType, sqlCommandType);
         return msId;
     }
 
     /**
-     * Creates and registers a new MappedStatement.
+     * 创建并注册新的 MappedStatement。
      *
-     * @param msId           MappedStatement ID.
-     * @param sqlSource      SQL source.
-     * @param resultType     Result type.
-     * @param sqlCommandType SQL command type.
+     * @param msId           MappedStatement 的 ID。
+     * @param sqlSource      SQL 源。
+     * @param resultType     结果类型。
+     * @param sqlCommandType SQL 命令类型。
      */
     private void newMappedStatement(String msId, SqlSource sqlSource, Class<?> resultType, SqlCommandType sqlCommandType) {
         MappedStatement ms = new MappedStatement.Builder(configuration, msId, sqlSource, sqlCommandType)

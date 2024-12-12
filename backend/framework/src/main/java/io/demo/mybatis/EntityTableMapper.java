@@ -10,9 +10,9 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
- * Utility class: EntityTableMapper
+ * 工具类：EntityTableMapper
  * <p>
- * Provides field operations based on reflection, including field filtering, table information extraction, and other functionalities.
+ * 提供基于反射的字段操作，包括字段过滤、表信息提取等功能。
  * </p>
  */
 public class EntityTableMapper {
@@ -20,10 +20,10 @@ public class EntityTableMapper {
     private static final String FIELD_SEP_TAG = "`";
 
     /**
-     * Retrieves table information for the entity class.
+     * 获取实体类的表信息。
      *
-     * @param entityClass The entity class
-     * @return The table information object
+     * @param entityClass 实体类
+     * @return 表信息对象
      */
     public static EntityTable extractTableInfo(Class<?> entityClass) {
         Predicate<Field> fieldFilter = field -> !"serialVersionUID".equals(field.getName());
@@ -41,11 +41,11 @@ public class EntityTableMapper {
     }
 
     /**
-     * Retrieves the value of the specified field in the object.
+     * 获取字段对应的值。
      *
-     * @param bean  The object instance
-     * @param field The field
-     * @return The field value
+     * @param bean  对象实例
+     * @param field 字段
+     * @return 字段值
      */
     public static synchronized Object getFieldValue(Object bean, Field field) {
         if (bean == null) {
@@ -55,18 +55,18 @@ public class EntityTableMapper {
             field.setAccessible(true);
             return field.get(bean);
         } catch (IllegalAccessException e) {
-            throw new IllegalStateException("Unable to access field: " + field.getName(), e);
+            throw new IllegalStateException("无法访问字段：" + field.getName(), e);
         } finally {
             field.setAccessible(false);
         }
     }
 
     /**
-     * Determines the column name of the primary key field.
+     * 确定主键字段对应的数据库列名。
      *
-     * @param fields           The array of fields in the entity class
-     * @param defaultPrimaryKey The default primary key name
-     * @return The primary key column name
+     * @param fields           实体类的字段数组
+     * @param defaultPrimaryKey 默认主键名
+     * @return 主键的列名
      */
     public static String determinePrimaryKey(Field[] fields, String defaultPrimaryKey) {
         return Stream.of(fields)
@@ -77,20 +77,20 @@ public class EntityTableMapper {
     }
 
     /**
-     * Generates the table name (default using camel case to underscore rule).
+     * 生成表名（默认采用驼峰转下划线规则）。
      *
-     * @param entityType The entity class
-     * @return The table name
+     * @param entityType 实体类
+     * @return 表名
      */
     public static String generateTableName(Class<?> entityType) {
         return camelToUnderscore(entityType.getSimpleName());
     }
 
     /**
-     * Maps the array of fields to an array of database column names.
+     * 将字段数组映射为数据库列名数组。
      *
-     * @param fields The array of fields
-     * @return The array of column names
+     * @param fields 字段数组
+     * @return 列名数组
      */
     public static String[] mapFieldsToColumnNames(Field[] fields) {
         return Stream.of(fields)
@@ -99,10 +99,10 @@ public class EntityTableMapper {
     }
 
     /**
-     * Filters out fields with the @NoColumn annotation.
+     * 过滤掉带有 @NoColumn 注解的字段。
      *
-     * @param fields The array of fields
-     * @return The filtered array of fields
+     * @param fields 字段数组
+     * @return 过滤后的字段数组
      */
     public static Field[] filterFieldsWithoutNoColumnAnnotation(Field[] fields) {
         return Stream.of(fields)
@@ -111,10 +111,10 @@ public class EntityTableMapper {
     }
 
     /**
-     * Maps the array of fields to an array of select column names (supports aliases).
+     * 将字段数组映射为查询列名数组（支持别名）。
      *
-     * @param fields The array of fields
-     * @return The array of select column names
+     * @param fields 字段数组
+     * @return 查询列名数组
      */
     public static String[] mapFieldsToSelectColumnNames(Field[] fields) {
         return Stream.of(fields)
@@ -123,10 +123,10 @@ public class EntityTableMapper {
     }
 
     /**
-     * Retrieves the database column name of the field (with underscores).
+     * 获取字段的数据库列名（带下划线）。
      *
-     * @param field The field
-     * @return The database column name
+     * @param field 字段
+     * @return 数据库列名
      */
     public static String getColumnName(Field field) {
         Column columnAnnotation = field.getAnnotation(Column.class);
@@ -137,31 +137,31 @@ public class EntityTableMapper {
     }
 
     /**
-     * Retrieves the select column name of the field (with alias).
+     * 获取字段的查询列名（带别名）。
      *
-     * @param field The field
-     * @return The select column name
+     * @param field 字段
+     * @return 查询列名
      */
     public static String getSelectColumnName(Field field) {
         return getColumnName(field) + " AS " + FIELD_SEP_TAG + field.getName() + FIELD_SEP_TAG;
     }
 
     /**
-     * Converts a camel case string to an underscore-separated string.
+     * 将驼峰字符串转换为下划线分隔的字符串。
      *
-     * @param camelStr The camel case string
-     * @return The underscore-separated string
+     * @param camelStr 驼峰字符串
+     * @return 下划线字符串
      */
     public static String camelToUnderscore(String camelStr) {
         return convertCamelToSeparator(camelStr, '_');
     }
 
     /**
-     * Converts a camel case string to a string separated by the specified separator.
+     * 将驼峰字符串转换为指定分隔符的字符串。
      *
-     * @param camelStr  The camel case string
-     * @param separator The separator
-     * @return The separated string
+     * @param camelStr  驼峰字符串
+     * @param separator 分隔符
+     * @return 分隔符字符串
      */
     public static String convertCamelToSeparator(String camelStr, char separator) {
         if (camelStr == null || camelStr.trim().isEmpty()) {
@@ -184,11 +184,11 @@ public class EntityTableMapper {
     }
 
     /**
-     * Retrieves all fields of the specified class (including parent classes).
+     * 获取指定类的所有字段（包括父类）。
      *
-     * @param clazz       The class
-     * @param fieldFilter The field filter
-     * @return The array of fields
+     * @param clazz       类
+     * @param fieldFilter 字段过滤器
+     * @return 字段数组
      */
     public static Field[] getAllFields(Class<?> clazz, Predicate<Field> fieldFilter) {
         List<Field> fields = new ArrayList<>();

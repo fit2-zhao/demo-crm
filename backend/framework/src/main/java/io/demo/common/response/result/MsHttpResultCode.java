@@ -3,21 +3,22 @@ package io.demo.common.response.result;
 import io.demo.common.exception.IResultCode;
 
 /**
- * <p>Enumeration representing HTTP status codes, mainly used to automatically set the HTTP response status code to the last three digits of the corresponding status code when an exception is thrown.</p>
- * <p>Each status code in the enumeration represents the response status of an HTTP request, commonly used in REST APIs.</p>
+ * <p>表示 HTTP 状态码的枚举，主要用于在抛出异常时，自动设置 HTTP 响应状态码为对应状态码的后三位数字。</p>
+ * <p>枚举中的每个状态码代表一个 HTTP 请求的响应状态，常用于 REST API。</p>
  *
- * <p>The status codes use the 100 series, with the first three digits representing the business domain and the last three digits representing the specific HTTP status code:</p>
+ * <p>状态码采用 100 系列，前三位代表业务域，后三位代表具体的 HTTP 状态码：</p>
  * <ul>
- *     <li>Success: 100200</li>
- *     <li>Failure: 100500</li>
- *     <li>Validation Failed: 100400</li>
- *     <li>Unauthorized: 100401</li>
- *     <li>Forbidden: 100403</li>
- *     <li>Not Found: 100404</li>
+ *     <li>成功：100200</li>
+ *     <li>失败：100500</li>
+ *     <li>验证失败：100400</li>
+ *     <li>未授权：100401</li>
+ *     <li>禁止访问：100403</li>
+ *     <li>未找到：100404</li>
  * </ul>
  *
- * <p>Implements the {@link IResultCode} interface for standardized exception handling.</p>
+ * <p>实现 {@link IResultCode} 接口，用于标准化异常处理。</p>
  *
+ * @author jianxing
  * @see IResultCode
  * @see MsHttpResultCode#SUCCESS
  * @see MsHttpResultCode#FAILED
@@ -29,32 +30,32 @@ import io.demo.common.exception.IResultCode;
 public enum MsHttpResultCode implements IResultCode {
 
     /**
-     * Request succeeded
+     * 请求成功
      */
     SUCCESS(100200, "http_result_success"),
 
     /**
-     * Request failed, unknown exception
+     * 请求失败，未知异常
      */
     FAILED(100500, "http_result_unknown_exception"),
 
     /**
-     * Validation failed
+     * 验证失败
      */
     VALIDATE_FAILED(100400, "http_result_validate"),
 
     /**
-     * Unauthorized, login required
+     * 未授权，需登录
      */
     UNAUTHORIZED(100401, "http_result_unauthorized"),
 
     /**
-     * Forbidden access
+     * 禁止访问
      */
     FORBIDDEN(100403, "http_result_forbidden"),
 
     /**
-     * Resource not found
+     * 资源未找到
      */
     NOT_FOUND(100404, "http_result_not_found");
 
@@ -62,10 +63,10 @@ public enum MsHttpResultCode implements IResultCode {
     private final String message;
 
     /**
-     * Enum constructor
+     * 枚举构造函数
      *
-     * @param code    HTTP status code
-     * @param message Message key corresponding to the status code
+     * @param code    HTTP 状态码
+     * @param message 状态码对应的消息键
      */
     MsHttpResultCode(int code, String message) {
         this.code = code;
@@ -73,9 +74,9 @@ public enum MsHttpResultCode implements IResultCode {
     }
 
     /**
-     * Get the HTTP status code
+     * 获取 HTTP 状态码
      *
-     * @return Numeric value of the HTTP status code
+     * @return HTTP 状态码的数值
      */
     @Override
     public int getCode() {
@@ -83,9 +84,9 @@ public enum MsHttpResultCode implements IResultCode {
     }
 
     /**
-     * Get the message of the status code
+     * 获取状态码的消息
      *
-     * @return Message corresponding to the status code, processed by translation
+     * @return 状态码对应的消息，经过翻译处理
      */
     @Override
     public String getMessage() {

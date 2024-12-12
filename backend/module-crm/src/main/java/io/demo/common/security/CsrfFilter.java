@@ -18,72 +18,72 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 
 /**
- * Custom filter for handling CSRF validation.
- * This filter ensures that only authenticated users can access non-public resources and validates the CSRF token and Referer in the request.
+ * 自定义过滤器，用于处理 CSRF 校验。
+ * 该过滤器确保只有认证用户才能访问非公开资源，并对请求中的 CSRF token 和 Referer 进行校验。
  */
 public class CsrfFilter extends AnonymousFilter {
 
     /**
-     * Performs CSRF validation before processing the request.
-     * If the request is not authenticated or contains a valid CSRF token in the headers, the request is allowed to proceed.
-     * Otherwise, an appropriate exception is thrown or an invalid authentication status is returned.
+     * 在处理请求之前进行 CSRF 校验。
+     * 如果请求没有通过认证或请求头中包含有效的 CSRF token，则允许请求继续。
+     * 否则，抛出相应的异常或返回无效的认证状态。
      *
-     * @param request     Servlet request
-     * @param response    Servlet response
-     * @param mappedValue Mapped values in the filter chain
-     * @return true if the request should continue processing, false otherwise
+     * @param request     Servlet 请求
+     * @param response    Servlet 响应
+     * @param mappedValue 过滤器链中的映射值
+     * @return true 如果请求继续处理，false 如果请求被中断
      */
     @Override
     protected boolean onPreHandle(ServletRequest request, ServletResponse response, Object mappedValue) {
         HttpServletRequest httpServletRequest = WebUtils.toHttp(request);
 
-        // Return invalid authentication status if the user is not authenticated
+        // 如果用户未认证，返回认证无效状态
         if (!SecurityUtils.getSubject().isAuthenticated()) {
             ((HttpServletResponse) response).setHeader(SessionConstants.AUTHENTICATION_STATUS, SessionConstants.AUTHENTICATION_INVALID);
             return true;
         }
 
-        // No CSRF validation is required for error pages
+        // 错误页面无需 CSRF 校验
         if (httpServletRequest.getRequestURI().equals("/error")) {
             return true;
         }
 
-        // No CSRF validation is required for API requests
+        // API 请求无需 CSRF 校验
         if (ApiKeyHandler.isApiKeyCall(httpServletRequest)) {
             return true;
         }
 
-        // No CSRF validation is required for WebSocket requests
+        // WebSocket 请求无需 CSRF 校验
         String websocketKey = httpServletRequest.getHeader("Sec-WebSocket-Key");
         if (StringUtils.isNotBlank(websocketKey)) {
             return true;
         }
 
-        // Get CSRF token and X-Auth-Token from request headers
+        // 获取请求头中的 CSRF token 和 X-Auth-Token
         String csrfToken = httpServletRequest.getHeader(SessionConstants.CSRF_TOKEN);
         String xAuthToken = httpServletRequest.getHeader(SessionConstants.HEADER_TOKEN);
 
-        // Validate CSRF token and X-Auth-Token
+        // 校验 CSRF token 和 X-Auth-Token
         validateToken(csrfToken, xAuthToken);
 
-        // Validate Referer
+        // 校验 Referer
         validateReferer(httpServletRequest);
 
         return true;
     }
 
     /**
-     * Validates the Referer in the request against the configured domain names.
-     * If no Referer domain is configured, validation is skipped.
+     * 校验请求中的 Referer 是否符合配置的域名要求。
+     * 如果没有配置 Referer 域名，默认不进行校验。
      *
-     * @param request HttpServletRequest request
+     * @param request HttpServletRequest 请求
      */
     private void validateReferer(HttpServletRequest request) {
         Environment env = CommonBeanFactory.getBean(Environment.class);
         assert env != null;
         String domains = env.getProperty("referer.urls");
 
-        // Skip validation if referer.urls is not configured
+        // 如果没有配置 referer.urls，则不校验
         if (StringUtils.isBlank(domains)) {
             return;
         }
@@ -91,15 +91,15 @@ public class CsrfFilter extends AnonymousFilter {
         String[] allowedDomains = StringUtils.split(domains, ",");
         String referer = request.getHeader(HttpHeaders.REFERER);
 
-        // Validate if the Referer is in the allowed domain list
+        // 校验 Referer 是否在允许的域名列表中
         if (allowedDomains != null && !ArrayUtils.contains(allowedDomains, referer)) {
             throw new RuntimeException("CSRF error: invalid referer");
         }
     }
 
     /**
-     * Validates the CSRF token and X-Auth-Token in the request.
-     * Throws an exception if the token is invalid.
+     * 校验请求中的 CSRF token 和 X-Auth-Token 是否有效。
+     * 如果 token 无效，抛出异常。
      *
      * @param csrfToken  CSRF token
      * @param xAuthToken X-Auth-Token
@@ -109,7 +109,7 @@ public class CsrfFilter extends AnonymousFilter {
             throw new RuntimeException("CSRF token is empty");
         }
 
-        // Decrypt CSRF token
+        // 解密 CSRF token
         csrfToken = CodingUtils.aesDecrypt(csrfToken, SessionUser.secret, CodingUtils.generateIv());
 
         String[] signatureArray = StringUtils.split(StringUtils.trimToNull(csrfToken), "|");
@@ -117,12 +117,12 @@ public class CsrfFilter extends AnonymousFilter {
             throw new RuntimeException("Invalid CSRF token format");
         }
 
-        // Validate if the user ID and session ID match
+        // 校验用户 ID 和会话 ID 是否匹配
         if (!StringUtils.equals(SessionUtils.getUserId(), signatureArray[0])) {
             throw new RuntimeException("CSRF token does not match the current user");
         }
 
-        // Validate if the sessionId or X-Auth-Token match
+        // 校验 sessionId 或 X-Auth-Token 是否匹配
         if (!StringUtils.equals(SessionUtils.getSessionId(), signatureArray[2]) &&
                 !StringUtils.equals(xAuthToken, signatureArray[2])) {
             throw new RuntimeException("CSRF token does not match the current session");

@@ -4,9 +4,10 @@ import io.demo.common.util.LogUtils;
 import org.quartz.*;
 
 /**
- * Base scheduling task class, all scheduling tasks should inherit from this class and implement specific business logic.
+ * 基础调度任务类，所有调度任务都应该继承此类，并实现具体的业务逻辑。
  * <p>
- * This class provides the resource information required for scheduling tasks and allows subclasses to implement specific business logic through the abstract method {@link #businessExecute(JobExecutionContext)}.
+ * 本类提供了调度任务执行所需的资源信息，并通过抽象方法 {@link #businessExecute(JobExecutionContext)}
+ * 让子类实现具体的业务逻辑。
  * </p>
  *
  * @since 1.0
@@ -14,46 +15,46 @@ import org.quartz.*;
 public abstract class BaseScheduleJob implements Job {
 
     /**
-     * Resource ID, indicating the resource associated with this task.
+     * 资源 ID，表示该任务所关联的资源。
      */
     protected String resourceId;
 
     /**
-     * User ID, indicating the user executing this task.
+     * 用户 ID，表示该任务执行的用户。
      */
     protected String userId;
 
     /**
-     * Scheduling expression, used for task scheduling rules.
+     * 调度表达式，用于任务的调度规则。
      */
     protected String expression;
 
     /**
-     * Called when executing the scheduling task, extracts the information required for the task and calls the business execution method of the subclass.
+     * 执行调度任务时调用，提取任务所需的信息并调用子类的业务执行方法。
      *
-     * @param context The context object of the task execution
-     * @throws JobExecutionException If the task execution fails, this exception is thrown
+     * @param context 任务执行的上下文对象
+     * @throws JobExecutionException 如果任务执行失败，抛出此异常
      */
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        // Get the resource information required for the task from JobDataMap
+        // 从 JobDataMap 中获取任务所需的资源信息
         JobKey jobKey = context.getTrigger().getJobKey();
         JobDataMap jobDataMap = context.getJobDetail().getJobDataMap();
         this.resourceId = jobDataMap.getString("resourceId");
         this.userId = jobDataMap.getString("userId");
         this.expression = jobDataMap.getString("expression");
 
-        // Log the current task execution status
+        // 记录日志，显示当前任务的执行情况
         LogUtils.info(jobKey.getGroup() + " Running: " + resourceId);
 
-        // Call the business logic implemented by the subclass
+        // 调用子类实现的业务逻辑
         businessExecute(context);
     }
 
     /**
-     * Subclasses need to implement this method to define the specific business logic of task execution.
+     * 子类需要实现该方法，定义任务执行的具体业务逻辑。
      *
-     * @param context The context object of the task execution
+     * @param context 任务执行的上下文对象
      */
     protected abstract void businessExecute(JobExecutionContext context);
 }

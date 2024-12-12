@@ -9,70 +9,70 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 /**
- * <p>User Data Transfer Object, used to transfer user information, including other platform integration information and avatar.</p>
+ * <p>用户数据传输对象，用于传输用户信息，包含其他平台对接信息和头像。</p>
  */
 @Data
 public class UserDTO {
-    @Schema(description = "User ID", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "用户ID", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "{user.id.not_blank}", groups = {Updated.class})
     @Size(min = 1, max = 50, message = "{user.id.length_range}", groups = {Created.class, Updated.class})
     private String id;
 
-    @Schema(description = "Username", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "用户名", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "{user.name.not_blank}", groups = {Created.class})
     @Size(min = 1, max = 255, message = "{user.name.length_range}", groups = {Created.class, Updated.class})
     private String name;
 
-    @Schema(description = "User email", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "用户邮箱", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "{user.email.not_blank}", groups = {Created.class})
     @Size(min = 1, max = 64, message = "{user.email.length_range}", groups = {Created.class, Updated.class})
     private String email;
 
-    @Schema(description = "User password")
+    @Schema(description = "用户密码")
     private String password;
 
-    @Schema(description = "Is enabled")
+    @Schema(description = "是否启用")
     private Boolean enable;
 
-    @Schema(description = "Creation time")
+    @Schema(description = "创建时间")
     private Long createTime;
 
-    @Schema(description = "Update time")
+    @Schema(description = "更新时间")
     private Long updateTime;
 
-    @Schema(description = "Language")
+    @Schema(description = "语言")
     private String language;
 
-    @Schema(description = "Current organization ID")
+    @Schema(description = "当前组织ID")
     private String lastOrganizationId;
 
-    @Schema(description = "Phone number")
+    @Schema(description = "手机号")
     private String phone;
 
-    @Schema(description = "Source: LOCAL OIDC CAS OAUTH2", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "来源：LOCAL OIDC CAS OAUTH2", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "{user.source.not_blank}", groups = {Created.class})
     @Size(min = 1, max = 50, message = "{user.source.length_range}", groups = {Created.class, Updated.class})
     private String source;
 
-    @Schema(description = "Current project ID")
+    @Schema(description = "当前项目ID")
     private String lastProjectId;
 
-    @Schema(description = "Creator")
+    @Schema(description = "创建人")
     private String createUser;
 
-    @Schema(description = "Updater")
+    @Schema(description = "修改人")
     private String updateUser;
 
-    @Schema(description = "Is deleted", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "是否删除", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "{user.deleted.not_blank}", groups = {Created.class})
     private Boolean deleted;
 
     @Schema(description = "CFT Token")
     private String cftToken;
 
-    @Schema(description = "Other platform integration information", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    @Schema(description = "其他平台对接信息", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private byte[] platformInfo;
 
-    @Schema(description = "Avatar")
+    @Schema(description = "头像")
     private String avatar;
 }

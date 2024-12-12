@@ -9,40 +9,40 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 /**
- * Represents a combined search condition used to support complex search logic.
- * Contains match mode (all/any) and a list of filter conditions.
+ * 表示组合搜索条件，用于支持复杂的搜索逻辑。
+ * 包含匹配模式（所有/任一）和筛选条件列表。
  */
 @Data
 public class CombineSearch {
 
-    @Schema(description = "Match mode, supports 'all' or 'any'", allowableValues = {"AND", "OR"})
+    @Schema(description = "匹配模式，支持“所有”或“任一”", allowableValues = {"AND", "OR"})
     @EnumValue(enumClass = SearchMode.class)
     private String searchMode = SearchMode.AND.name();
 
-    @Schema(description = "List of filter conditions used to define multiple search criteria")
+    @Schema(description = "筛选条件列表，用于定义多个搜索条件")
     @Valid
     private List<CombineCondition> conditions;
 
     /**
-     * Get the current match mode. If not set, the default is "AND".
+     * 获取当前的匹配模式。如果未设置，则默认返回 "AND"。
      *
-     * @return Current match mode
+     * @return 当前的匹配模式
      */
     public String getSearchMode() {
         return StringUtils.isBlank(searchMode) ? SearchMode.AND.name() : searchMode;
     }
 
     /**
-     * Enum: Search mode, defines two match modes: "all" and "any".
+     * 枚举：搜索模式，定义了“所有”与“任一”两种匹配模式。
      */
     public enum SearchMode {
         /**
-         * All conditions match ("and" operation)
+         * 所有条件都匹配（“与”操作）
          */
         AND,
 
         /**
-         * Any condition matches ("or" operation)
+         * 任一条件匹配（“或”操作）
          */
         OR
     }

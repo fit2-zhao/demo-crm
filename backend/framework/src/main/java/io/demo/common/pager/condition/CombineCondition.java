@@ -10,42 +10,42 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 /**
- * Represents a combined condition used to support complex filtering and query logic.
- * Contains information such as field name, operator, and expected value.
+ * 表示组合条件，用于支持复杂的过滤和查询逻辑。
+ * 包含字段名、操作符和期望值等信息。
  */
 @Data
 public class CombineCondition {
 
-    @Schema(description = "Parameter name of the condition")
-    @NotNull(message = "Parameter name cannot be null")
+    @Schema(description = "条件的参数名称")
+    @NotNull(message = "参数名称不能为空")
     private String name;
 
-    @Schema(description = "Expected value, if the operator is BETWEEN, IN, NOT_IN, it is an array, otherwise it is a single value")
+    @Schema(description = "期望值，若操作符为 BETWEEN, IN, NOT_IN 时为数组，其他操作符为单个值")
     private Object value;
 
-    @Schema(description = "Indicates whether it is a custom field")
-    @NotNull(message = "Custom field flag cannot be null")
+    @Schema(description = "是否为自定义字段")
+    @NotNull(message = "自定义字段标识不能为空")
     private Boolean customField = false;
 
-    @Schema(description = "Type of the custom field")
+    @Schema(description = "自定义字段的类型")
     private String customFieldType;
 
-    @Schema(description = "Operator",
+    @Schema(description = "操作符",
             allowableValues = {"IN", "NOT_IN", "BETWEEN", "GT", "LT", "COUNT_GT", "COUNT_LT", "EQUALS", "NOT_EQUALS", "CONTAINS", "NOT_CONTAINS", "EMPTY", "NOT_EMPTY"})
     @EnumValue(enumClass = CombineConditionOperator.class)
     private String operator;
 
     /**
-     * Validate whether the condition is valid, checking the validity of the field name, operator, and value.
+     * 校验条件是否合法，检查字段名称、操作符和值的有效性。
      *
-     * @return true if the condition is valid, otherwise false
+     * @return 如果条件合法则返回 true，否则返回 false
      */
     public boolean valid() {
         if (StringUtils.isBlank(name) || StringUtils.isBlank(operator)) {
             return false;
         }
 
-        // Check operator for empty value
+        // 针对空值判断操作符
         if (StringUtils.equalsAny(operator, CombineConditionOperator.EMPTY.name(), CombineConditionOperator.NOT_EMPTY.name())) {
             return true;
         }
@@ -54,12 +54,12 @@ public class CombineCondition {
             return false;
         }
 
-        // Validate value if it is a collection type
+        // 针对值为集合类型的校验
         if (value instanceof List<?> valueList && CollectionUtils.isEmpty(valueList)) {
             return false;
         }
 
-        // Validate value if it is a string
+        // 针对值为字符串的校验
         if (value instanceof String valueStr && StringUtils.isBlank(valueStr)) {
             return false;
         }
@@ -68,71 +68,71 @@ public class CombineCondition {
     }
 
     /**
-     * Enum: Combined condition operators, defining various possible query operators.
+     * 枚举：组合条件操作符，定义了各种可能的查询操作符。
      */
     public enum CombineConditionOperator {
         /**
-         * Belongs to a set
+         * 属于某个集合
          */
         IN,
 
         /**
-         * Does not belong to a set
+         * 不属于某个集合
          */
         NOT_IN,
 
         /**
-         * Range operation
+         * 区间操作
          */
         BETWEEN,
 
         /**
-         * Greater than
+         * 大于
          */
         GT,
 
         /**
-         * Less than
+         * 小于
          */
         LT,
 
         /**
-         * Count greater than
+         * 数量大于
          */
         COUNT_GT,
 
         /**
-         * Count less than
+         * 数量小于
          */
         COUNT_LT,
 
         /**
-         * Equals
+         * 等于
          */
         EQUALS,
 
         /**
-         * Not equals
+         * 不等于
          */
         NOT_EQUALS,
 
         /**
-         * Contains
+         * 包含
          */
         CONTAINS,
 
         /**
-         * Does not contain
+         * 不包含
          */
         NOT_CONTAINS,
 
         /**
-         * Is empty
+         * 为空
          */
         EMPTY,
 
         /**
-         * Is not empty
+         * 不为空
          */
         NOT_EMPTY
     }

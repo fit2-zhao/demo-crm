@@ -11,19 +11,18 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Objects;
 
 /**
- * Utility class for handling API key authentication, including functions for retrieving users,
- * verifying if a request contains an API key, and validating signatures.
+ * 处理 API 密钥验证的工具类，包括获取用户、验证请求是否包含 API 密钥以及验证签名的功能。
  */
 public class ApiKeyHandler {
 
-    public static final String API_ACCESS_KEY = "accessKey"; // API key field
-    public static final String API_SIGNATURE = "signature";  // API signature field
+    public static final String API_ACCESS_KEY = "accessKey"; // API 密钥字段
+    public static final String API_SIGNATURE = "signature";  // API 签名字段
 
     /**
-     * Retrieves the user ID based on the API key and signature in the request.
+     * 根据请求中的 API 密钥和签名获取用户 ID。
      *
-     * @param request HTTP request
-     * @return User ID, or null if the request is invalid
+     * @param request HTTP 请求
+     * @return 用户 ID，如果请求无效则返回 null
      */
     public static String getUser(HttpServletRequest request) {
         if (request == null) {
@@ -33,10 +32,10 @@ public class ApiKeyHandler {
     }
 
     /**
-     * Determines if the request contains a valid API key and signature.
+     * 判断请求是否包含有效的 API 密钥和签名。
      *
-     * @param request HTTP request
-     * @return true if the request contains a valid API key and signature, false otherwise
+     * @param request HTTP 请求
+     * @return 如果请求包含有效的 API 密钥和签名，返回 true；否则返回 false
      */
     public static Boolean isApiKeyCall(HttpServletRequest request) {
         if (request == null) {
@@ -46,38 +45,38 @@ public class ApiKeyHandler {
     }
 
     /**
-     * Validates the user based on the provided accessKey and signature, and returns the user ID.
-     * Throws an appropriate exception if validation fails.
+     * 根据提供的 accessKey 和 signature 验证用户，并返回用户 ID。
+     * 如果验证失败，则抛出相应的异常。
      *
-     * @param accessKey API key
-     * @param signature API signature
-     * @return User ID
-     * @throws RuntimeException if validation fails, an appropriate exception is thrown
+     * @param accessKey API 密钥
+     * @param signature API 签名
+     * @return 用户 ID
+     * @throws RuntimeException 如果验证失败，会抛出相应的异常
      */
     public static String getUser(String accessKey, String signature) {
         if (StringUtils.isBlank(accessKey) || StringUtils.isBlank(signature)) {
             return null;
         }
 
-        // Retrieve user key information
+        // 获取用户密钥信息
         UserKey userKey = Objects.requireNonNull(CommonBeanFactory.getBean(UserKeyService.class)).getUserKey(accessKey);
         if (userKey == null) {
             throw new RuntimeException("invalid accessKey");
         }
 
-        // Check if the accessKey is enabled
+        // 检查 accessKey 是否启用
         if (BooleanUtils.isFalse(userKey.getEnable())) {
             throw new RuntimeException("accessKey is disabled");
         }
 
-        // Check if the accessKey is expired
+        // 检查 accessKey 是否过期
         if (BooleanUtils.isFalse(userKey.getForever())) {
             if (userKey.getExpireTime() == null || userKey.getExpireTime() < System.currentTimeMillis()) {
                 throw new RuntimeException("accessKey is expired");
             }
         }
 
-        // Decrypt and validate the signature
+        // 解密签名并验证
         String signatureDecrypt;
         try {
             signatureDecrypt = CodingUtils.aesDecrypt(signature, userKey.getSecretKey(), accessKey.getBytes());
@@ -90,7 +89,7 @@ public class ApiKeyHandler {
             throw new RuntimeException("invalid signature");
         }
 
-        // Validate if the accessKey in the signature matches
+        // 验证签名中的 accessKey 是否匹配
         if (!StringUtils.equals(accessKey, signatureArray[0])) {
             throw new RuntimeException("invalid signature");
         }
@@ -102,12 +101,12 @@ public class ApiKeyHandler {
             throw new RuntimeException("invalid signature time", e);
         }
 
-        // Validate if the signature is expired (30 minutes)
+        // 验证签名是否超时（30分钟）
         if (Math.abs(System.currentTimeMillis() - signatureTime) > 1800000) {
             throw new RuntimeException("expired signature");
         }
 
-        // Return the user creator ID
+        // 返回用户创建者 ID
         return userKey.getCreateUser();
     }
 }
