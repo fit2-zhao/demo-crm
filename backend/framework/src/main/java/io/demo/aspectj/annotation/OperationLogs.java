@@ -6,8 +6,6 @@ import java.lang.annotation.*;
 @Inherited
 @Documented
 public @interface OperationLogs {
-
     OperationLog[] value();
-
 }
 
