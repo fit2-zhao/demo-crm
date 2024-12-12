@@ -1,11 +1,8 @@
 on:
-  pull_request:
-    types:
-      - opened
-
   issue_comment:
     types:
       - created
+
 name: Add Labels to PR
 
 jobs:
@@ -17,28 +14,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 对 PR 创建时添加默认标签
-      - name: Add default labels on PR creation
-        if: ${{ github.event_name == 'pull_request' && github.event.action == 'opened' }}
-        uses: actions/labeler@v5
-        with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          configuration-path: .github/labeler.yml
-          sync-labels: true
-
-      # 对 PR 评论中以 / 开头的命令动态添加标签
-      - name: Extract labels from comment
+      # 从评论中提取并格式化标签为 "评审人: 标签"
+      - name: Extract reviewer and labels
         if: ${{ github.event_name == 'issue_comment' && github.event.issue.pull_request && startsWith(github.event.comment.body, '/') }}
         id: extract_labels
         run: |
-          labels=$(echo "${{ github.event.comment.body }}" | sed 's|^/||')
-          echo "Extracted labels: $labels"
-          echo "::set-output name=labels::$labels"
+          comment_body="${{ github.event.comment.body }}"
+          reviewer="${{ github.event.comment.user.login }}"
+          raw_labels=$(echo "$comment_body" | sed 's|^/||')
+          formatted_labels=$(echo "$raw_labels" | awk -v reviewer="$reviewer" '{split($0, arr, ","); for (i in arr) {gsub(/^ +| +$/, "", arr[i]); print "评审人: " reviewer ": " arr[i]}}')
+          echo "Formatted labels: $formatted_labels"
+          echo "::set-output name=labels::$formatted_labels"
 
+      # 将提取的标签添加到 PR
       - name: Add labels via PR comment
         if: ${{ github.event_name == 'issue_comment' && github.event.issue.pull_request && startsWith(github.event.comment.body, '/') }}
         uses: actions-ecosystem/action-add-labels@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: ${{ steps.extract_labels.outputs.labels }}
-
