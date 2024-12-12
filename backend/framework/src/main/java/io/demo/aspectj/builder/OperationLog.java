@@ -16,6 +16,7 @@ import java.util.Map;
 @NoArgsConstructor
 @ToString
 public class OperationLog {
+
     /**
      * id
      */
