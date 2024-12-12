@@ -21,6 +21,7 @@ jobs:
 
       # 对 PR 创建时添加默认标签
       - name: Add default labels on PR creation
+        uses: actions-ecosystem/action-add-labels@v1
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           configuration-path: .github/actions/labeler.yml
